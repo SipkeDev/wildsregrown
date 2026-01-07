@@ -1,3 +1,5 @@
+package com.wildsregrown.util;
+
 import com.sipke.math.MathUtil;
 import com.wildsregrown.blocks.render.TintUtil;
 

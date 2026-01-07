@@ -9,15 +9,15 @@ public class ModEntitiesRenderRegistery {
 
     public static void register(){
         EntityRendererRegistry.register(ModEntities.sitAbleEntity, SitAbleEntityRender::new);
-        //EntityRendererRegistry.register(ModEntities.soldierEntity, SoldierRenderer::new);
-        //EntityModelLayerRegistry.registerModelLayer(ModModelLayers.soldierModelLayer, SoldierModel::getTexturedModelData);
+
+        //Blocks
         BlockEntityRendererFactories.register(ModEntities.structureBlock,               StructureBlockRenderer::new);
-        //BlockEntityRendererFactories.register(ModEntities.crateEntity,                  CrateRenderer::new);
-        //BlockEntityRendererFactories.register(ModEntities.tableChestEntity,             TableChestRenderer::new);
-        //BlockEntityRendererFactories.register(ModEntities.counterShelvesEntity,         CounterShelvesRender::new);
-        //BlockEntityRendererFactories.register(ModEntities.drawerEntity,                 DrawerRender::new);
+        BlockEntityRendererFactories.register(ModEntities.crateEntity,                  CrateRenderer::new);
+        BlockEntityRendererFactories.register(ModEntities.tableChestEntity,             TableChestRenderer::new);
+        BlockEntityRendererFactories.register(ModEntities.counterShelvesEntity,         CounterShelvesRender::new);
+        BlockEntityRendererFactories.register(ModEntities.drawerEntity,                 DrawerRender::new);
         BlockEntityRendererFactories.register(ModEntities.shelvesEntity,                ShelvesRender::new);
-        //BlockEntityRendererFactories.register(ModEntities.genericSingleStorageEntity,   SingleStorageRender::new);
+        BlockEntityRendererFactories.register(ModEntities.genericSingleStorageEntity,   SingleStorageRender::new);
         BlockEntityRendererFactories.register(ModEntities.itemLootPedestal,             ItemLootPedestalRender::new);
         BlockEntityRendererFactories.register(ModEntities.portableWorkbenchEntity,      PortableWorkbenchRender::new);
 

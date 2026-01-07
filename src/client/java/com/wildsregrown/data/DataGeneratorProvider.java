@@ -23,10 +23,12 @@ public class DataGeneratorProvider implements DataGeneratorEntrypoint {
 		pack.addProvider(RecipeProvider::new);
 	}
 
+	/**
 	@Override
 	public void buildRegistry(RegistryBuilder registryBuilder) {
 		registryBuilder.addRegistry(RegistryKeys.BIOME, WRGBiomes::register);
 	}
+	*/
 
 	public static String idFromBlock(Block block) {
 		return Registries.BLOCK.getId(block).getPath().replaceFirst(".*\\.", "");

@@ -1,11 +1,9 @@
 package com.wildsregrown.entity.render.renderer;
 
 import com.wildsregrown.entities.block.ShelvesEntity;
-import com.wildsregrown.entity.render.renderstates.RenderState;
 import com.wildsregrown.entity.render.renderstates.ShelvesRenderState;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -15,9 +13,7 @@ import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,12 +45,13 @@ public class ShelvesRender implements BlockEntityRenderer<ShelvesEntity, Shelves
 
     @Override
     public void render(ShelvesRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
-        renderSlot(0, state, matrices, queue, cameraState);
-        renderSlot(1, state, matrices, queue, cameraState);
+        if (state.facing != null) {
+            renderSlot(0, state, matrices, queue, cameraState);
+            renderSlot(1, state, matrices, queue, cameraState);
+        }
     }
 
     private void renderSlot(int slot, ShelvesRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState){
-
         matrices.push();
         switch (state.facing){
             case NORTH -> {

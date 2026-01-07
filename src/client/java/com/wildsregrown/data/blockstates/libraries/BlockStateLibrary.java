@@ -571,7 +571,7 @@ public class BlockStateLibrary {
     }
 
     public static WeightedVariant modelOf(String key) {
-        return createWeightedVariant(Identifier.of(modid, "block/" + key));
+        return createWeightedVariant(Identifier.of(modid, key));
     }
     public static WeightedVariant modelOf(String key, int vars) {
         ModelVariant[] list = new ModelVariant[vars];

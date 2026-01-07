@@ -3,6 +3,7 @@ package com.wildsregrown.entity.render.renderer;
 import com.wildsregrown.entities.block.CrateEntity;
 import com.sipke.math.MathUtil;
 import com.wildsregrown.entity.render.renderstates.CrateRenderState;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -35,8 +36,11 @@ public class CrateRenderer implements BlockEntityRenderer<CrateEntity, CrateRend
         BlockEntityRenderer.super.updateRenderState(blockEntity, renderState, tickProgress, cameraPos, crumblingOverlay);
         ctx.itemModelManager().clearAndUpdate(renderState.renderState, blockEntity.getStack(), ItemDisplayContext.FIXED, world, null, (int)blockEntity.getPos().asLong());
         BlockState state = world.getBlockState(blockEntity.getPos());
-        renderState.hasLid = state.get(Properties.OPEN);
-        renderState.light = world.getLightLevel(blockEntity.getPos());
+        if (!(state.getBlock() instanceof AirBlock)) {
+            renderState.hasLid = state.get(Properties.OPEN);
+            renderState.count = blockEntity.count;
+            renderState.light = world.getLightLevel(blockEntity.getPos());
+        }
     }
 
     @Override

@@ -83,7 +83,7 @@ public class DrawerBlock extends HorizontalConnectingBlock implements BlockEntit
                 }
             }
         }
-        return ActionResult.FAIL;
+        return ActionResult.CONSUME;
     }
 
     private ActionResult swapItemStackInInventory(int drawerFlag, BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
@@ -109,10 +109,7 @@ public class DrawerBlock extends HorizontalConnectingBlock implements BlockEntit
             if (q3) {entity.switchStack(drawerFlag, 3, player);}
         }
 
-        WildsRegrown.LOGGER.info("Inventory: " + q0 + " . " + q1 + " . " + q2 + " . " + q3 + " / Drawer:" + (drawerFlag == 0 ? "Bottom" : "Top"));
-        WildsRegrown.LOGGER.info("OFFSET: " + offset);
-
-        return ActionResult.FAIL;
+        return ActionResult.SUCCESS;
     }
 
     private ActionResult toggleTop(BlockState state, World world, BlockPos pos){
@@ -126,7 +123,7 @@ public class DrawerBlock extends HorizontalConnectingBlock implements BlockEntit
         }else if (state.get(DRAWERS) == DrawerState.OPEN){
             world.setBlockState(pos, state.with(DRAWERS, DrawerState.DRAWER_BOTTOM));
         }
-        return ActionResult.FAIL;
+        return ActionResult.SUCCESS;
 
     }
 

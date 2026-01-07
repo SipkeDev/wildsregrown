@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "wildsregrown",
 	"version": "${version}",
-	"name": "Wilds Regrown",
+	"name": "WildsRegrown",
 	"description": "A medieval content overhaul",
 	"accessWidener" : "wildsregrown.accesswidener",
 	"authors": [
@@ -23,7 +23,7 @@
 			"com.wildsregrown.WildsRegrownClient"
 		],
 		"fabric-datagen": [
-          "com.wildsregrown.data.DataGeneratorProvider"
+			"com.wildsregrown.data.DataGeneratorProvider"
 		]
 	},
 	"mixins": [
