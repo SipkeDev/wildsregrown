@@ -1,0 +1,42 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"0": "wildsregrown:block/cube/grey_limestone_bricks",
+		"particle": "wildsregrown:block/cube/grey_limestone_bricks"
+	},
+	"elements": [
+		{
+			"from": [0.002, -6.1, 0.4],
+			"to": [15.998, 1, 7.5],
+			"rotation": {"angle": -45, "axis": "x", "origin": [1, 0, 1.4]},
+			"faces": {
+				"north": {"uv": [0, 8, 16, 16], "texture": "#0"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 8], "texture": "#0"},
+				"west": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 8], "texture": "#0"},
+				"down": {"uv": [0, 8, 16, 16], "texture": "#0", "cullface": "down"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [53, 92, 0],
+			"translation": [2.5, 0, 5.5],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -74, 0],
+			"translation": [6.75, 0, -6.75]
+		},
+		"ground": {
+			"translation": [0, 4.25, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [45, -45, 0],
+			"translation": [-1.5, 3.5, 0],
+			"scale": [0.8, 0.8, 0.8]
+		}
+	}
+}

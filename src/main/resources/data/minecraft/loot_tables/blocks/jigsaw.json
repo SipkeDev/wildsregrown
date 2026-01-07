@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:repeater"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:comparator"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:redstone"
+        }
+      ]
+    }
+  ]
+}

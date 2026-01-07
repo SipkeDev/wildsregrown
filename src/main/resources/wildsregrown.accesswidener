@@ -1,0 +1,4 @@
+accessWidener v2 named
+accessible field net/minecraft/client/gui/DrawContext vertexConsumers Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;
+accessible method net/minecraft/block/StairsBlock getStairShape (Lnet/minecraft/block/BlockState;Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/enums/StairShape;
+accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;

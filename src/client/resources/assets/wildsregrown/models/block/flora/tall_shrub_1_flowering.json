@@ -1,0 +1,87 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "wildsregrown:block/flora/spirea_huge",
+		"1": "wildsregrown:block/flora/spirea_huge_flowers",
+		"2": "wildsregrown:block/flora/spirea_huge_stem",
+		"particle": "wildsregrown:block/flora/spirea_huge"
+	},
+	"elements": [
+		{
+			"name": "stem",
+			"from": [-8, 0, 8],
+			"to": [24, 32, 8],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 16, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "stem",
+			"from": [8, 0, -8],
+			"to": [8, 32, 24],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 16, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "leaves",
+			"from": [8, 0, -8],
+			"to": [8, 32, 24],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 16, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		},
+		{
+			"name": "leaves",
+			"from": [-8, 0, 8],
+			"to": [24, 32, 8],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 16, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		},
+		{
+			"name": "flowers",
+			"from": [-8, 0, 8],
+			"to": [24, 32, 8],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 16, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex": 1},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex": 1}
+			}
+		},
+		{
+			"name": "flowers",
+			"from": [8, 0, -8],
+			"to": [8, 32, 24],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 16, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex": 1},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex": 1}
+			}
+		}
+	],
+	"display": {
+		"firstperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"translation": [0, 1.25, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [45, 45, 0],
+			"translation": [0, -1.75, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}

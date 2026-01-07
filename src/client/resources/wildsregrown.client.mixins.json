@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "com.wildsregrown.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "BackupBypass",
+    "gui.BackgroundMixin",
+    "gui.MessageScreenMixin",
+    "render.SpriteContentsAccessor",
+    "render.WorldRenderAccessor",
+    "sodium.BlockRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+  ]
+}

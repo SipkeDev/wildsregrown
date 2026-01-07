@@ -1,0 +1,45 @@
+{
+	"schemaVersion": 1,
+	"id": "wildsregrown",
+	"version": "${version}",
+	"name": "Wilds Regrown",
+	"description": "A medieval content overhaul",
+	"accessWidener" : "wildsregrown.accesswidener",
+	"authors": [
+		"Sipke"
+	],
+	"contact": {
+		"homepage": "",
+		"sources": "https://modrinth.com/mod/wildsregrown"
+	},
+	"license": "All right reserved",
+	"icon": "assets/wildsregrown/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.wildsregrown.WildsRegrown"
+		],
+		"client": [
+			"com.wildsregrown.WildsRegrownClient"
+		],
+		"fabric-datagen": [
+          "com.wildsregrown.data.DataGeneratorProvider"
+		]
+	},
+	"mixins": [
+      "wildsregrown.mixins.json",
+		{
+			"config": "wildsregrown.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

@@ -1,0 +1,44 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "wildsregrown:block/flora/tall_thin_grass_large",
+		"particle": "wildsregrown:block/flora/tall_thin_grass_large"
+	},
+	"elements": [
+		{
+			"from": [-8, 0, 10],
+			"to": [24, 32, 10],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 16, 10]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		},
+		{
+			"from": [8, 0, -6],
+			"to": [8, 32, 26],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 16, 10]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_lefthand": {
+			"rotation": [66, 0, 0],
+			"translation": [-6, 14.25, 48.75],
+			"scale": [1, 4, 1]
+		},
+		"firstperson_righthand": {
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"gui": {
+			"rotation": [45, 0, 0],
+			"translation": [0, -4, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}

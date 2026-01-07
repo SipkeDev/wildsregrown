@@ -1,0 +1,15 @@
+{
+  "dimensions": {
+    "minecraft:overworld": {
+      "type": "wildsregrown:wrg_dimension",
+      "generator": {
+        "type": "wildsregrown:wrg_chunk",
+        "biome_source": {
+          "type": "wildsregrown:wrg_biome",
+          "biome": "wildsregrown:empty"
+        },
+        "settings": "minecraft:overworld"
+      }
+    }
+  }
+}

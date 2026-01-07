@@ -1,0 +1,66 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "wildsregrown:block/flora/spirea_huge",
+		"2": "wildsregrown:block/flora/spirea_huge_stem",
+		"particle": "wildsregrown:block/flora/spirea_huge"
+	},
+	"elements": [
+		{
+			"name": "stem",
+			"from": [-7, 0, 9],
+			"to": [25, 32, 9],
+			"rotation": {"angle": 45, "axis": "y", "origin": [9, 16, 9]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "stem",
+			"from": [9, 0, -7],
+			"to": [9, 32, 25],
+			"rotation": {"angle": 45, "axis": "y", "origin": [9, 16, 9]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "leaves",
+			"from": [9, 0, -7],
+			"to": [9, 32, 25],
+			"rotation": {"angle": 45, "axis": "y", "origin": [9, 16, 9]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		},
+		{
+			"name": "leaves",
+			"from": [-7, 0, 9],
+			"to": [25, 32, 9],
+			"rotation": {"angle": 45, "axis": "y", "origin": [9, 16, 9]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		}
+	],
+	"display": {
+		"firstperson_righthand": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"ground": {
+			"translation": [0, 1.25, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [45, 45, 0],
+			"translation": [0, -1.75, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
+}

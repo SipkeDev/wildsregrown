@@ -1,0 +1,30 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"0": "1",
+		"1": "trees/red_birch_wood_end",
+		"particle": "1"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 13],
+			"to": [16, 4, 16],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 2, 14.5]},
+			"faces": {
+				"north": {"uv": [3, 0, 7, 16], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [5.5, 7.25, 9.5, 10.25], "rotation": 270, "texture": "#1", "cullface": "down"},
+				"south": {"uv": [0, 0, 4, 16], "rotation": 270, "texture": "#0"},
+				"west": {"uv": [5.5, 7.25, 9.5, 10.25], "rotation": 270, "texture": "#1", "cullface": "up"},
+				"up": {"uv": [0, 0, 3, 16], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [13, 0, 16, 16], "rotation": 270, "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [31, 136, 0],
+			"translation": [-2.75, -2.5, 0],
+			"scale": [0.8, 0.8, 0.8]
+		}
+	}
+}

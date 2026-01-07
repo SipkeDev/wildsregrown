@@ -1,0 +1,37 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "wildsregrown:block/rock/sandstone_beige",
+		"particle": "wildsregrown:block/rock/sandstone_beige"
+	},
+	"elements": [
+		{
+			"from": [7, 0, 2],
+			"to": [9, 1, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7, 0, 2]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 1], "texture": "#0"},
+				"east": {"uv": [0, 0, 12, 1], "texture": "#0"},
+				"south": {"uv": [0, 0, 2, 1], "texture": "#0"},
+				"west": {"uv": [0, 0, 12, 1], "texture": "#0"},
+				"up": {"uv": [0, 0, 2, 12], "texture": "#0"},
+				"down": {"uv": [0, 0, 2, 12], "texture": "#0", "cullface": "down"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [-90, 0, 0],
+			"translation": [0, 2.75, -6.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [80, 0, 0],
+			"translation": [0, 2.25, 5.25]
+		},
+		"gui": {
+			"rotation": [45, -45, 0],
+			"translation": [0, 4.5, 0]
+		}
+	}
+}

@@ -1,0 +1,183 @@
+package com.wildsregrown.blocks.wood.furniture;
+
+import com.wildsregrown.blocks.VoxelTransform;
+import com.wildsregrown.blocks.properties.LinSeedPaintable;
+import com.wildsregrown.blocks.properties.ModProperties;
+import com.wildsregrown.blocks.render.ITintedBlock;
+import com.wildsregrown.entities.block.SitEntity;
+import com.wildsregrown.registries.ModEntities;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Chair extends Block implements ITintedBlock {
+
+    private static final VoxelShape[] shapes;
+    private static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
+    private static final EnumProperty<LinSeedPaintable> PAINT = ModProperties.LINSEED_PAINT;
+    private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    protected SitEntity sitAbleEntity;
+    final float height;
+
+    public Chair(Settings settings, float height){
+        super(settings);
+        this.setDefaultState(getDefaultState().with(FACING, Direction.NORTH).with(PAINT, LinSeedPaintable.NONE).with(WATERLOGGED, false));
+        this.height = height;
+    }
+
+
+    @Override
+    protected BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(Properties.HORIZONTAL_FACING, rotation.rotate(state.get(Properties.HORIZONTAL_FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.with(Properties.HORIZONTAL_FACING, mirror.apply(state.get(Properties.HORIZONTAL_FACING)));
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(PAINT, FACING, WATERLOGGED);
+    }
+
+    @Override
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        switch (state.get(FACING)){
+            case NORTH -> {
+                return shapes[0];
+            }
+            case EAST -> {
+                return shapes[1];
+            }
+            case SOUTH -> {
+                return shapes[2];
+            }
+            case WEST -> {
+                return shapes[3];
+            }
+            default -> {
+                return VoxelShapes.fullCube();
+            }
+        }
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        return getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (world.isClient()) {
+            return ActionResult.CONSUME;
+        }
+
+        if (player.isSpectator() || player.isSneaking()) {
+            return ActionResult.FAIL;
+        }
+
+        List<SitEntity> active = world.getEntitiesByClass(SitEntity.class, new Box(pos), Entity::hasPassengers);
+        List<Entity> hasPassenger = new ArrayList<>();
+        active.forEach(chairEntity -> hasPassenger.add(chairEntity.getFirstPassenger()));
+
+        if (!active.isEmpty() && hasPassenger.stream().anyMatch(Entity::isPlayer)) {
+            return ActionResult.FAIL;
+        } else if (!active.isEmpty()) {
+            hasPassenger.forEach(Entity::stopRiding);
+            return ActionResult.SUCCESS;
+        } else if (sitEntity(world, pos, state, player) == ActionResult.SUCCESS) {
+            return ActionResult.SUCCESS;
+        }
+
+        return ActionResult.CONSUME;
+    }
+
+    protected ActionResult sitEntity(World world, BlockPos pos, BlockState state, Entity entityToSit) {
+
+        double posX = pos.getX() + 0.5;
+        double posY = pos.getY() + this.height;
+        double posZ = pos.getZ() + 0.5;
+
+        float yaw = entityToSit.getYaw();
+        this.sitAbleEntity = ModEntities.sitAbleEntity.create(world, SpawnReason.DISPENSER);
+        sitAbleEntity.refreshPositionAndAngles(posX, posY, posZ, yaw, 0);
+        sitAbleEntity.setNoGravity(true);
+        sitAbleEntity.setSilent(true);
+        sitAbleEntity.setInvisible(false);
+        sitAbleEntity.setInvulnerable(true);
+
+        if (world.spawnEntity(sitAbleEntity)) {
+            entityToSit.setYaw(yaw);
+            entityToSit.setBodyYaw(yaw);
+            entityToSit.setHeadYaw(yaw);
+            entityToSit.startRiding(sitAbleEntity, true, true);
+
+            return ActionResult.SUCCESS;
+        }
+        return ActionResult.CONSUME;
+    }
+
+    @Override
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
+        return false;
+    }
+
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        if (sitAbleEntity != null) {
+            sitAbleEntity.discard();
+        }
+    }
+
+    static {
+        shapes = new VoxelShape[4];
+        shapes[0] = VoxelShapes.union(
+                VoxelShapes.cuboid(0, 0.375, 0, 1, 0.5, 1),
+                VoxelShapes.cuboid(0.125, 0, 0.8125, 0.25, 0.375, 1),
+                VoxelShapes.cuboid(0.125, 0.5, 0.8125, 0.25, 1.1875, 1),
+                VoxelShapes.cuboid(0.125, 0, 0.125, 0.25, 0.375, 0.3125),
+                VoxelShapes.cuboid(0.75, 0, 0.125, 0.875, 0.375, 0.3125),
+                VoxelShapes.cuboid(0.75, 0, 0.8125, 0.875, 0.375, 1),
+                VoxelShapes.cuboid(0.75, 0.5, 0.8125, 0.875, 1.1875, 1),
+                VoxelShapes.cuboid(0, 1.1875, 0.8125, 1, 1.3125, 1)
+        );
+        shapes[1] = VoxelTransform.rotate90(shapes[0]);
+        shapes[2] = VoxelTransform.rotate180(shapes[0]);
+        shapes[3] = VoxelTransform.rotate270(shapes[0]);
+    }
+}

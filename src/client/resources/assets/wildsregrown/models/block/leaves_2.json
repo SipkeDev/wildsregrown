@@ -1,0 +1,45 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "wildsregrown:block/leaves/oak_bushy_leaves"
+	},
+	"elements": [
+		{
+			"from": [-4, -4, 10],
+			"to": [20, 20, 10],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 5, 10]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		},
+		{
+			"from": [8, 0, -7],
+			"to": [8, 23, 17],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 5]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		},
+		{
+			"from": [-4, 7, -4],
+			"to": [20, 7, 20],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 7, 5]},
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#0", "tintindex": 0},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}
+			}
+		},
+		{
+			"from": [12, -4, -3],
+			"to": [12, 20, 20],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [12, 8, 5]},
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#0", "tintindex": 0},
+				"west": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#0", "tintindex": 0}
+			}
+		}
+	]
+}

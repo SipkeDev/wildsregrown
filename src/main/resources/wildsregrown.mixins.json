@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.wildsregrown.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CreativeBlockMixin",
+    "LevelPropertiesMixin",
+    "OffsetAccessor",
+    "SilenceLog",
+    "WorldLoading"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

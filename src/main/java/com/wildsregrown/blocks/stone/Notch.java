@@ -1,0 +1,155 @@
+package com.wildsregrown.blocks.stone;
+
+import com.wildsregrown.blocks.VoxelTransform;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.block.Waterloggable;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.OrderedTick;
+import net.minecraft.world.tick.ScheduledTickView;
+
+public class Notch extends Block implements Waterloggable {
+
+    private static final VoxelShape[][][][] SHAPES;
+
+    public static final BooleanProperty X = BooleanProperty.of("x");
+    public static final BooleanProperty Y = BooleanProperty.of("y");
+    public static final BooleanProperty Z = BooleanProperty.of("z");
+    private static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
+    public Notch(Settings settings) {
+        super(settings);
+        this.setDefaultState(this.stateManager.getDefaultState().with(X, true).with(Y, false).with(AXIS, Direction.Axis.Y).with(Z, true).with(Properties.WATERLOGGED, false));
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, BlockRotation rotation) {
+        if (rotation == BlockRotation.NONE) {
+            return state;
+        }
+
+        Direction.Axis axis = state.get(AXIS);
+        boolean x = state.get(X);
+        boolean z = state.get(Z);
+
+        if (rotation == BlockRotation.CLOCKWISE_180) {
+            return state.with(X, !x).with(Z, !z);
+        }
+
+        if (axis == Direction.Axis.X) {
+            state = state.with(AXIS, Direction.Axis.Z);
+        }
+        if (axis == Direction.Axis.Z) {
+            state = state.with(AXIS, Direction.Axis.X);
+        }
+
+        if ((rotation == BlockRotation.CLOCKWISE_90) == (x == z)) {
+            return state.with(X, !x);
+        }
+        return state.with(Z, !z);
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, BlockMirror mirror) {
+        switch (mirror) {
+            case LEFT_RIGHT -> {return state.with(Z, !state.get(Z));}
+            case FRONT_BACK -> {return state.with(X, !state.get(X));}
+            default -> {return state;}
+        }
+    }
+
+    public FluidState getFluidState(BlockState state)
+    {
+        return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
+        if (state.get(Properties.WATERLOGGED)) {
+            tickView.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER, pos));
+        }
+        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    }
+
+//    public BlockState rotate(BlockState state, BlockRotation rotation) {
+//        return state.with(FACING, rotation.rotate(state.get(FACING)));
+//    }
+//    public BlockState mirror(BlockState state, BlockMirror mirror) {
+//        return state.rotate(mirror.getRotation(state.get(FACING)));
+//    }
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Y,X,Z, AXIS, Properties.WATERLOGGED);
+    }
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        BlockPos.Mutable v = ctx.getBlockPos().mutableCopy();
+        Vec3d v_ = ctx.getHitPos();
+
+        boolean x = (0.5 + v.getX() - v_.x) < 0;
+        boolean y = (0.5 + v.getY() - v_.y) < 0;
+        boolean z = (0.5 + v.getZ() - v_.z) < 0;
+
+        return this.getDefaultState().with(X, x).with(Y, y).with(Z, z).with(AXIS, ctx.getSide().getAxis()).with(Properties.WATERLOGGED, false);
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPES[state.get(X) ? 1 : 0][state.get(Z) ? 1 : 0][state.get(Y) ? 1 : 0][state.get(AXIS).ordinal()];
+    }
+
+
+    static {
+        VoxelShape topX = VoxelShapes.union(
+                Block.createCuboidShape(8 , 0, 8, 16, 16, 16),
+                Block.createCuboidShape(8 , 8, 0, 16, 16, 16));
+        VoxelShape topY = VoxelShapes.union(
+                Block.createCuboidShape(8 , 8, 0, 16, 16, 16),
+                Block.createCuboidShape(0 , 8, 8, 16, 16, 16));
+        VoxelShape topZ = VoxelShapes.union(
+                Block.createCuboidShape(8 , 0, 8, 16, 16, 16),
+                Block.createCuboidShape(0 , 8, 8, 16, 16, 16));
+
+        VoxelShape botX = VoxelShapes.union(
+                Block.createCuboidShape(8 , 0, 8, 16, 16, 16),
+                Block.createCuboidShape(8 , 0, 0, 16, 8, 16));
+        VoxelShape botY = VoxelShapes.union(
+                Block.createCuboidShape(8 , 0, 0, 16, 8, 16),
+                Block.createCuboidShape(0 , 0, 8, 16, 8, 16));
+        VoxelShape botZ = VoxelShapes.union(
+                Block.createCuboidShape(8 , 0, 8, 16, 16, 16),
+                Block.createCuboidShape(0 , 0, 8, 16, 8, 16));
+
+
+        //VoxelShape[][] SHAPE_PP = new VoxelShape[]{bot, top};
+        VoxelShape[][] SHAPE_PP = new VoxelShape[][]{{botX,botY,botZ}, {topX,topY,topZ}};
+        VoxelShape[][] SHAPE_NP = new VoxelShape[][]{{VoxelTransform.rotate90 (botZ), VoxelTransform.rotate90(botY), VoxelTransform.rotate90(botX)},   {VoxelTransform.rotate90(topZ), VoxelTransform.rotate90(topY), VoxelTransform.rotate90(topX)}};
+        VoxelShape[][] SHAPE_NN = new VoxelShape[][]{{VoxelTransform.rotate180(botX), VoxelTransform.rotate180(botY), VoxelTransform.rotate180(botZ)}, {VoxelTransform.rotate180(topX), VoxelTransform.rotate180(topY), VoxelTransform.rotate180(topZ)}};
+        VoxelShape[][] SHAPE_PN = new VoxelShape[][]{{VoxelTransform.rotate270(botZ), VoxelTransform.rotate270(botY), VoxelTransform.rotate270(botX)}, {VoxelTransform.rotate270(topZ), VoxelTransform.rotate270(topY), VoxelTransform.rotate270(topX)}};
+
+        SHAPES = new VoxelShape[/*X*/][/*Z*/][/*Y*/][/*AXIS*/]{
+                {
+                        SHAPE_NN,
+                        SHAPE_NP
+                },
+                {
+                        SHAPE_PN,
+                        SHAPE_PP
+                }
+        };
+    }
+}

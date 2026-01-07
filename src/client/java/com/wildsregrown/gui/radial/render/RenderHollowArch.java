@@ -1,0 +1,59 @@
+package com.wildsregrown.gui.radial.render;
+
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import net.minecraft.client.gui.ScreenRect;
+import net.minecraft.client.gui.render.state.GuiElementRenderState;
+import net.minecraft.client.gui.render.state.SimpleGuiElementRenderState;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.texture.TextureSetup;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
+
+public record RenderHollowArch(RenderPipeline pipeline, TextureSetup textureSetup, Matrix3x2fStack stack,
+                               int cx, int cy, double start, double end, float radius, int color,
+                               @Nullable ScreenRect scissorArea, @Nullable ScreenRect bounds) implements GuiElementRenderState, SimpleGuiElementRenderState {
+
+        public RenderHollowArch(RenderPipeline pipeline, TextureSetup textureSetup, Matrix3x2fStack stack, int cx, int cy, double start, double end, float radius, int color, @Nullable ScreenRect bounds) {
+            this(pipeline, textureSetup, stack, cx, cy, start, end, radius, color, bounds, getBounds(cx, cy, stack, bounds));
+        }
+
+        @Nullable
+        private static ScreenRect getBounds(int x, int y, Matrix3x2fStack pose, @Nullable ScreenRect rect) {
+            ScreenRect rectangle = new ScreenRect(x, y, 0, 0).transform(pose);
+            return rect != null ? rect.intersection(rectangle) : rectangle;
+        }
+
+        @Override
+        public void setupVertices(VertexConsumer vertexConsumer) {
+
+            double delta = end - start;
+            double division = delta/6.0;
+            double steps = delta/division;
+            double start = this.start - 90;
+            float mod = 1.05f;
+
+            stack.pushMatrix();
+            for (double i = 0; i < steps; i++) {
+
+                double t = start+(i*division);
+                double angle0 = Math.toRadians(t);
+                double angle1 = Math.toRadians(t+division);
+
+                float x0 = cx + (float) (Math.cos(angle0) * radius);
+                float y0 = cy + (float) (Math.sin(angle0) * radius);
+                float x1 = cx + (float) (Math.cos(angle1) * radius);
+                float y1 = cy + (float) (Math.sin(angle1) * radius);
+                float x2 = cx + (float) (Math.cos(angle0) * mod*radius);
+                float y2 = cy + (float) (Math.sin(angle0) * mod*radius);
+                float x3 = cx + (float) (Math.cos(angle1) * mod*radius);
+                float y3 = cy + (float) (Math.sin(angle1) * mod*radius);
+                vertexConsumer.vertex(this.stack(), x0, y0).color(color);
+                vertexConsumer.vertex(this.stack(), x1, y1).color(color);
+                vertexConsumer.vertex(this.stack(), x3, y3).color(color);
+                vertexConsumer.vertex(this.stack(), x2, y2).color(color);
+
+            }
+            stack.popMatrix();
+
+        }
+    }

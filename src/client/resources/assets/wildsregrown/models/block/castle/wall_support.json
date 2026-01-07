@@ -1,0 +1,47 @@
+{
+	"parent": "block/block",
+	"textures": {
+		"0": "wildsregrown:block/cube/grey_sandstone_bricks"
+	},
+	"elements": [
+		{
+			"from": [5, 6, 8],
+			"to": [11, 16, 16],
+			"faces": {
+				"north": {"uv": [5, 0, 11, 10], "texture": "#0"},
+				"east": {"uv": [0, 0, 8, 10], "texture": "#0"},
+				"south": {"uv": [5, 0, 11, 10], "texture": "#0", "cullface": "south"},
+				"west": {"uv": [8, 0, 16, 10], "texture": "#0"},
+				"up": {"uv": [5, 0, 11, 8], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [5, 8, 11, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 0, 10],
+			"to": [10, 6, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, -8, 0]},
+			"faces": {
+				"north": {"uv": [6, 10, 10, 16], "texture": "#0"},
+				"east": {"uv": [0, 10, 6, 16], "texture": "#0"},
+				"south": {"uv": [6, 10, 10, 16], "texture": "#0", "cullface": "south"},
+				"west": {"uv": [10, 10, 16, 16], "texture": "#0"},
+				"down": {"uv": [6, 10, 10, 16], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, 0, -90],
+			"translation": [-3.75, 0, -5]
+		},
+		"ground": {
+			"translation": [0, -2.75, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [25, 145, 0],
+			"translation": [-1.75, -1.75, 0],
+			"scale": [0.8, 0.8, 0.8]
+		}
+	}
+}
