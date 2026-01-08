@@ -45,7 +45,7 @@ public class WoodGroup {
         this.utensils  = utensils ? new Block[Utensils.values().length]   : null;
 
         this.common[Common.leaves.ordinal()]              = ModBlocks.register(id + "_leaves",                    Leaves::new, settings, WOOD_GROUP_KEY);
-        this.common[Common.branch.ordinal()]              = ModBlocks.register(id + "_branch",                    TreeBranch::new, settings, WOOD_GROUP_KEY);
+        //this.common[Common.branch.ordinal()]              = ModBlocks.register(id + "_branch",                    TreeBranch::new, settings, WOOD_GROUP_KEY);
         this.common[Common.log.ordinal()]                 = ModBlocks.register(id + "_log",                       Log::new, settings, WOOD_GROUP_KEY);      ModBlocks.CUTOUTS.add(this.common[Common.log.ordinal()]);
         this.common[Common.stripped_log.ordinal()]        = ModBlocks.register("stripped_"+ id + "_log",          Log::new, settings, WOOD_GROUP_KEY);      ModBlocks.CUTOUTS.add(this.common[Common.stripped_log.ordinal()]);
         this.common[Common.slab.ordinal()]                = ModBlocks.register(id + "_slab",                  HalfLog::new, settings, WOOD_GROUP_KEY);  ModBlocks.CUTOUTS.add(this.common[Common.slab.ordinal()]);

@@ -22,7 +22,7 @@ import static net.minecraft.client.data.BlockStateModelGenerator.createStairsBlo
 
 public class CastleLibrary {
 
-    private final static String modelPath = "block/castle/";
+    private final static String modelPath = "castle/";
 
     public static void woodenArrowSlit(BlockStateModelGenerator generator, Block block, String id, String name, String type) {
 
@@ -32,28 +32,28 @@ public class CastleLibrary {
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
-        applyTextureToModel(generator, loc0 + "_top",modelPath+"wood_arrow_slit_top", plank_path + name + "_" + type, log_path + name + "_wood");
-        applyTextureToModel(generator, loc0 + "_middle",modelPath+"wood_arrow_slit_middle", plank_path + name + "_" + type, log_path + name + "_wood");
-        applyTextureToModel(generator, loc0 + "_bottom",modelPath+"wood_arrow_slit_bottom", plank_path + name + "_" + type, log_path + name + "_wood");
-        applyTextureToModel(generator, loc0 + "_bottom_floor",modelPath+"wood_arrow_slit_bottom_floor", plank_path + name + "_" + type, log_path + name + "_wood");
+        applyTextureToModel(generator, loc0 + "_top",root+modelPath+"wood_arrow_slit_top", plank_path + name + "_" + type, log_path + name + "_wood");
+        applyTextureToModel(generator, loc0 + "_middle",root+modelPath+"wood_arrow_slit_middle", plank_path + name + "_" + type, log_path + name + "_wood");
+        applyTextureToModel(generator, loc0 + "_bottom",root+modelPath+"wood_arrow_slit_bottom", plank_path + name + "_" + type, log_path + name + "_wood");
+        applyTextureToModel(generator, loc0 + "_bottom_floor",root+modelPath+"wood_arrow_slit_bottom_floor", plank_path + name + "_" + type, log_path + name + "_wood");
         if (pines) {
-            applyTextureToModel(generator, loc1 + "_top",modelPath+"wood_arrow_slit_top", plank_path + "pine_paintable_" + type, log_path + "pine_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_middle",modelPath+"wood_arrow_slit_middle", plank_path + "pine_paintable_" + type, log_path + "pine_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_bottom",modelPath+"wood_arrow_slit_bottom", plank_path + "pine_paintable_" + type, log_path + "pine_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_bottom_floor",modelPath+"wood_arrow_slit_bottom_floor", plank_path + "pine_paintable_" + type, log_path + "pine_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_top",root+modelPath+"wood_arrow_slit_top", plank_path + "pine_paintable_" + type, log_path + "pine_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_middle",root+modelPath+"wood_arrow_slit_middle", plank_path + "pine_paintable_" + type, log_path + "pine_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_bottom",root+modelPath+"wood_arrow_slit_bottom", plank_path + "pine_paintable_" + type, log_path + "pine_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_bottom_floor",root+modelPath+"wood_arrow_slit_bottom_floor", plank_path + "pine_paintable_" + type, log_path + "pine_paintable_wood");
         }else if (fruit) {
-            applyTextureToModel(generator, loc1 + "_top",modelPath+"wood_arrow_slit_top", plank_path + "fruit_paintable_" + type, log_path + "fruit_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_middle",modelPath+"wood_arrow_slit_middle", plank_path + "fruit_paintable_" + type, log_path + "fruit_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_bottom",modelPath+"wood_arrow_slit_bottom", plank_path + "fruit_paintable_" + type, log_path + "fruit_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_bottom_floor",modelPath+"wood_arrow_slit_bottom_floor", plank_path + "fruit_paintable_" + type, log_path + "fruit_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_top",root+modelPath+"wood_arrow_slit_top", plank_path + "fruit_paintable_" + type, log_path + "fruit_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_middle",root+modelPath+"wood_arrow_slit_middle", plank_path + "fruit_paintable_" + type, log_path + "fruit_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_bottom",root+modelPath+"wood_arrow_slit_bottom", plank_path + "fruit_paintable_" + type, log_path + "fruit_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_bottom_floor",root+modelPath+"wood_arrow_slit_bottom_floor", plank_path + "fruit_paintable_" + type, log_path + "fruit_paintable_wood");
         }else {
-            applyTextureToModel(generator, loc1 + "_top",modelPath+"wood_arrow_slit_top", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_middle",modelPath+"wood_arrow_slit_middle", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_bottom",modelPath+"wood_arrow_slit_bottom", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_bottom_floor",modelPath+"wood_arrow_slit_bottom_floor", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_top",root+modelPath+"wood_arrow_slit_top", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_middle",root+modelPath+"wood_arrow_slit_middle", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_bottom",root+modelPath+"wood_arrow_slit_bottom", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_bottom_floor",root+modelPath+"wood_arrow_slit_bottom_floor", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0 + "_middle"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_middle"));
 
         BlockStateVariantMap.QuadrupleProperty<WeightedVariant, LinSeedPaintable, Direction, VerticalConnected, Integer> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, ModProperties.VERTICAL_CONNECTED, ModProperties.VARIATIONS_3);
 
@@ -103,7 +103,7 @@ public class CastleLibrary {
             applyTextureToModel(generator, loc1, "block/castle/wood_arch", plank_path + name + "_paintable_" + type);
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant, LinSeedPaintable, Direction.Axis, BlockHalf> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_AXIS, Properties.BLOCK_HALF);
 
@@ -124,8 +124,8 @@ public class CastleLibrary {
 
     public static void woodenHalfArch(BlockStateModelGenerator generator, String name, Block block, String type) {
 
-        String loc0 = plank_path + name + "_" + type;
-        String loc1 = plank_path + name + "_paintable_" + type;
+        String loc0 = modelPath + name + "_" + type;
+        String loc1 = modelPath + name + "_paintable_" + type;
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
@@ -145,7 +145,7 @@ public class CastleLibrary {
             applyTextureToModel(generator, "outer_" + loc1, "block/castle/wood_half_arch_outer_corner", plank_path + name + "_paintable_" + type);
             applyTextureToModel(generator, "straight_" + loc1, "block/castle/wood_half_arch", plank_path + name + "_paintable_" + type);
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, "straight_" + loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+"straight_" + loc0));
 
         BlockStateVariantMap.QuadrupleProperty<WeightedVariant, LinSeedPaintable, Direction, BlockHalf, StairShape> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.BLOCK_HALF, Properties.STAIR_SHAPE);
 

@@ -223,7 +223,7 @@ class BlockDrops extends FabricBlockLootTableProvider {
     private void buildWood(WoodGroup group) {
 
         addDrop(group.get(WoodGroup.Common.leaves), dropsWithShears(group.get(WoodGroup.Common.leaves)));
-        addDrop(group.get(WoodGroup.Common.branch), drops(group.get(WoodGroup.Common.beam)));
+        //addDrop(group.get(WoodGroup.Common.branch), drops(group.get(WoodGroup.Common.beam)));
         addDrop(group.get(WoodGroup.Common.log));
         addDrop(group.get(WoodGroup.Common.stripped_log));
         addDrop(group.get(WoodGroup.Common.slab));

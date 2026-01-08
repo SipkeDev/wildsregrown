@@ -1,5 +1,6 @@
 package com.wildsregrown.network;
 
+import com.sipke.api.features.Colors;
 import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.blocks.dungeon.StructureEntity;
 import com.wildsregrown.network.payloads.StructureBlockPayload;
@@ -17,14 +18,17 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.BlockStateComponent;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URI;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -38,8 +42,20 @@ public class Networking {
         for (ServerPlayerEntity entity : connected_players) {
             entity.sendMessage(Text.of("People are joining the server!"));
         }
+
         connected_players.add(player);
-        player.sendMessage(Text.of("Make sure to use /wrg to find generation features quickly."));
+
+        MutableText helloThere = Text.literal("Make sure to use /wrg to find generation features quickly.");
+        helloThere.setStyle(helloThere.getStyle().withBold(true).withColor(Colors.ivory));
+        player.sendMessage(helloThere);
+
+        MutableText discord = Text.literal("Checkout our Discord server for the CTM Resource pack!");
+        discord.setStyle(discord.getStyle().withColor(Colors.darkPastelRed).withClickEvent(new ClickEvent.OpenUrl(URI.create("https://discord.gg/Kr6veDaJDr"))));
+        player.sendMessage(discord);
+
+        MutableText bug = Texts.bracketed(Text.of("Alpha mod: Please report found bugs!"));
+        bug.setStyle(bug.getStyle().withColor(Colors.pastelYellow).withClickEvent(new ClickEvent.OpenUrl(URI.create("https://discord.gg/Kr6veDaJDr"))));
+        player.sendMessage(bug);
 
         if(player.getEntityWorld() != null){
             ChunkGenerator chunkGenerator = player.getEntityWorld().getChunkManager().getChunkGenerator();

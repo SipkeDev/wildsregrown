@@ -31,7 +31,7 @@ public class FloraLibrary {
             applyTextureToModel(generator, id + "_3_flowering" + "_" + i, "block/flora/root_cluster_" + i + "_flowering", "block/flora/" + id + "_large", "block/flora/" + id + "_flowering");
         }
 
-        generator.registerTintedItemModel(block, Identifier.of(modid, id + "_3_0"), new GrassTintSource());
+        generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_3_0"), new GrassTintSource());
         BlockStateVariantMap.DoubleProperty<WeightedVariant, FloraStage, Integer> map = BlockStateVariantMap.models(ModProperties.FLORAL_STAGE, ModProperties.AGE_4);
 
         String suffix;
@@ -71,7 +71,7 @@ public class FloraLibrary {
             applyTextureToModel(generator, id + "_5_fruits" + "_"+i,"block/flora/root_cluster_"+i+"_flowering","block/flora/" + floraName + "_huge", "block/flora/" + floraName + "_fruits");
         }
 
-        generator.registerTintedItemModel(block, Identifier.of(modid, id + "_3_0"), new GrassTintSource());
+        generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_3_0"), new GrassTintSource());
         BlockStateVariantMap.DoubleProperty<WeightedVariant,FloraStage, Integer> map = BlockStateVariantMap.models(ModProperties.FLORAL_STAGE, ModProperties.AGE_6);
 
         String suffix;
@@ -116,7 +116,7 @@ public class FloraLibrary {
             applyTextureToModel(generator, id + "_3_fruits" + "_"+i,"block/flora/flower_"+i+"_flowering","block/flora/" + texture + "_large", "block/flora/" + texture + "_fruits");
         }
 
-        generator.registerTintedItemModel(block, Identifier.of(modid, id + "_3_0"), new GrassTintSource());
+        generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_3_0"), new GrassTintSource());
         BlockStateVariantMap.DoubleProperty<WeightedVariant,FloraStage, Integer> map = BlockStateVariantMap.models(ModProperties.FLORAL_STAGE, ModProperties.AGE_4);
 
         String suffix;
@@ -148,7 +148,7 @@ public class FloraLibrary {
             applyTextureToModel(generator, id + "_3_flowering" + "_"+i,"block/flora/tall_grass_"+i+"_flowering","block/flora/" + id + "_large", "block/flora/" + id + "_flowering");
         }
 
-        generator.registerTintedItemModel(block, Identifier.of(modid, id + "_3_0"), new ConstantTintSource(Colors.pastelGreen));
+        generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_3_0"), new ConstantTintSource(Colors.pastelGreen));
         BlockStateVariantMap.DoubleProperty<WeightedVariant,FloraStage, Integer> map = BlockStateVariantMap.models(ModProperties.FLORAL_STAGE, ModProperties.AGE_4);
 
         String suffix;
@@ -181,7 +181,7 @@ public class FloraLibrary {
                 applyTextureToModel(generator, id + "_" + j + "_flowering" + "_" + i, "block/flora/shrub_"+i+"_flowering", "block/flora/" + texture + "_" + names[j], "block/flora/" + texture + "_" + names[j] + "_flowers", "block/flora/" + texture + "_" + names[j] + "_stem");
             }
         }
-        generator.registerTintedItemModel(block, Identifier.of(modid, id + "_5_flowering_0"), new GrassTintSource());
+        generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_5_flowering_0"), new GrassTintSource());
         BlockStateVariantMap.DoubleProperty<WeightedVariant, FloraStage, Integer> map = BlockStateVariantMap.models(ModProperties.FLORAL_STAGE, ModProperties.AGE_6);
 
         for (FloraStage stage: FloraStage.values()) {
@@ -222,7 +222,7 @@ public class FloraLibrary {
             }
         }
 
-        generator.registerTintedItemModel(block, Identifier.of(modid, id + "_5_flowering_0"), new GrassTintSource());
+        generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_5_flowering_0"), new GrassTintSource());
         BlockStateVariantMap.DoubleProperty<WeightedVariant, FloraStage, Integer> map = BlockStateVariantMap.models(ModProperties.FLORAL_STAGE, ModProperties.AGE_6);
 
         String suffix;

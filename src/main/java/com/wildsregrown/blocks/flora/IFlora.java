@@ -45,7 +45,7 @@ public interface IFlora extends INeighbours {
             );
             BlockState newState = world.getBlockState(newPos);
             if (newState.getBlock() instanceof IFlora) {
-                WildsRegrown.LOGGER.info("SPREAD DISEASE");
+                //WildsRegrown.LOGGER.info("SPREAD DISEASE");
                 world.setBlockState(newPos, newState.with(ModProperties.FLORAL_STAGE, disease));
             }
         }

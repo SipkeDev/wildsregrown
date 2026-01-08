@@ -41,6 +41,7 @@ public class TableChestRenderer implements BlockEntityRenderer<TableChestEntity,
         ctx.itemModelManager().clearAndUpdate(renderState.state[2], blockEntity.getStack(2), ItemDisplayContext.FIXED, world, null, 0);
         BlockState state = world.getBlockState(blockEntity.getPos());
         if (!(state.getBlock() instanceof AirBlock)) {
+            renderState.open = state.get(Properties.OPEN);
             renderState.facing = state.get(Properties.HORIZONTAL_FACING);
             renderState.light = world.getLightLevel(blockEntity.getPos());
         }
@@ -49,8 +50,8 @@ public class TableChestRenderer implements BlockEntityRenderer<TableChestEntity,
     @Override
     public void render(TableChestRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
         if (state.facing != null) {
-            //Render contents
-            if (state.facing == Direction.DOWN) {
+            if (state.open) {
+                //Render contents
                 for (int i = 0; i < 3; i++) {
                     renderSlot(i, state, matrices, queue, cameraState);
                 }
@@ -58,18 +59,16 @@ public class TableChestRenderer implements BlockEntityRenderer<TableChestEntity,
         }
     }
 
-    private void renderSlot(int slot, TableChestRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState){
-        if (!state.state[slot].isEmpty()) {
-            matrices.push();
-            if (state.facing.getAxis() == Direction.Axis.Z) {
-                matrices.translate(0.3f + slot * 0.2f, 0.2f, 0.5f);
-            } else {
-                matrices.translate(0.5f, 0.2f, 0.3f + slot * 0.2f);
-            }
-            matrices.scale(0.125f, 0.125f, 0.125f);
-            state.state[slot].render(matrices, queue, state.light*17, OverlayTexture.DEFAULT_UV, 0);
-            matrices.pop();
+    private void renderSlot(int slot, TableChestRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+        matrices.push();
+        if (state.facing.getAxis() == Direction.Axis.Z) {
+            matrices.translate(0.3f + slot * 0.2f, 0.2f, 0.5f);
+        } else {
+            matrices.translate(0.5f, 0.2f, 0.3f + slot * 0.2f);
         }
+        matrices.scale(0.125f, 0.125f, 0.125f);
+        state.state[slot].render(matrices, queue, state.light * 17, OverlayTexture.DEFAULT_UV, 0);
+        matrices.pop();
     }
 
 }

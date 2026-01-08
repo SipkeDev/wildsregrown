@@ -14,16 +14,16 @@ import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.mode
 
 public class LuxuryLibrary {
 
-    public static final String path = "block/luxury/";
+    public static final String path = "luxury/";
 
     public static void tableChest(BlockStateModelGenerator generator, Block block, String id, String name) {
 
         String modelPath = path + "table_chest";
 
-        applyTextureToModel(generator, modelPath + id + "_closed", modelPath + "_closed", log_path + name + "_wood");
-        applyTextureToModel(generator, modelPath + id + "_open", modelPath + "_open", log_path + name + "_wood");
+        applyTextureToModel(generator, modelPath + id + "_closed", root+modelPath + "_closed", log_path + name + "_wood");
+        applyTextureToModel(generator, modelPath + id + "_open", root+modelPath + "_open", log_path + name + "_wood");
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, modelPath + id + "_closed"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id + "_closed"));
 
         CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, Properties.OPEN)
                 .register(Direction.NORTH, false, modelOf(modelPath + id + "_closed", false, 0, 0))

@@ -88,7 +88,7 @@ public class BlockStateDataGenerator extends FabricModelProvider {
 
         //Misc
         BlockStateLibrary.roof(generator, ModBlocks.thatch_roof, "thatch_roof", "block/misc/thatch_roof");
-        BlockStateLibrary.singleton(generator, ModBlocks.structureBlock, idFromBlock(ModBlocks.structureBlock), Identifier.of(modid, "block/dungeon/structure_block"));
+        BlockStateLibrary.singleton(generator, ModBlocks.structureBlock, idFromBlock(ModBlocks.structureBlock),"block/dungeon/structure_block");
         //Lights
         BlockStateLibrary.torch(generator, ModBlocks.torch);
 
@@ -112,7 +112,7 @@ public class BlockStateDataGenerator extends FabricModelProvider {
 
                     //Handle layered instances
                     if (block instanceof SoilBlock) {
-                        BlockStateLibrary.soil(generator, "block/soil/" + id, block);
+                        BlockStateLibrary.soil(generator, id, block);
                     }
                     if (block instanceof GravelBlock) {
                         BlockStateLibrary.gravel(generator, block);

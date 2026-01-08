@@ -21,7 +21,7 @@ import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.mode
 
 public class WoodInterior {
 
-    private final static String modelPath = "block/interior/";
+    private final static String modelPath = "interior/";
 
     public static void counter(BlockStateModelGenerator generator, Block block, String id, String name) {
 
@@ -55,7 +55,7 @@ public class WoodInterior {
             applyTextureToModel(generator, loc1 + "_outer_left", "block/interior/counter_outer_left", log_path + name + "_paintable_wood", log_path + name + "_paintable_wood");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant,LinSeedPaintable, Direction, StairShape> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.STAIR_SHAPE);
 
@@ -97,7 +97,7 @@ public class WoodInterior {
             applyTextureToModel(generator, loc1, "block/interior/" + parent, plank_path + name + "_paintable_planks", log_path + name + "_paintable_wood");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant,LinSeedPaintable, Direction> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING);
 
@@ -134,7 +134,7 @@ public class WoodInterior {
             applyTextureToModel(generator, loc1 + "_open", "block/interior/" + parents[1], plank_path + name + "_paintable_planks", log_path + name + "_paintable_wood");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0 + "_closed"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_closed"));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant,LinSeedPaintable, Direction, Boolean> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.OPEN);
         for (LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getValues()) {
@@ -181,7 +181,7 @@ public class WoodInterior {
             applyTextureToModel(generator, loc1 + "_right", "block/interior/storage_table_right", log_path + name + "_paintable_wood");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0 + "_single"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_single"));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant,LinSeedPaintable, Direction, HorizontalConnected> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, ModProperties.HORIZONTAL_CONNECTED);
 
@@ -234,7 +234,7 @@ public class WoodInterior {
             applyTextureToModel(generator, loc1 + "_open_bottom", "block/interior/" + "drawer_open_bottom", plank_path + name + "_paintable_planks", log_path + name + "_paintable_wood");
             applyTextureToModel(generator, loc1 + "_open",        "block/interior/" + "drawer_open", plank_path + name + "_paintable_planks", log_path + name + "_paintable_wood");
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0 + "_closed"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_closed"));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant,LinSeedPaintable, Direction, DrawerState>  map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, ModProperties.DRAWER_STATE);
 
@@ -274,7 +274,7 @@ public class WoodInterior {
         }else {
             applyTextureToModel(generator, loc1, "block/interior/shelves", log_path + name + "_paintable_wood");
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant,LinSeedPaintable, Direction>  map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING);
 

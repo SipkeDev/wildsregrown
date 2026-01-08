@@ -26,7 +26,6 @@ public class ClayGroup {
         this.bricks[Bricks.balustrade.ordinal()]   = ModBlocks.register(id + "_brick_balustrade"  , Balustrade::new    , settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.wall_support.ordinal()] = ModBlocks.register(id + "_brick_wall_support", WallSupport::new   , settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.arch.ordinal()]         = ModBlocks.register(id + "_brick_arch"        , ArchBlock::new     , settings, SOIL_GROUP_KEY);
-        this.bricks[Bricks.wall.ordinal()]         = ModBlocks.register(id + "_brick_wall"        , WallBlock::new     , settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.arrow_slit.ordinal()]   = ModBlocks.register(id + "_brick_arrow_slit"  , ArrowSlitBlock::new, settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.stairs.ordinal()]       = ModBlocks.register(id + "_brick_stairs"      , (s) -> new StairsBlock(bricks[Bricks.block.ordinal()].getDefaultState()  , s)      , settings        , SOIL_GROUP_KEY);
         this.bricks[Bricks.half_arch.ordinal()]    = ModBlocks.register(id + "_brick_half_arch"   , (s) -> new HalfArchBlock(bricks[Bricks.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
@@ -35,7 +34,7 @@ public class ClayGroup {
         this.old_bricks[OldBricks.balustrade.ordinal()]   = ModBlocks.register("old_" + id + "_brick_balustrade"  , Balustrade::new    , settings, SOIL_GROUP_KEY);
         this.old_bricks[OldBricks.wall_support.ordinal()] = ModBlocks.register("old_" + id + "_brick_wall_support", WallSupport::new   , settings, SOIL_GROUP_KEY);
         this.old_bricks[OldBricks.arch.ordinal()]         = ModBlocks.register("old_" + id + "_brick_arch"        , ArchBlock::new     , settings, SOIL_GROUP_KEY);
-        this.old_bricks[OldBricks.wall.ordinal()]         = ModBlocks.register("old_" + id + "_brick_wall"        , WallBlock::new     , settings, SOIL_GROUP_KEY);
+        //this.old_bricks[OldBricks.wall.ordinal()]         = ModBlocks.register("old_" + id + "_brick_wall"        , WallBlock::new     , settings, SOIL_GROUP_KEY);
         this.old_bricks[OldBricks.arrow_slit.ordinal()]   = ModBlocks.register("old_" + id + "_brick_arrow_slit"  , ArrowSlitBlock::new, settings, SOIL_GROUP_KEY);
         this.old_bricks[OldBricks.stairs.ordinal()]       = ModBlocks.register("old_" + id + "_brick_stairs"      , (s) -> new StairsBlock(old_bricks[Bricks.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
         this.old_bricks[OldBricks.half_arch.ordinal()]    = ModBlocks.register("old_" + id + "_brick_half_arch"   , (s) -> new HalfArchBlock(old_bricks[Bricks.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
@@ -79,7 +78,6 @@ public class ClayGroup {
         wall_support,
         half_arch,
         arch,
-        wall,
         //castle
         arrow_slit
     }
@@ -87,14 +85,12 @@ public class ClayGroup {
     public enum OldBricks {
         //basic
         block,
-        cuttings,
         stairs,
         //deco
         balustrade,
         wall_support,
         half_arch,
         arch,
-        wall,
         //castle
         arrow_slit
     }

@@ -4,7 +4,6 @@ import com.sipke.api.features.Colors;
 import com.wildsregrown.blocks.properties.*;
 import com.wildsregrown.blocks.wood.tree.FruitingLeaves;
 import com.wildsregrown.blocks.wood.tree.HalfLog;
-import com.wildsregrown.data.blockstates.libraries.BlockStateLibrary;
 import com.wildsregrown.data.blockstates.libraries.FramingLibrary;
 import com.wildsregrown.registries.groups.WoodGroup;
 import net.minecraft.block.Block;
@@ -17,15 +16,17 @@ import net.minecraft.client.render.model.json.ModelVariant;
 import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 
 import static com.wildsregrown.WildsRegrown.modid;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.*;
+import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.CreateVariants;
 import static com.wildsregrown.data.blockstates.libraries.CastleLibrary.*;
 import static com.wildsregrown.data.blockstates.libraries.FramingLibrary.*;
+import static com.wildsregrown.data.blockstates.libraries.FurnitureLibrary.*;
 import static com.wildsregrown.data.blockstates.libraries.LuxuryLibrary.*;
-import static com.wildsregrown.data.blockstates.libraries.WoodDeco.*;
+import static com.wildsregrown.data.blockstates.libraries.UtensilsLibrary.*;
 import static com.wildsregrown.data.blockstates.libraries.WoodInterior.*;
 import static com.wildsregrown.registries.ModItemGroups.id;
 import static net.minecraft.client.data.BlockStateModelGenerator.*;
@@ -42,10 +43,10 @@ public class WoodGroupBlockStates {
     }
 
     public static void source(BlockStateModelGenerator generator, String id, Block block, String family) {
-        final String modelPath = "block/tree/";
+        final String modelPath = "tree/";
         applyTextureToModel(generator, modelPath + id, "block/trees/tree_source", log_path + family + "_bark", log_path + family + "_wood_end");
         generator.blockStateCollector.accept(createSingletonBlockState(block, createWeightedVariant(Identifier.of(modid, modelPath + id))));
-        generator.registerParentedItemModel(block, Identifier.of(modid, modelPath + id));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id));
     }
 
     public void build(WoodGroup group) {
@@ -61,9 +62,6 @@ public class WoodGroupBlockStates {
         } else {
             leaves(generator, block, texture);
         }
-
-        block = group.get(WoodGroup.Common.branch);
-        branch(generator, id(block), block, name);
 
         log(generator, group.get(WoodGroup.Common.log), name, "_bark");
         log(generator, group.get(WoodGroup.Common.stripped_log), name, "_wood");
@@ -182,8 +180,8 @@ public class WoodGroupBlockStates {
 
     public static void stairs(BlockStateModelGenerator generator, String name, Block block, String type) {
 
-        String loc0 = plank_path + name + "_" + type;
-        String loc1 = plank_path + name + "_paintable_" + type;
+        String loc0 = "planks/" + name + "_" + type;
+        String loc1 = "planks/" + name + "_paintable_" + type;
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
@@ -203,7 +201,7 @@ public class WoodGroupBlockStates {
             applyTextureToModel(generator, "outer_stairs_" + loc1, "block/outer_stairs", plank_path + name + "_paintable_" + type);
             applyTextureToModel(generator, "straight_stairs_" + loc1, "block/vanilla_stairs", plank_path + name + "_paintable_" + type);
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, "straight_stairs_" + loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+"straight_stairs_" + loc0));
 
         BlockStateVariantMap.QuadrupleProperty<WeightedVariant, LinSeedPaintable, Direction, BlockHalf, StairShape> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.BLOCK_HALF, Properties.STAIR_SHAPE);
 
@@ -231,8 +229,7 @@ public class WoodGroupBlockStates {
 
     private static void windowCover(BlockStateModelGenerator generator, Block block, String id, String name, String type) {
 
-        String modelPath = "block/framing/";
-
+        String modelPath = "framing/";
         String loc0 = modelPath + id + "_" + type;
         String loc1 = modelPath + id + "_paintable_" + type;
 
@@ -260,7 +257,7 @@ public class WoodGroupBlockStates {
             applyTextureToModel(generator, loc1 + "_4","block/framing/window_cover_3", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0 + "_1"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_1"));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant, LinSeedPaintable, Direction, Integer> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, ModProperties.VARIATIONS_4);
 
@@ -291,22 +288,22 @@ public class WoodGroupBlockStates {
             suffix = "_pine";
         }
         for (int i = 0; i < vars; i++) {
-            applyTextures(generator, id + "_" + i, Identifier.of(modid, "block/leaves" + suffix + "_" + i), new Pair<>("0", Identifier.of(modid, id)));
+            applyTextureToModel(generator, id + "_" + i, root+"leaves" + suffix + "_" + i, id);
         }
-        WeightedVariant[] map = new WeightedVariant[vars * 4];
+        ModelVariant[] map = new ModelVariant[vars * 4];
         for (int i = 0; i < vars; i++) {
             int k = i * 4;
-            map[k] = modelOf(id + "_" + i, false, 0, 0);
-            map[k + 1] = modelOf(id + "_" + i, false, 90, 0);
-            map[k + 2] = modelOf(id + "_" + i, false, 180, 0);
-            map[k + 3] = modelOf(id + "_" + i, false, 270, 0);
+            map[k] = createModelVariant(Identifier.of(modid,    root+id + "_" + i));
+            map[k + 1] = createModelVariant(Identifier.of(modid,root+id + "_" + i)).withRotationY(AxisRotation.R90);
+            map[k + 2] = createModelVariant(Identifier.of(modid,root+id + "_" + i)).withRotationY(AxisRotation.R180);
+            map[k + 3] = createModelVariant(Identifier.of(modid,root+id + "_" + i)).withRotationY(AxisRotation.R270);
         }
-        //generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block, map));
+        generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block, createWeightedVariant(map)));
 
         if (id.contains("jacaranda")) {
-            generator.registerTintedItemModel(block, Identifier.of(modid, id + "_0"), new ConstantTintSource(Colors.richLilac));
+            generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_0"), new ConstantTintSource(Colors.richLilac));
         } else {
-            generator.registerTintedItemModel(block, Identifier.of(modid, id + "_0"), new ConstantTintSource(Colors.pastelGreen));
+            generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_0"), new ConstantTintSource(Colors.pastelGreen));
         }
     }
 
@@ -334,7 +331,7 @@ public class WoodGroupBlockStates {
         applyTextureToModel(generator, id + "_face","block/branch_face", log_path + name +"_bark");
         applyTextureToModel(generator, id + "_corner","block/branch_corner", log_path + name +"_bark");
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, id + "_diagonal"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id + "_diagonal"));
 
         CreateVariants(generator, block, BlockStateVariantMap.models(OrdinalDirection.DIRECTIONS, Verticality.VERTICALITY)
                 .register(OrdinalDirection.N , Verticality.LEVEL, modelOf(id + "_face"    , false, 0  , 0))
@@ -366,8 +363,8 @@ public class WoodGroupBlockStates {
 
     public static void log(BlockStateModelGenerator generator, Block block, String name, String type) {
 
-        String loc0 = log_path + name + type;
-        String loc1 = log_path + name + "_paintable" + type;
+        String loc0 = "log/" + name + type;
+        String loc1 = "log/" + name + "_paintable" + type;
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
@@ -390,7 +387,7 @@ public class WoodGroupBlockStates {
                 applyTextureToModel(generator, loc1, "block/stripped_log", log_path + name + "_paintable" + type, log_path + name + "_paintable_wood_end");
             }
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction.Axis, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.AXIS, ModProperties.LINSEED_PAINT);
 
@@ -411,8 +408,8 @@ public class WoodGroupBlockStates {
 
     public static void slab(BlockStateModelGenerator generator, Block block, String name, String type) {
 
-        final String loc0 = log_path + name + "_half" + type;
-        final String loc1 = log_path + name + "_paintable" + "_half" + type;
+        final String loc0 = "log/" + name + "_half" + type;
+        final String loc1 = "log/" + name + "_paintable" + "_half" + type;
         final String r = "_rotated";
 
         final boolean pines = name.contains("larch") || name.contains("spruce");
@@ -453,7 +450,7 @@ public class WoodGroupBlockStates {
                 applyTextureToModel(generator, loc1 +r, "block/stripped_half_log"+r, log_path + name + "_paintable" + type, log_path + name + "_paintable_wood_end");
             }
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant, Boolean, Direction, LinSeedPaintable> map = BlockStateVariantMap.models(HalfLog.rotated, Properties.FACING, ModProperties.LINSEED_PAINT);
 
@@ -483,8 +480,8 @@ public class WoodGroupBlockStates {
     }
 
     public static void beam(BlockStateModelGenerator generator, Block block, String name, String type) {
-        String loc0 = log_path + name + "_beam" + type;
-        String loc2 = log_path + name + "_beam" + "_paintable" + type;
+        String loc0 = "log/" + name + "_beam" + type;
+        String loc2 = "log/" + name + "_beam" + "_paintable" + type;
         boolean pines = name.contains("larch") || name.contains("spruce") || name.contains("sequoia");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("citrus") || name.contains("plum") || name.contains("walnut");
 
@@ -507,7 +504,7 @@ public class WoodGroupBlockStates {
                 applyTextureToModel(generator, loc2, "block/stripped_beam", log_path + name + "_paintable" + type, log_path + name + "_paintable_wood_end");
             }
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant, Direction.Axis, LinSeedPaintable, Quadrant> map = BlockStateVariantMap.models(Properties.AXIS, ModProperties.LINSEED_PAINT, Quadrant.QUADRANT);
 

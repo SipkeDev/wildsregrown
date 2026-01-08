@@ -24,7 +24,7 @@ import static com.wildsregrown.data.blockstates.WoodGroupBlockStates.plank_path;
 
 public class FramingLibrary {
 
-    private final static String modelPath = "block/framing/";
+    private final static String modelPath = "framing/";
     
     public static void planks(BlockStateModelGenerator generator, Block block, String id, String type) {
 
@@ -50,7 +50,7 @@ public class FramingLibrary {
         applyTextureToModel(generator, modelPath + id + type + "_paintable_3", "block/layered_12", texture2);
         applyTextureToModel(generator, modelPath + id + type + "_paintable_4", "block/layered_full", texture2);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, modelPath + id + type + "_2"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id + type + "_2"));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant, Direction, Integer, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.FACING, ModProperties.QUARTER_LAYERS, ModProperties.LINSEED_PAINT);
 
@@ -98,10 +98,10 @@ public class FramingLibrary {
         if (name.contains("apple") || name.contains("pear") || name.contains("plum")) {
             texture1 = log_path + "fruit_paintable_" + texture;
         }
-        applyTextureToModel(generator, modelPath + id, "block/framing/ladder", texture0);
-        applyTextureToModel(generator, modelPath + id + "_paintable", "block/framing/ladder", texture1);
+        applyTextureToModel(generator, modelPath + id, root+"framing/ladder", texture0);
+        applyTextureToModel(generator, modelPath + id + "_paintable", root+"framing/ladder", texture1);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, modelPath + id));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.LINSEED_PAINT);
 
@@ -131,45 +131,45 @@ public class FramingLibrary {
 
     public static void sodRoof(BlockStateModelGenerator generator, Block block, String id, String name) {
 
-        String loc0 = plank_path + name + "_planks";
-        String loc1 = plank_path + name + "_paintable_planks";
+        String loc0 = modelPath+"roof/" + name + "_planks";
+        String loc1 = modelPath+"roof/" + name + "_paintable_planks";
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
-        applyTextureToModel(generator, loc0 + "_straight",modelPath+"roof_moss", plank_path + name + "_planks");
-        applyTextureToModel(generator, loc0 + "_left",modelPath+"roof_moss_left", plank_path + name + "_planks");
-        applyTextureToModel(generator, loc0 + "_right",modelPath+"roof_moss_right", plank_path + name + "_planks");
-        applyTextureToModel(generator, loc0 + "_single",modelPath+"roof_moss_single", plank_path + name + "_planks");
-        applyTextureToModel(generator, loc0 + "_top", modelPath+"roof_moss_top", plank_path + name + "_planks");
-        applyTextureToModel(generator, loc0 + "_top_side", modelPath+"roof_moss_top_side", plank_path + name + "_planks");
-        applyTextureToModel(generator, loc0 + "_top_single", modelPath+"roof_moss_top_single", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_straight",root+modelPath+"roof_moss", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_left",root+modelPath+"roof_moss_left", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_right",root+modelPath+"roof_moss_right", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_single",root+modelPath+"roof_moss_single", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_top", root+modelPath+"roof_moss_top", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_top_side", root+modelPath+"roof_moss_top_side", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_top_single", root+modelPath+"roof_moss_top_single", plank_path + name + "_planks");
         if (pines) {
-            applyTextureToModel(generator, loc1 + "_straight",modelPath+"roof_moss", plank_path + "pine_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_left",modelPath+"roof_moss_left", plank_path + "pine_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_right",modelPath+"roof_moss_right", plank_path + "pine_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_single",modelPath+"roof_moss_single", plank_path + "pine_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_top", modelPath+"roof_moss_top", plank_path + "pine_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_top_side", modelPath+"roof_moss_top_side", plank_path + "pine_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_top_single", modelPath+"roof_moss_top_single", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_straight",root+modelPath+"roof_moss", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_left",root+modelPath+"roof_moss_left", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_right",root+modelPath+"roof_moss_right", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_single",root+modelPath+"roof_moss_single", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_top", root+modelPath+"roof_moss_top", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_top_side", root+modelPath+"roof_moss_top_side", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_top_single", root+modelPath+"roof_moss_top_single", plank_path + "pine_paintable_planks");
         } else if (fruit) {
-            applyTextureToModel(generator, loc1 + "_straight",modelPath+"roof_moss", plank_path + "fruit_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_left",modelPath+"roof_moss_left", plank_path + "fruit_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_right",modelPath+"roof_moss_right", plank_path + "fruit_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_single",modelPath+"roof_moss_single", plank_path + "fruit_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_top", modelPath+"roof_moss_top", plank_path + "fruit_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_top_side", modelPath+"roof_moss_top_side", plank_path + "fruit_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_top_single", modelPath+"roof_moss_top_single", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_straight",root+modelPath+"roof_moss", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_left",root+modelPath+"roof_moss_left", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_right",root+modelPath+"roof_moss_right", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_single",root+modelPath+"roof_moss_single", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_top", root+modelPath+"roof_moss_top", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_top_side", root+modelPath+"roof_moss_top_side", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_top_single", root+modelPath+"roof_moss_top_single", plank_path + "fruit_paintable_planks");
         } else {
-            applyTextureToModel(generator, loc1 + "_straight",modelPath+"roof_moss", plank_path + name + "_paintable_" + "_planks");
-            applyTextureToModel(generator, loc1 + "_left",modelPath+"roof_moss_left", plank_path + name + "_paintable_" + "_planks");
-            applyTextureToModel(generator, loc1 + "_right",modelPath+"roof_moss_right", plank_path + name + "_paintable_" + "_planks");
-            applyTextureToModel(generator, loc1 + "_single",modelPath+"roof_moss_single", plank_path + name + "_paintable_" + "_planks");
-            applyTextureToModel(generator, loc1 + "_top", modelPath+"roof_moss_top", plank_path + name + "_paintable_" + "_planks");
-            applyTextureToModel(generator, loc1 + "_top_side", modelPath+"roof_moss_top_side", plank_path + name + "_paintable_" + "_planks");
-            applyTextureToModel(generator, loc1 + "_top_single", modelPath+"roof_moss_top_single", plank_path + name + "_paintable_" + "_planks");
+            applyTextureToModel(generator, loc1 + "_straight",root+modelPath+"roof_moss", plank_path + name + "_paintable_" + "_planks");
+            applyTextureToModel(generator, loc1 + "_left",root+modelPath+"roof_moss_left", plank_path + name + "_paintable_" + "_planks");
+            applyTextureToModel(generator, loc1 + "_right",root+modelPath+"roof_moss_right", plank_path + name + "_paintable_" + "_planks");
+            applyTextureToModel(generator, loc1 + "_single",root+modelPath+"roof_moss_single", plank_path + name + "_paintable_" + "_planks");
+            applyTextureToModel(generator, loc1 + "_top", root+modelPath+"roof_moss_top", plank_path + name + "_paintable_" + "_planks");
+            applyTextureToModel(generator, loc1 + "_top_side", root+modelPath+"roof_moss_top_side", plank_path + name + "_paintable_" + "_planks");
+            applyTextureToModel(generator, loc1 + "_top_single", root+modelPath+"roof_moss_top_single", plank_path + name + "_paintable_" + "_planks");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0 + "_single"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+ loc0 + "_single"));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant, LinSeedPaintable, HorizontalConnected, Direction> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, ModProperties.HORIZONTAL_CONNECTED, Properties.FACING);
 
@@ -214,10 +214,10 @@ public class FramingLibrary {
         //compress fruit
         if (id.contains("apple") || id.contains("pear") || id.contains("plum")) {texture1 = plank_path + "fruit_paintable_" + texture;}
 
-        applyTextureToModel(generator, modelPath + id, modelPath + "roof", texture0);
-        applyTextureToModel(generator, modelPath + id + "_paintable", modelPath + "roof", texture1);
+        applyTextureToModel(generator, modelPath + id, root+modelPath + "roof", texture0);
+        applyTextureToModel(generator, modelPath + id + "_paintable", root+modelPath + "roof", texture1);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, modelPath + id));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.LINSEED_PAINT);
 
@@ -245,12 +245,6 @@ public class FramingLibrary {
         CreateVariants(generator, block, map);
     }
 
-    public static void woodenDoor(BlockStateModelGenerator generator, Block block, String id, String name) {
-        applyTextures(generator, modelPath+id, Identifier.of("block/cube_all"), new Pair<>("all",Identifier.of(modid, modelPath+id)));
-        //generator.blockStateCollector.accept(VariantsBlockStateSupplier.create(block).coordinate(woodenDoorVariantMap(woodenDoorVariantMap(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING, Properties.DOUBLE_BLOCK_HALF, Properties.DOOR_HINGE, Properties.OPEN), DoubleBlockHalf.LOWER, bottomLeftHingeClosedModelId, bottomLeftHingeOpenModelId, bottomRightHingeClosedModelId, bottomRightHingeOpenModelId), DoubleBlockHalf.UPPER, topLeftHingeClosedModelId, topLeftHingeOpenModelId, topRightHingeClosedModelId, topRightHingeOpenModelId)));
-        generator.registerParentedItemModel(block, Identifier.of(modid, modelPath+id));
-    }
-
     public static void woodenSupport(BlockStateModelGenerator generator, String id, Block block, String name) {
 
         String loc0 = modelPath + id;
@@ -267,17 +261,17 @@ public class FramingLibrary {
 
         for (SupportConnected connected : SupportConnected.values()) {
             //var 1
-            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_1", modelPath + "wood_support_" + connected.asString(), tex0);
-            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_1", modelPath + "wood_support_" + connected.asString(), tex1);
+            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_1", root+modelPath + "wood_support_" + connected.asString(), tex0);
+            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_1", root+modelPath + "wood_support_" + connected.asString(), tex1);
             //var 2
-            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_2", modelPath + "thin_wood_support_" + connected.asString(), tex0);
-            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_2", modelPath + "thin_wood_support_" + connected.asString(), tex1);
+            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_2", root+modelPath + "thin_wood_support_" + connected.asString(), tex0);
+            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_2", root+modelPath + "thin_wood_support_" + connected.asString(), tex1);
             //var 3
-            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_3", modelPath + "thin_r_wood_support_" + connected.asString(), tex0);
-            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_3", modelPath + "thin_r_wood_support_" + connected.asString(), tex1);
+            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_3", root+modelPath + "thin_r_wood_support_" + connected.asString(), tex0);
+            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_3", root+modelPath + "thin_r_wood_support_" + connected.asString(), tex1);
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0 + "_wall_1"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_wall_1"));
 
         BlockStateVariantMap.QuadrupleProperty<WeightedVariant, Direction, SupportConnected, LinSeedPaintable, Integer> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.SUPPORT_STATE, ModProperties.LINSEED_PAINT, ModProperties.VARIATIONS_3);
 
@@ -306,27 +300,27 @@ public class FramingLibrary {
 
     public static void crate(BlockStateModelGenerator generator, Block block, String id, String name) {
 
-        String modelPath = "block/crafting/crate";
+        String modelPath = "crafting/crate";
         String loc0 = modelPath + id;
         String loc1 = modelPath + id + "_paintable";
 
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
-        applyTextureToModel(generator, loc0 + "_closed", modelPath + "_closed", plank_path + name + "_planks");
-        applyTextureToModel(generator, loc0 + "_open",modelPath + "_open", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_closed", root+modelPath + "_closed", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_open",root+modelPath + "_open", plank_path + name + "_planks");
         if (pines) {
-            applyTextureToModel(generator, loc1 + "_closed", modelPath + "_closed", plank_path + "pine_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_open",modelPath + "_open", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_closed", root+modelPath + "_closed", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_open",root+modelPath + "_open", plank_path + "pine_paintable_planks");
         }else if (fruit) {
-            applyTextureToModel(generator, loc1 + "_closed", modelPath + "_closed", plank_path + "fruit_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_open",modelPath + "_open", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_closed", root+modelPath + "_closed", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_open",root+modelPath + "_open", plank_path + "fruit_paintable_planks");
         }else {
-            applyTextureToModel(generator, loc1 + "_closed", modelPath + "_closed", plank_path + name + "_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_open",modelPath + "_open", plank_path + name + "_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_closed", root+modelPath + "_closed", plank_path + name + "_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_open",root+modelPath + "_open", plank_path + name + "_paintable_planks");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid,loc0 + "_open"));
+        generator.registerParentedItemModel(block, Identifier.of(modid,root+loc0 + "_open"));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, LinSeedPaintable, Boolean> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT,Properties.OPEN);
 
@@ -342,27 +336,27 @@ public class FramingLibrary {
 
     public static void crateLid(BlockStateModelGenerator generator, Block block, String id, String name) {
 
-        String modelPath = "block/crafting/crate_lid";
+        String modelPath = "crafting/crate_lid";
         String loc0 = modelPath + id;
         String loc1 = modelPath + id + "_paintable";
 
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
-        applyTextureToModel(generator, loc0 + "_floor", modelPath + "_floor", plank_path + name + "_planks");
-        applyTextureToModel(generator, loc0 + "_side",modelPath + "_side", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_floor", root+modelPath + "_floor", plank_path + name + "_planks");
+        applyTextureToModel(generator, loc0 + "_side",root+modelPath + "_side", plank_path + name + "_planks");
         if (pines) {
-            applyTextureToModel(generator, loc1 + "_floor", modelPath + "_floor", plank_path + "pine_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_side",modelPath + "_side", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_floor", root+modelPath + "_floor", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_side",root+modelPath + "_side", plank_path + "pine_paintable_planks");
         }else if (fruit) {
-            applyTextureToModel(generator, loc1 + "_floor", modelPath + "_floor", plank_path + "fruit_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_side",modelPath + "_side", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_floor", root+modelPath + "_floor", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_side",root+modelPath + "_side", plank_path + "fruit_paintable_planks");
         }else {
-            applyTextureToModel(generator, loc1 + "_floor", modelPath + "_floor", plank_path + name + "_paintable_planks");
-            applyTextureToModel(generator, loc1 + "_side",modelPath + "_side", plank_path + name + "_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_floor", root+modelPath + "_floor", plank_path + name + "_paintable_planks");
+            applyTextureToModel(generator, loc1 + "_side",root+modelPath + "_side", plank_path + name + "_paintable_planks");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0 + "_floor"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_floor"));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, LinSeedPaintable, Direction> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HOPPER_FACING);
         for(LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getValues()){
@@ -379,22 +373,22 @@ public class FramingLibrary {
     }
 
     public static void portableWorkbench(BlockStateModelGenerator generator, Block block, String id, String name) {
-        String modelPath = "block/crafting/";
+        String modelPath = "crafting/";
 
         String loc0 = modelPath + id;
         String loc1 = modelPath + id + "_paintable";
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
-        applyTextureToModel(generator, loc0, modelPath + "portable_workbench", log_path + name + "_wood");
+        applyTextureToModel(generator, loc0, root+modelPath + "portable_workbench", log_path + name + "_wood");
         if (pines) {
-            applyTextureToModel(generator, loc1, modelPath + "portable_workbench", log_path + "pine_paintable_wood");
+            applyTextureToModel(generator, loc1, root+modelPath + "portable_workbench", log_path + "pine_paintable_wood");
         }else if(fruit){
-            applyTextureToModel(generator, loc1, modelPath + "portable_workbench", log_path + "fruit_paintable_wood");
+            applyTextureToModel(generator, loc1, root+modelPath + "portable_workbench", log_path + "fruit_paintable_wood");
         }else {
-            applyTextureToModel(generator, loc1, modelPath + "portable_workbench", log_path + name + "_paintable_wood");
+            applyTextureToModel(generator, loc1, root+modelPath + "portable_workbench", log_path + name + "_paintable_wood");
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, loc0));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.SingleProperty<WeightedVariant, LinSeedPaintable> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT);
 

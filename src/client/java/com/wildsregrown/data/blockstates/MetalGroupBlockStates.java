@@ -28,7 +28,7 @@ public class MetalGroupBlockStates {
     public void build(MetalGroup group) {
         Block block = group.block;
         String texture = "block/metals/" + id(block);
-        BlockStateLibrary.layered(generator, "block/layered/" + id(block), "block/metals/" + id(block), block, group.isOxidation());
+        BlockStateLibrary.layered(generator, "layered/" + id(block), "block/metals/" + id(block), block, group.isOxidation());
 
         if (group.decoExist()) {
 
@@ -69,7 +69,7 @@ public class MetalGroupBlockStates {
             applyTextureToModel(generator, id + "_2", "block/" + parent, texture + "_2");
             applyTextureToModel(generator, id + "_3", "block/" + parent, texture + "_3");
 
-            generator.registerParentedItemModel(block, Identifier.of(modid, id + "_0"));
+            generator.registerParentedItemModel(block, Identifier.of(modid, root+id + "_0"));
             CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.OXIDATION)
                     .register(Direction.NORTH, 0, modelOf(id + "_0", false, 0, 0))
                     .register(Direction.WEST, 0, modelOf(id + "_0", false, 270, 0))
@@ -89,8 +89,8 @@ public class MetalGroupBlockStates {
                     .register(Direction.EAST, 3, modelOf(id + "_3", false, 90, 0))
             );
         }else {
-            applyTextureToModel(generator, id, "block/" + parent, texture);
-            generator.registerParentedItemModel(block, Identifier.of(modid, id));
+            applyTextureToModel(generator, id, parent, texture);
+            generator.registerParentedItemModel(block, Identifier.of(modid, root+id));
             CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING)
                     .register(Direction.NORTH, modelOf(id, false, 0, 0))
                     .register(Direction.WEST, modelOf(id, false, 270, 0))
@@ -109,7 +109,7 @@ public class MetalGroupBlockStates {
             applyTextureToModel(generator, id + "_2", "block/" + parent, texture + "_2");
             applyTextureToModel(generator, id + "_3", "block/" + parent, texture + "_3");
 
-            generator.registerParentedItemModel(block, Identifier.of(modid, id + "_0"));
+            generator.registerParentedItemModel(block, Identifier.of(modid, root+id + "_0"));
             CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS, ModProperties.OXIDATION)
                     .register(Direction.Axis.X, 0, modelOf(id + "_0", false, 90, 0))
                     .register(Direction.Axis.Z, 0, modelOf(id + "_0", false, 0, 0))
@@ -148,7 +148,7 @@ public class MetalGroupBlockStates {
         applyTextureToModel(generator, id + "_2_lit","block/" + lit, texture + "_2");
         applyTextureToModel(generator, id + "_3_lit","block/" + lit, texture + "_3");
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, id+"_0_empty"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id+"_0_empty"));
         CreateVariants(generator, block, BlockStateVariantMap.models(ModProperties.FUELED_LIGHT, ModProperties.OXIDATION)
                 .register(FueledLight.EMPTY,0, modelOf(id + "_0_empty"))
                 .register(FueledLight.EMPTY,1, modelOf(id + "_1_empty"))
@@ -185,7 +185,7 @@ public class MetalGroupBlockStates {
         applyTextureToModel(generator, id + "_2_lit", "block/" + lit, texture + "_2");
         applyTextureToModel(generator, id + "_3_lit", "block/" + lit, texture + "_3");
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, id+"_0_empty"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id+"_0_empty"));
         CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.FUELED_LIGHT, ModProperties.OXIDATION)
                 .register(Direction.NORTH, FueledLight.EMPTY, 0, modelOf(id + "_0_empty", false, 0,0))
                 .register(Direction.WEST, FueledLight.EMPTY, 0, modelOf(id + "_0_empty", false, 270,0))
@@ -250,7 +250,7 @@ public class MetalGroupBlockStates {
             }
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, id+"_0_empty"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id+"_0_empty"));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant, TorchHolderState, Direction, Integer> map = BlockStateVariantMap.models(ModProperties.TORCH_HOLDER_STATE, Properties.HORIZONTAL_FACING, ModProperties.OXIDATION);
 
@@ -287,7 +287,7 @@ public class MetalGroupBlockStates {
             applyTextureToModel(generator, loc + "_32", parent + "_32", texture + "_" + oxidated);
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, id+"_0_0"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id+"_0_0"));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, Integer, Integer> map = BlockStateVariantMap.models(ModProperties.OXIDATION, ModProperties.FUEL_32);
 
@@ -331,7 +331,7 @@ public class MetalGroupBlockStates {
             applyTextureToModel(generator, id + "_unlit_" + i, "block/" + parent0, texture + "_" + i);
             applyTextureToModel(generator, id + "_lit_" + i, "block/" + parent1, texture + "_" + i);
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, id+"_unlit_0"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id+"_unlit_0"));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, Integer, Boolean> map = BlockStateVariantMap.models(ModProperties.OXIDATION, Properties.LIT);
 

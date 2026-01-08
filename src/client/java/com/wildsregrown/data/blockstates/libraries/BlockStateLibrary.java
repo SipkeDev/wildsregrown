@@ -1,6 +1,7 @@
 package com.wildsregrown.data.blockstates.libraries;
 
 import com.google.gson.JsonObject;
+import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.blocks.properties.*;
 import com.wildsregrown.blocks.properties.connecting.CornerConnecting;
 import com.wildsregrown.blocks.properties.connecting.VerticalConnected;
@@ -27,38 +28,34 @@ import static net.minecraft.client.data.BlockStateModelGenerator.*;
 
 public class BlockStateLibrary {
 
-    public static void singleton(BlockStateModelGenerator generator, Block block, String id, Identifier model) {
-        applyTextures(generator, id, model);
-        generator.blockStateCollector.accept(createSingletonBlockState(block, createWeightedVariant(Identifier.of(modid, id))));
-        generator.registerParentedItemModel(block, Identifier.of(modid, id));
+    public static String root = "block/";
+
+    public static void singleton(BlockStateModelGenerator generator, Block block, String id, String model) {
+        applyTextureToModel(generator, id, model);
+        generator.blockStateCollector.accept(createSingletonBlockState(block, createWeightedVariant(Identifier.of(modid, root+id))));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id));
     }
 
-    public static void singleton(BlockStateModelGenerator G, Block block, String id, Identifier model, Identifier texture) {
-        applyTextures(G, id, model, new Pair<>("0", texture));
-        G.blockStateCollector.accept(createSingletonBlockState(block, createWeightedVariant(Identifier.of(modid, id))));
-        G.registerParentedItemModel(block, Identifier.of(modid, id));
+    public static void stairs(BlockStateModelGenerator generator, String name, Block block, String texture) {
+        BlockStateLibrary.applyTextureToModel(generator, "inner_" + name, "block/inner_stairs", texture);
+        BlockStateLibrary.applyTextureToModel(generator, "outer_" + name, "block/outer_stairs", texture);
+        BlockStateLibrary.applyTextureToModel(generator, "vanilla_" + name, "block/vanilla_stairs", texture);
+        generator.blockStateCollector.accept(createStairsBlockState(block, createWeightedVariant(Identifier.of(modid, root+"inner_" + name)), createWeightedVariant(Identifier.of(modid, root+"vanilla_" + name)), createWeightedVariant(Identifier.of(modid, root+"outer_" + name))));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+"vanilla_" + name));
     }
 
-    public static void stairs(BlockStateModelGenerator G, String name, Block block, String texture) {
-        BlockStateLibrary.applyTextureToModel(G, "inner_" + name, "block/inner_stairs", texture);
-        BlockStateLibrary.applyTextureToModel(G, "outer_" + name, "block/outer_stairs", texture);
-        BlockStateLibrary.applyTextureToModel(G, "vanilla_" + name, "block/vanilla_stairs", texture);
-        G.blockStateCollector.accept(createStairsBlockState(block, createWeightedVariant(Identifier.of(modid, "inner_" + name)), createWeightedVariant(Identifier.of(modid, "vanilla_" + name)), createWeightedVariant(Identifier.of(modid, "outer_" + name))));
-        G.registerParentedItemModel(block, Identifier.of(modid, "vanilla_" + name));
-    }
-
-    public static void halfArch(BlockStateModelGenerator G, String id, Block block, String texture) {
-        BlockStateLibrary.applyTextureToModel(G, "inner_" + id, "block/castle/half_arch_inner_corner", texture);
-        BlockStateLibrary.applyTextureToModel(G, "outer_" + id, "block/castle/half_arch_outer_corner", texture);
-        BlockStateLibrary.applyTextureToModel(G, "basic_" + id, "block/castle/half_arch", texture);
-        G.blockStateCollector.accept(createStairsBlockState(block, createWeightedVariant(Identifier.of(modid, "inner_" + id)), createWeightedVariant(Identifier.of(modid, "basic_" + id)), createWeightedVariant(Identifier.of(modid, "outer_" + id))));
-        G.registerParentedItemModel(block, Identifier.of(modid, "basic_" + id));
+    public static void halfArch(BlockStateModelGenerator generator, String id, Block block, String texture) {
+        BlockStateLibrary.applyTextureToModel(generator, "inner_" + id, "block/castle/half_arch_inner_corner", texture);
+        BlockStateLibrary.applyTextureToModel(generator, "outer_" + id, "block/castle/half_arch_outer_corner", texture);
+        BlockStateLibrary.applyTextureToModel(generator, "basic_" + id, "block/castle/half_arch", texture);
+        generator.blockStateCollector.accept(createStairsBlockState(block, createWeightedVariant(Identifier.of(modid, root+"inner_" + id)), createWeightedVariant(Identifier.of(modid, root+"basic_" + id)), createWeightedVariant(Identifier.of(modid, root+"outer_" + id))));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+"basic_" + id));
     }
     
-    public static void arch(BlockStateModelGenerator G, String id, Block block, String texture) {
-        applyTextureToModel(G, id, "block/castle/arch", texture);
-        G.registerParentedItemModel(block, Identifier.of(modid, id));
-        CreateVariants(G, block, BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS, Properties.BLOCK_HALF)
+    public static void arch(BlockStateModelGenerator generator, String id, Block block, String texture) {
+        applyTextureToModel(generator, id, root+"castle/arch", texture);
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id));
+        CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS, Properties.BLOCK_HALF)
                         .register(Direction.Axis.X, BlockHalf.TOP   , modelOf(id, true , 90, 0))
                         .register(Direction.Axis.Z, BlockHalf.TOP   , modelOf(id, false, 0 , 0))
                         .register(Direction.Axis.X, BlockHalf.BOTTOM, modelOf(id, true , 90, 180))
@@ -88,7 +85,7 @@ public class BlockStateLibrary {
             applyTextureToModel(G, id + "_smooth_c_middle","block/decoration/pillar_smooth_middle", texture);
             applyTextureToModel(G, id + "_smooth_c_bottom","block/decoration/pillar_smooth_bottom", texture);
 
-        G.registerParentedItemModel(block, Identifier.of(modid, id + "_c_single"));
+        G.registerParentedItemModel(block, Identifier.of(modid, root+id + "_c_single"));
 
         CreateVariants(G, block, BlockStateVariantMap.models(Properties.HOPPER_FACING, ModProperties.VERTICAL_CONNECTED, ModProperties.VARIATIONS_2)
                 .register(Direction.DOWN , VerticalConnected.SINGLE, 1, modelOf(id + "_c_single"       , true, 0  , 0))
@@ -135,30 +132,30 @@ public class BlockStateLibrary {
         ;
     }
 
-    public static void thinPillarFacing(BlockStateModelGenerator G, String id, Block block, String texture) {
-            applyTextureToModel(G, id + "_top","block/decoration/thin_pillar_facing_top", texture);
-            applyTextureToModel(G, id + "_single","block/decoration/thin_pillar_facing_single", texture);
-            applyTextureToModel(G, id + "_middle","block/decoration/thin_pillar_facing_middle", texture);
-            applyTextureToModel(G, id + "_bottom","block/decoration/thin_pillar_facing_bottom", texture);
+    public static void thinPillarFacing(BlockStateModelGenerator generator, String id, Block block, String texture) {
+            applyTextureToModel(generator, id + "_top","block/decoration/thin_pillar_facing_top", texture);
+            applyTextureToModel(generator, id + "_single","block/decoration/thin_pillar_facing_single", texture);
+            applyTextureToModel(generator, id + "_middle","block/decoration/thin_pillar_facing_middle", texture);
+            applyTextureToModel(generator, id + "_bottom","block/decoration/thin_pillar_facing_bottom", texture);
 
-            applyTextureToModel(G, id + "_c_top","block/decoration/thin_pillar_top", texture);
-            applyTextureToModel(G, id + "_c_single","block/decoration/thin_pillar_single", texture);
-            applyTextureToModel(G, id + "_c_middle","block/decoration/thin_pillar_middle", texture);
-            applyTextureToModel(G, id + "_c_bottom","block/decoration/thin_pillar_bottom", texture);
+            applyTextureToModel(generator, id + "_c_top","block/decoration/thin_pillar_top", texture);
+            applyTextureToModel(generator, id + "_c_single","block/decoration/thin_pillar_single", texture);
+            applyTextureToModel(generator, id + "_c_middle","block/decoration/thin_pillar_middle", texture);
+            applyTextureToModel(generator, id + "_c_bottom","block/decoration/thin_pillar_bottom", texture);
 
-            applyTextureToModel(G, id + "_smooth_top","block/decoration/thin_pillar_facing_smooth_top", texture);
-            applyTextureToModel(G, id + "_smooth_single","block/decoration/thin_pillar_facing_smooth_single", texture);
-            applyTextureToModel(G, id + "_smooth_middle","block/decoration/thin_pillar_facing_smooth_middle", texture);
-            applyTextureToModel(G, id + "_smooth_bottom","block/decoration/thin_pillar_facing_smooth_bottom", texture);
+            applyTextureToModel(generator, id + "_smooth_top","block/decoration/thin_pillar_facing_smooth_top", texture);
+            applyTextureToModel(generator, id + "_smooth_single","block/decoration/thin_pillar_facing_smooth_single", texture);
+            applyTextureToModel(generator, id + "_smooth_middle","block/decoration/thin_pillar_facing_smooth_middle", texture);
+            applyTextureToModel(generator, id + "_smooth_bottom","block/decoration/thin_pillar_facing_smooth_bottom", texture);
 
-            applyTextureToModel(G, id + "_smooth_c_top","block/decoration/thin_pillar_smooth_top", texture);
-            applyTextureToModel(G, id + "_smooth_c_single","block/decoration/thin_pillar_smooth_single", texture);
-            applyTextureToModel(G, id + "_smooth_c_middle","block/decoration/thin_pillar_smooth_middle", texture);
-            applyTextureToModel(G, id + "_smooth_c_bottom","block/decoration/thin_pillar_smooth_bottom", texture);
+            applyTextureToModel(generator, id + "_smooth_c_top","block/decoration/thin_pillar_smooth_top", texture);
+            applyTextureToModel(generator, id + "_smooth_c_single","block/decoration/thin_pillar_smooth_single", texture);
+            applyTextureToModel(generator, id + "_smooth_c_middle","block/decoration/thin_pillar_smooth_middle", texture);
+            applyTextureToModel(generator, id + "_smooth_c_bottom","block/decoration/thin_pillar_smooth_bottom", texture);
 
-        G.registerParentedItemModel(block, Identifier.of(modid, id + "_c_single"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id + "_c_single"));
 
-        CreateVariants(G, block, BlockStateVariantMap.models(Properties.HOPPER_FACING, ModProperties.VERTICAL_CONNECTED, ModProperties.VARIATIONS_2)
+        CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HOPPER_FACING, ModProperties.VERTICAL_CONNECTED, ModProperties.VARIATIONS_2)
                 .register(Direction.DOWN , VerticalConnected.SINGLE, 1, modelOf(id + "_c_single"       , false, 0  , 0))
                 .register(Direction.DOWN , VerticalConnected.MIDDLE, 1, modelOf(id + "_c_middle"       , false, 0  , 0))
                 .register(Direction.DOWN , VerticalConnected.TOP   , 1, modelOf(id + "_c_top"          , false, 0  , 0))
@@ -212,7 +209,7 @@ public class BlockStateLibrary {
         applyTextureToModel(G, id + "_cross_bottom","block/castle/arrowslit_cross_bottom", texture);
         applyTextureToModel(G, id + "_cross_single","block/castle/arrowslit_cross_single", texture);
 
-        G.registerParentedItemModel(block, Identifier.of(modid, id + "_middle"));
+        G.registerParentedItemModel(block, Identifier.of(modid, root+id + "_middle"));
 
         CreateVariants(G, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.VERTICAL_CONNECTED, ModProperties.VARIATIONS_3)
             .register(Direction.SOUTH, VerticalConnected.SINGLE, 1, modelOf(id + "_middle"      , false, 0  , 0))
@@ -275,7 +272,7 @@ public class BlockStateLibrary {
         applyTextureToModel(G, id + "_bottom","block/castle/machicolations_bottom", texture);
         applyTextureToModel(G, id + "_single","block/castle/machicolations_single", texture);
 
-        G.registerParentedItemModel(block, Identifier.of(modid, id + "_single"));
+        G.registerParentedItemModel(block, Identifier.of(modid, root+id + "_single"));
 
         CreateVariants(G, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.VERTICAL_CONNECTED)
                         .register(Direction.SOUTH, VerticalConnected.SINGLE, modelOf(id + "_single", false, 0  , 0))
@@ -297,12 +294,10 @@ public class BlockStateLibrary {
         );
     }
 
-    public static void wallSupport(BlockStateModelGenerator G, String id, Block block, String texture) {
-        applyTextureToModel(G, id,"block/castle/wall_support", texture);
-
-        G.registerParentedItemModel(block, Identifier.of(modid, id));
-
-        CreateVariants(G, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING)
+    public static void wallSupport(BlockStateModelGenerator generator, String id, Block block, String texture) {
+        applyTextureToModel(generator, id,root+"castle/wall_support", texture);
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id));
+        CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING)
                         .register(Direction.SOUTH, modelOf(id, false, 0  , 0))
                         .register(Direction.WEST , modelOf(id, false, 90 , 0))
                         .register(Direction.NORTH, modelOf(id, false, 180, 0))
@@ -315,7 +310,7 @@ public class BlockStateLibrary {
         applyTextureToModel(G, id + "_inner","block/decoration/balustrade_inner_corner", texture);
         applyTextureToModel(G, id + "_outer","block/decoration/balustrade_outer_corner", texture);
 
-        G.registerParentedItemModel(block, Identifier.of(modid, id + "_straight"));
+        G.registerParentedItemModel(block, Identifier.of(modid, root+id + "_straight"));
 
         CreateVariants(G, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.CORNER_CONNECTING)
                         .register(Direction.EAST , CornerConnecting.NONE        , modelOf(id + "_straight", true, 270, 0))
@@ -336,29 +331,29 @@ public class BlockStateLibrary {
     public static void soil(BlockStateModelGenerator generator, String id, Block block){
 
         //no overgrown
-        Identifier texture = Identifier.of(modid, id);
-        applyTextures(generator, id + "_layer_1_0", Identifier.of(modid,"block/layered_2"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_layer_2_0", Identifier.of(modid,"block/layered_4"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_layer_3_0", Identifier.of(modid,"block/layered_6"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_layer_4_0", Identifier.of(modid,"block/layered_8"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_layer_5_0", Identifier.of(modid,"block/layered_10"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_layer_6_0", Identifier.of(modid,"block/layered_12"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_layer_7_0", Identifier.of(modid,"block/layered_14"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_layer_8_0", Identifier.of(modid,"block/layered_full"), new Pair<>("0", texture));
+        String texture = root + "soil/" + id;
+        applyTextureToModel(generator, id + "_layer_1_0", "block/layered_2", texture);
+        applyTextureToModel(generator, id + "_layer_2_0", "block/layered_4", texture);
+        applyTextureToModel(generator, id + "_layer_3_0", "block/layered_6", texture);
+        applyTextureToModel(generator, id + "_layer_4_0", "block/layered_8", texture);
+        applyTextureToModel(generator, id + "_layer_5_0", "block/layered_10", texture);
+        applyTextureToModel(generator, id + "_layer_6_0", "block/layered_12", texture);
+        applyTextureToModel(generator, id + "_layer_7_0", "block/layered_14", texture);
+        applyTextureToModel(generator, id + "_layer_8_0", "block/layered_full", texture);
 
         for (int k = 1; k <= ModProperties.OVERGROWN.getValues().getLast(); k++) {
-            Identifier grass = Identifier.of(modid, "block/flora/overgrown_" + k);
-            applyTextures(generator, id + "_layer_1_" + k, Identifier.of(modid, "block/layered_2_overgrown"), new Pair<>("0", texture), new Pair<>("1", grass));
-            applyTextures(generator, id + "_layer_2_" + k, Identifier.of(modid, "block/layered_4_overgrown"), new Pair<>("0", texture), new Pair<>("1", grass));
-            applyTextures(generator, id + "_layer_3_" + k, Identifier.of(modid, "block/layered_6_overgrown"), new Pair<>("0", texture), new Pair<>("1", grass));
-            applyTextures(generator, id + "_layer_4_" + k, Identifier.of(modid, "block/layered_8_overgrown"), new Pair<>("0", texture), new Pair<>("1", grass));
-            applyTextures(generator, id + "_layer_5_" + k, Identifier.of(modid, "block/layered_10_overgrown"), new Pair<>("0", texture), new Pair<>("1", grass));
-            applyTextures(generator, id + "_layer_6_" + k, Identifier.of(modid, "block/layered_12_overgrown"), new Pair<>("0", texture), new Pair<>("1", grass));
-            applyTextures(generator, id + "_layer_7_" + k, Identifier.of(modid, "block/layered_14_overgrown"), new Pair<>("0", texture), new Pair<>("1", grass));
-            applyTextures(generator, id + "_layer_8_" + k, Identifier.of(modid, "block/layered_full_overgrown"), new Pair<>("0", texture), new Pair<>("1", grass));
+            String grass = root + "flora/overgrown_" + k;
+            applyTextureToModel(generator, id + "_layer_1_" + k, "block/layered_2_overgrown", texture, grass);
+            applyTextureToModel(generator, id + "_layer_2_" + k, "block/layered_4_overgrown", texture, grass);
+            applyTextureToModel(generator, id + "_layer_3_" + k, "block/layered_6_overgrown", texture, grass);
+            applyTextureToModel(generator, id + "_layer_4_" + k, "block/layered_8_overgrown", texture, grass);
+            applyTextureToModel(generator, id + "_layer_5_" + k, "block/layered_10_overgrown", texture, grass);
+            applyTextureToModel(generator, id + "_layer_6_" + k, "block/layered_12_overgrown", texture, grass);
+            applyTextureToModel(generator, id + "_layer_7_" + k, "block/layered_14_overgrown", texture, grass);
+            applyTextureToModel(generator, id + "_layer_8_" + k, "block/layered_full_overgrown", texture, grass);
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid,id + "_layer_8_0"));
+        generator.registerParentedItemModel(block, Identifier.of(modid,root + id + "_layer_8_0"));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, Integer, Integer> map = BlockStateVariantMap.models(ModProperties.OVERGROWN, ModProperties.LAYERS);
 
@@ -374,20 +369,19 @@ public class BlockStateLibrary {
     }
 
     public static void layered(BlockStateModelGenerator generator, String id, String path, Block block, boolean oxidation){
-        Identifier texture = Identifier.of(modid, path);
         if (oxidation){
-            texture = Identifier.of(modid, path + "_0");
+            path = path + "_0";
         }
-        applyTextures(generator, id + "_1", Identifier.of(modid,"block/layered_2"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_2", Identifier.of(modid,"block/layered_4"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_3", Identifier.of(modid,"block/layered_6"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_4", Identifier.of(modid,"block/layered_8"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_5", Identifier.of(modid,"block/layered_10"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_6", Identifier.of(modid,"block/layered_12"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_7", Identifier.of(modid,"block/layered_14"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_8", Identifier.of(modid,"block/layered_full"), new Pair<>("0", texture));
+        applyTextureToModel(generator, id + "_1", "block/layered_2", path);
+        applyTextureToModel(generator, id + "_2", "block/layered_4", path);
+        applyTextureToModel(generator, id + "_3", "block/layered_6", path);
+        applyTextureToModel(generator, id + "_4", "block/layered_8", path);
+        applyTextureToModel(generator, id + "_5", "block/layered_10", path);
+        applyTextureToModel(generator, id + "_6", "block/layered_12", path);
+        applyTextureToModel(generator, id + "_7", "block/layered_14", path);
+        applyTextureToModel(generator, id + "_8", "block/layered_full", path);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid,id + "_8"));
+        generator.registerParentedItemModel(block, Identifier.of(modid,root + id + "_8"));
 
         BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction, Integer> map = BlockStateVariantMap.models(Properties.FACING, ModProperties.LAYERS);
 
@@ -407,17 +401,17 @@ public class BlockStateLibrary {
 
         String id = idFromBlock(block);
 
-        Identifier texture = Identifier.of(modid, "block/gravel/" + id);
-        applyTextures(generator, id + "_1", Identifier.of(modid,"block/layered_2"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_2", Identifier.of(modid,"block/layered_4"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_3", Identifier.of(modid,"block/layered_6"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_4", Identifier.of(modid,"block/layered_8"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_5", Identifier.of(modid,"block/layered_10"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_6", Identifier.of(modid,"block/layered_12"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_7", Identifier.of(modid,"block/layered_14"), new Pair<>("0", texture));
-        applyTextures(generator, id + "_8", Identifier.of(modid,"block/layered_full"), new Pair<>("0", texture));
+        String texture = "block/gravel/" + id;
+        applyTextureToModel(generator, id + "_1", "block/layered_2", texture);
+        applyTextureToModel(generator, id + "_2", "block/layered_4", texture);
+        applyTextureToModel(generator, id + "_3", "block/layered_6", texture);
+        applyTextureToModel(generator, id + "_4", "block/layered_8", texture);
+        applyTextureToModel(generator, id + "_5", "block/layered_10", texture);
+        applyTextureToModel(generator, id + "_6", "block/layered_12", texture);
+        applyTextureToModel(generator, id + "_7", "block/layered_14", texture);
+        applyTextureToModel(generator, id + "_8", "block/layered_full", texture);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid,id + "_8"));
+        generator.registerParentedItemModel(block, Identifier.of(modid,root + id + "_8"));
 
         BlockStateVariantMap.SingleProperty<WeightedVariant, Integer> map = BlockStateVariantMap.models(ModProperties.LAYERS);
 
@@ -431,7 +425,7 @@ public class BlockStateLibrary {
     public static void battlements(BlockStateModelGenerator generator, String id, Block block, String texture) {
         applyTextureToModel(generator, id,"block/castle/battlements", texture);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, id));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root +  id));
 
         CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING)
                 .register(Direction.SOUTH, modelOf(id, false, 0  , 0))
@@ -443,9 +437,9 @@ public class BlockStateLibrary {
 
     public static void roof(BlockStateModelGenerator generator, Block block, String id, String texture) {
 
-        applyTextureToModel(generator, "block/misc/" + id, "block/framing/roof", texture);
+        applyTextureToModel(generator, "misc/" + id, "block/framing/roof", texture);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, "block/misc/" + id));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+"misc/" + id));
 
         BlockStateVariantMap.SingleProperty<WeightedVariant, Direction> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING);
 
@@ -458,7 +452,7 @@ public class BlockStateLibrary {
 
         Stream.of(directions).forEach(ctx -> {
                     map
-                            .register(ctx.getLeft(), modelOf("block/misc/" + id, true, ctx.getMiddle(), ctx.getRight()));
+                            .register(ctx.getLeft(), modelOf("misc/" + id, true, ctx.getMiddle(), ctx.getRight()));
                 }
         );
 
@@ -468,10 +462,10 @@ public class BlockStateLibrary {
     public static void torch(BlockStateModelGenerator generator, Block block) {
 
         String id = idFromBlock(block);
-        Identifier identifier = Identifier.of(modid, id);
+        Identifier identifier = Identifier.of(modid, root + id);
         generator.registerParentedItemModel(block, identifier);
 
-        ModelSupplier supplier = new SimpleModelSupplier(Identifier.of(modid, "block/lights/torch"));
+        ModelSupplier supplier = new SimpleModelSupplier(Identifier.of(modid, root + "lights/torch"));
 
         generator.modelCollector.accept(identifier, supplier);
         generator.blockStateCollector.accept(BlockStateModelGenerator.createSingletonBlockState(block, modelOf(id)));
@@ -484,7 +478,7 @@ public class BlockStateLibrary {
         applyTextureToModel(generator, id + "_filled","block/" + filled, texture);
         applyTextureToModel(generator, id + "_lit","block/" + lit, texture);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, id+"_empty"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id+"_empty"));
         CreateVariants(generator, block, BlockStateVariantMap.models(ModProperties.FUELED_LIGHT)
                 .register(FueledLight.EMPTY, modelOf(id + "_empty"))
                 .register(FueledLight.FILLED, modelOf(id + "_filled"))
@@ -497,7 +491,7 @@ public class BlockStateLibrary {
         applyTextureToModel(generator, id + "_1","block/dungeon/item_loot_pedestal_1", texture);
         applyTextureToModel(generator, id + "_2","block/dungeon/item_loot_pedestal_2", texture);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, id + "_1"));
+        generator.registerParentedItemModel(block, Identifier.of(modid, root + id + "_1"));
 
         CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.VARIATIONS_2)
                 .register(Direction.NORTH, 1, modelOf(id + "_1", false, 0, 0))
@@ -512,18 +506,16 @@ public class BlockStateLibrary {
     }
 
     public static void axis(BlockStateModelGenerator generator, String id, Block block, String texture, String parent) {
-
             applyTextureToModel(generator, id, "block/" + parent, texture);
-            generator.registerParentedItemModel(block, Identifier.of(modid, id));
+            generator.registerParentedItemModel(block, Identifier.of(modid, root+id));
             CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS)
                     .register(Direction.Axis.X, modelOf(id, false, 90,0))
                     .register(Direction.Axis.Z, modelOf(id, false, 0,0))
             );
-
     }
 
     public static void applyTextureToModel(BlockStateModelGenerator generator, String newJsonLoc, String parentLoc, String textureLoc) {
-        generator.modelCollector.accept(Identifier.of(modid, newJsonLoc), () -> {
+        generator.modelCollector.accept(Identifier.of(modid, root + newJsonLoc), () -> {
             JsonObject jsonObject = new JsonObject();
             JsonObject texture = new JsonObject();
             texture.addProperty("0",modid + ":" + textureLoc);
@@ -535,7 +527,7 @@ public class BlockStateLibrary {
     }
 
     public static void applyTextureToModel(BlockStateModelGenerator generator, String newJsonLoc, String parentLoc, String... textures) {
-        generator.modelCollector.accept(Identifier.of(modid, newJsonLoc), () -> {
+        generator.modelCollector.accept(Identifier.of(modid, root+newJsonLoc), () -> {
             JsonObject jsonObject = new JsonObject();
             JsonObject texture = new JsonObject();
             if (textures.length != 0) {
@@ -553,30 +545,17 @@ public class BlockStateLibrary {
         });
     }
 
-    @SafeVarargs
-    public static void applyTextures(BlockStateModelGenerator generator, String newJsonLoc, Identifier parentLoc, Pair<String, Identifier>... textures) {
-        generator.modelCollector.accept(Identifier.of(modid, newJsonLoc), () -> {
-            JsonObject jsonObject = new JsonObject();
-            JsonObject texture = new JsonObject();
-            for (Pair<String, Identifier> p: textures) {
-                texture.addProperty(p.getLeft(),p.getRight().toString());
-            }
-            jsonObject.addProperty("parent", parentLoc.toString());
-            jsonObject.add("textures", texture);
-            return jsonObject;
-        });
-    }
     public static void CreateVariants(BlockStateModelGenerator generator, Block block, BlockStateVariantMap map) {
         generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(map));
     }
 
     public static WeightedVariant modelOf(String key) {
-        return createWeightedVariant(Identifier.of(modid, key));
+        return createWeightedVariant(Identifier.of(modid, root + key));
     }
     public static WeightedVariant modelOf(String key, int vars) {
         ModelVariant[] list = new ModelVariant[vars];
         for (int i = 0; i < vars; i++) {
-            list[i] = createModelVariant(Identifier.of(modid, key+"_"+i));
+            list[i] = createModelVariant(Identifier.of(modid, root+key+"_"+i));
         }
         return createWeightedVariant(list);
     }

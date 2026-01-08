@@ -183,7 +183,7 @@ public class Locate {
         if (source.getWorld().getChunkManager().getChunkGenerator() == null || (playerX + playerZ) == 0) {
             throw KEY_NOT_FOUND.create("Error");
         } else {
-            source.sendFeedback(() -> text, false);
+            source.getServer().sendMessage(text);
             return 0;
         }
     }
@@ -436,20 +436,8 @@ public class Locate {
         int y = (int) source.getPosition().y;
         Text text = Texts.bracketed(Text.translatable("chat.coordinates", targetPos.getX(), y, targetPos.getZ())).styled((style) ->
                 style.withColor(Formatting.GREEN)
-                .withClickEvent(new ClickEvent() {
-                    @Override
-                    public Action getAction() {
-                        return ClickEvent.Action.SUGGEST_COMMAND;
-                        //"/tp @s " + targetPos.getX() + " ~ " + targetPos.getZ()
-                    }
-                })
-                .withHoverEvent(new HoverEvent() {
-                    @Override
-                    public Action getAction() {
-                        return HoverEvent.Action.SHOW_TEXT;
-                    }
-                    //, Text.translatable("chat.coordinates.tooltip"))
-                })
+                .withClickEvent(new ClickEvent.SuggestCommand("/tp @s " + targetPos.getX() + " ~ " + targetPos.getZ()))
+                .withHoverEvent(new HoverEvent.ShowText(Text.translatable("chat.coordinates.tooltip")))
         ).append(" " + landform + " with distance of " + i);
         source.sendFeedback(() -> text, false);
         WildsRegrown.LOGGER.info("Locating element " + landform + " for distance " + i);
