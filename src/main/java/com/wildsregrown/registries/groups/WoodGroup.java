@@ -61,6 +61,7 @@ public class WoodGroup {
             this.framing[Framing.parquet_stairs.ordinal()]    = ModBlocks.register(id + "_parquet_stairs", (ctx -> new PaintedStairs(this.framing[0].getDefaultState(), ctx)), settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.siding.ordinal()]           = ModBlocks.register(id + "_siding", Planks::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.siding_stairs.ordinal()]    = ModBlocks.register(id + "_siding_stairs", (ctx -> new PaintedStairs(this.framing[0].getDefaultState(), ctx)), settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.open_stairs.ordinal()]      = ModBlocks.register(id + "_open_stairs", (ctx -> new OpenStairs(this.framing[0].getDefaultState(), ctx)), settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.support.ordinal()]           = ModBlocks.register(id + "_support",       WoodenSupport::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.arch.ordinal()]              = ModBlocks.register(id + "_arch",          WoodenArchBlock::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.half_arch.ordinal()]         = ModBlocks.register(id + "_half_arch",     (s) -> new WoodenHalfArchBlock(common[Common.log.ordinal()].getDefaultState(),s), settings, WOOD_FRAMING_GROUP_KEY);
@@ -121,6 +122,7 @@ public class WoodGroup {
         parquet_stairs,
         siding,
         siding_stairs,
+        open_stairs,
         //Blocks
         support,
         arch,

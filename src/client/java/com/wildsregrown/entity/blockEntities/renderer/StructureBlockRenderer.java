@@ -1,21 +1,17 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.wildsregrown.blocks.dungeon.StructureEntity;
-import com.wildsregrown.entity.render.renderstates.StructureBlockRenderState;
+import com.wildsregrown.entity.blockEntities.renderstates.StructureBlockRenderState;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.DrawStyle;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.command.ModelCommandRenderer;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;

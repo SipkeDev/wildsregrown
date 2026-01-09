@@ -1,8 +1,7 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.wildsregrown.entities.block.GenericSingleStorageEntity;
-import com.wildsregrown.entity.render.renderstates.SingleItemFacingRenderState;
-import com.wildsregrown.entity.render.renderstates.SingleItemRenderState;
+import com.wildsregrown.entity.blockEntities.renderstates.SingleItemRenderState;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.OverlayTexture;
@@ -13,7 +12,6 @@ import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;

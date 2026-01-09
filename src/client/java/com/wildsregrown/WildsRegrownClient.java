@@ -2,7 +2,7 @@ package com.wildsregrown;
 
 import com.wildsregrown.blocks.SoilBlock;
 import com.wildsregrown.blocks.wood.tree.Leaves;
-import com.wildsregrown.entity.render.ModEntitiesRenderRegistery;
+import com.wildsregrown.entity.ModEntitiesRenderRegistery;
 import com.wildsregrown.gui.KeyBindings;
 import com.wildsregrown.gui.SkunkWorksGuiOverlay;
 import com.wildsregrown.gui.menu.main.MainMenu;

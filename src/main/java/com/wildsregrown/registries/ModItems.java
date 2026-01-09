@@ -75,6 +75,8 @@ public class ModItems {
     public static final Item atriplex_leaves = registerItem("atriplex_leaves", Item::new, new Item.Settings().food(ModFoodComponents.WILD_FOOD), FLORA_GROUP_KEY);
     public static final Item apple = registerItem("apple", Item::new, new Item.Settings().food(ModFoodComponents.APPLE), FLORA_GROUP_KEY);
 
+    public static final Item bandit = registerItem("bandit", SpawnEggItem::new, new Item.Settings(), TOOL_GROUP_KEY);
+
     public static Item registerItem(String name, Function<Item.Settings, Item> factory, Item.Settings settings, RegistryKey<ItemGroup> key) {
 
         final RegistryKey<Item> registryKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(modid, name));

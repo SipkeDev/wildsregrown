@@ -5,8 +5,10 @@ import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.connecting.SupportConnected;
 import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
 import net.minecraft.block.Block;
+import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.DoorHinge;
 import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.block.enums.StairShape;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.state.property.Properties;
@@ -18,6 +20,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.util.stream.Stream;
 
 import static com.wildsregrown.WildsRegrown.modid;
+import static com.wildsregrown.data.DataGeneratorProvider.idFromBlock;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.*;
 import static com.wildsregrown.data.blockstates.WoodGroupBlockStates.log_path;
 import static com.wildsregrown.data.blockstates.WoodGroupBlockStates.plank_path;
@@ -400,6 +403,56 @@ public class FramingLibrary {
             map.register(paint, modelOf(finalLoc));
         }
 
+        CreateVariants(generator, block, map);
+    }
+
+    public static void openStairs(BlockStateModelGenerator generator, String name, Block block) {
+
+        String id = idFromBlock(block);
+        String loc0 = "planks/" + id;
+        String loc1 = "planks/" + id + "_paintable_";
+        boolean pines = name.contains("larch") || name.contains("spruce");
+        boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
+
+        applyTextureToModel(generator, "inner_stairs_" + loc0, root + modelPath + "stairs_inner",  log_path + name + "_wood", plank_path + name + "_planks");
+        applyTextureToModel(generator, "outer_stairs_" + loc0, root + modelPath + "stairs_outer", log_path + name + "_wood", plank_path + name + "_planks");
+        applyTextureToModel(generator, "straight_stairs_" + loc0, root + modelPath + "stairs", log_path + name + "_wood", plank_path + name + "_planks");
+        if (pines) {
+            applyTextureToModel(generator, "inner_stairs_" + loc1, root + modelPath + "stairs_inner", log_path + "pine_paintable_wood", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, "outer_stairs_" + loc1, root + modelPath + "stairs_outer", log_path + "pine_paintable_wood", plank_path + "pine_paintable_planks");
+            applyTextureToModel(generator, "straight_stairs_" + loc1, root + modelPath + "stairs", log_path + "pine_paintable_wood", plank_path + "pine_paintable_planks");
+        }else if(fruit){
+            applyTextureToModel(generator, "inner_stairs_" + loc1, root + modelPath + "stairs_inner", log_path + "fruit_paintable_wood" + "_wood", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, "outer_stairs_" + loc1, root + modelPath + "stairs_outer", log_path + "fruit_paintable_wood", plank_path + "fruit_paintable_planks");
+            applyTextureToModel(generator, "straight_stairs_" + loc1, root + modelPath + "stairs", log_path + "fruit_paintable_wood", plank_path + "fruit_paintable_planks");
+        }else {
+            applyTextureToModel(generator, "inner_stairs_" + loc1, root + modelPath + "stairs_inner", log_path + name + "_paintable_wood", plank_path + name + "_paintable_planks");
+            applyTextureToModel(generator, "outer_stairs_" + loc1, root + modelPath + "stairs_outer", log_path + name + "_paintable_wood", plank_path + name + "_paintable_planks");
+            applyTextureToModel(generator, "straight_stairs_" + loc1, root + modelPath + "stairs", log_path + name + "_paintable_wood", plank_path + name + "_paintable_planks");
+        }
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+"straight_stairs_" + loc0));
+
+        BlockStateVariantMap.QuadrupleProperty<WeightedVariant, LinSeedPaintable, Direction, BlockHalf, StairShape> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.BLOCK_HALF, Properties.STAIR_SHAPE);
+
+        for (LinSeedPaintable paint : LinSeedPaintable.values()) {
+            String finalLoc = loc1;
+            if (paint == LinSeedPaintable.NONE){
+                finalLoc = loc0;
+            }
+            for(Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+                int dir = 90 + (direction.getHorizontalQuarterTurns()*90);
+                map.register(paint, direction, BlockHalf.TOP, StairShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir, 180));
+                map.register(paint, direction, BlockHalf.TOP, StairShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir+90, 180));
+                map.register(paint, direction, BlockHalf.TOP, StairShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir, 180));
+                map.register(paint, direction, BlockHalf.TOP, StairShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir+90, 180));
+                map.register(paint, direction, BlockHalf.TOP, StairShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 180));
+                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir-90, 0));
+                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir, 0));
+                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir-90, 0));
+                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir, 0));
+                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 0));
+            }
+        }
         CreateVariants(generator, block, map);
     }
 

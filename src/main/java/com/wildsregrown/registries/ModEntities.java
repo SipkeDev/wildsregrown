@@ -5,6 +5,7 @@ import com.wildsregrown.blocks.dungeon.StructureEntity;
 import com.wildsregrown.blocks.wood.tree.TreeEntity;
 import com.wildsregrown.entities.block.*;
 import com.wildsregrown.entities.mob.SoldierEntity;
+import com.wildsregrown.entities.mob.bandit.Bandit;
 import com.wildsregrown.registries.groups.StoneGroup;
 import com.wildsregrown.registries.groups.WoodGroup;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -31,7 +32,8 @@ public class ModEntities {
      */
 
     //Animals
-    public static final EntityType<SoldierEntity> soldierEntity = register("soldier", SoldierEntity::new, SpawnGroup.CREATURE, 1f, 1f);
+    public static final EntityType<Bandit> bandit = register("bandit", Bandit::new, SpawnGroup.CREATURE, 1f, 1f);
+    //public static final EntityType<SoldierEntity> soldierEntity = register("soldier", SoldierEntity::new, SpawnGroup.CREATURE, 1f, 1f);
     //public static final EntityType<Bovine> bovine = register("bovine", Bovine::new, SpawnGroup.CREATURE, 1f, 1f);
 
     //Misc

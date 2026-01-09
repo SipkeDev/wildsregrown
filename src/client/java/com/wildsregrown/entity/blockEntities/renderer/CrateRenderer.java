@@ -1,8 +1,8 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.wildsregrown.entities.block.CrateEntity;
 import com.sipke.math.MathUtil;
-import com.wildsregrown.entity.render.renderstates.CrateRenderState;
+import com.wildsregrown.entity.blockEntities.renderstates.CrateRenderState;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;

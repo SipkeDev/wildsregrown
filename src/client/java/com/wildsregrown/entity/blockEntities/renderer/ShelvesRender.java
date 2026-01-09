@@ -1,7 +1,7 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.wildsregrown.entities.block.ShelvesEntity;
-import com.wildsregrown.entity.render.renderstates.ShelvesRenderState;
+import com.wildsregrown.entity.blockEntities.renderstates.ShelvesRenderState;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.OverlayTexture;

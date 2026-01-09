@@ -1,8 +1,7 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.wildsregrown.entities.block.CounterShelvesEntity;
-import com.wildsregrown.entity.render.renderstates.CounterShelvesRenderState;
-import com.wildsregrown.entity.render.renderstates.SingleItemFacingRenderState;
+import com.wildsregrown.entity.blockEntities.renderstates.CounterShelvesRenderState;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.OverlayTexture;

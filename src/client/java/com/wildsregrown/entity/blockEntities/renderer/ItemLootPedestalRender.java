@@ -1,13 +1,12 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.sipke.math.MathUtil;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.entities.block.ItemLootPedestalEntity;
-import com.wildsregrown.entity.render.renderstates.ItemLootPedestalRenderState;
+import com.wildsregrown.entity.blockEntities.renderstates.ItemLootPedestalRenderState;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.command.ModelCommandRenderer;

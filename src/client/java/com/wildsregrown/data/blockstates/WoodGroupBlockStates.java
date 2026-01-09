@@ -86,6 +86,8 @@ public class WoodGroupBlockStates {
             planks(generator, group.get(WoodGroup.Framing.siding), name, "siding");
             stairs(generator, name, group.get(WoodGroup.Framing.siding_stairs), "siding");
 
+            openStairs(generator, name, group.get(WoodGroup.Framing.open_stairs));
+
             block = group.get(WoodGroup.Framing.support);
             woodenSupport(generator, id(block), block, name);
 

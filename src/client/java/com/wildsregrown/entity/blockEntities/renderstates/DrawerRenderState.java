@@ -1,4 +1,4 @@
-package com.wildsregrown.entity.render.renderstates;
+package com.wildsregrown.entity.blockEntities.renderstates;
 
 import com.wildsregrown.blocks.properties.DrawerState;
 import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;

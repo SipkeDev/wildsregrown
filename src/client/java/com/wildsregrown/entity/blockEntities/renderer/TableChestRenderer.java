@@ -1,8 +1,7 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.wildsregrown.entities.block.TableChestEntity;
-import com.wildsregrown.entity.render.renderstates.SingleItemFacingRenderState;
-import com.wildsregrown.entity.render.renderstates.TableChestRenderState;
+import com.wildsregrown.entity.blockEntities.renderstates.TableChestRenderState;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.OverlayTexture;

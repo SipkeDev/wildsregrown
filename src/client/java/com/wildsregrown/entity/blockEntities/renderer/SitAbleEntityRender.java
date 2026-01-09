@@ -1,4 +1,4 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.wildsregrown.entities.block.SitEntity;
 import net.minecraft.client.render.entity.EntityRenderer;

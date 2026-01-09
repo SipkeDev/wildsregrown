@@ -1,9 +1,9 @@
-package com.wildsregrown.entity.render.renderer;
+package com.wildsregrown.entity.blockEntities.renderer;
 
 import com.wildsregrown.blocks.properties.DrawerState;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.entities.block.DrawerEntity;
-import com.wildsregrown.entity.render.renderstates.DrawerRenderState;
+import com.wildsregrown.entity.blockEntities.renderstates.DrawerRenderState;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.OverlayTexture;
