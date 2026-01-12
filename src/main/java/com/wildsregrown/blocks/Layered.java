@@ -82,6 +82,7 @@ public class Layered extends Block implements Waterloggable {
         return 1F;
     }
 
+    @Override
     protected boolean canReplace(BlockState state, ItemPlacementContext context) {
         int i = state.get(LAYERS);
         if (context.getStack().isOf(this.asItem()) && i < 8) {

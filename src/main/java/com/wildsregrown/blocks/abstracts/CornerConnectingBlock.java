@@ -124,11 +124,12 @@ public abstract class CornerConnectingBlock extends Block implements Waterloggab
         return StairShape.STRAIGHT;
     }
     protected abstract boolean canConnectToBlock(BlockState blockState);
-    private boolean isDifferentOrientation(BlockState state, WorldView world, BlockPos pos, Direction direction) {
+    public boolean isDifferentOrientation(BlockState state, WorldView world, BlockPos pos, Direction direction) {
         BlockState newState = world.getBlockState(pos.offset(direction));
         return !canConnectToBlock(newState) || newState.get(FACING) != state.get(FACING);
     }
 
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         FluidState fluidState = ctx.getWorld().getFluidState(blockPos);

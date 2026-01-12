@@ -1,6 +1,8 @@
 package com.wildsregrown.registries.groups;
 
+import com.wildsregrown.blocks.HalfStairs;
 import com.wildsregrown.blocks.Layered;
+import com.wildsregrown.blocks.QuarterStairs;
 import com.wildsregrown.blocks.StoneBlock;
 import com.wildsregrown.blocks.dungeon.DungeonItemLootPedestal;
 import com.wildsregrown.blocks.stone.*;
@@ -22,18 +24,29 @@ public class StoneGroup {
         this.luxury = luxury ? new Block[Luxury.values().length] : null;
 
         this.common[Common.layered.ordinal()]= register(id, StoneBlock::new, settings, STONE_GROUP_KEY);
+        this.common[Common.quarter_stairs.ordinal()] = register(id + "_quarter_stairs"  , QuarterStairs::new, settings, STONE_GROUP_KEY);
+        this.common[Common.half_stairs.ordinal()] = register(id + "_half_stairs"  , HalfStairs::new, settings, STONE_GROUP_KEY);
         this.common[Common.stairs.ordinal()] = register(id + "_stairs"  , (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
         this.common[Common.cobble_layered.ordinal()]= register(id + "_cobble", StoneBlock::new, settings, STONE_GROUP_KEY);
+        this.common[Common.cobble_half_stairs.ordinal()] = register(id + "_cobble_half_stairs"  , HalfStairs::new, settings, STONE_GROUP_KEY);
         this.common[Common.cobble_stairs.ordinal()] = register(id + "_cobble" + "_stairs"  , (s) -> new StairsBlock(common[Common.cobble_layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
 
         if (construction){
             this.construction[Construction.bricks.ordinal()]                = register(id + "_bricks", StoneBlock::new, settings, STONE_GROUP_KEY);
+            this.construction[Construction.bricks_quarter_stairs.ordinal()]    = register(id + "_bricks" + "_quarter_stairs", QuarterStairs::new, settings, STONE_GROUP_KEY);
+            this.construction[Construction.bricks_half_stairs.ordinal()]    = register(id + "_bricks" + "_half_stairs", HalfStairs::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.bricks_stairs.ordinal()]         = register(id + "_bricks" + "_stairs", (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
             this.construction[Construction.pavement.ordinal()]              = register(id + "_pavement", StoneBlock::new, settings, STONE_GROUP_KEY);
+            this.construction[Construction.pavement_quarter_stairs.ordinal()]    = register(id + "_pavement" + "_quarter_stairs", QuarterStairs::new, settings, STONE_GROUP_KEY);
+            this.construction[Construction.pavement_half_stairs.ordinal()]  = register(id + "_pavement" + "_half_stairs", HalfStairs::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.pavement_stairs.ordinal()]       = register(id + "_pavement" + "_stairs", (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_bricks.ordinal()]         = register(id + "_cobble_bricks", StoneBlock::new, settings, STONE_GROUP_KEY);
+            this.construction[Construction.cobble_bricks_quarter_stairs.ordinal()]    = register(id + "_cobble_bricks" + "_quarter_stairs", QuarterStairs::new, settings, STONE_GROUP_KEY);
+            this.construction[Construction.cobble_bricks_half_stairs.ordinal()]= register(id + "_cobble_bricks" + "_half_stairs", HalfStairs::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_bricks_stairs.ordinal()]  = register(id + "_cobble_bricks" + "_stairs", (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_pavement.ordinal()]       = register(id + "_cobble_pavement", StoneBlock::new, settings, STONE_GROUP_KEY);
+            this.construction[Construction.cobble_pavement_quarter_stairs.ordinal()]    = register(id + "_cobble_pavement" + "_quarter_stairs", QuarterStairs::new, settings, STONE_GROUP_KEY);
+            this.construction[Construction.cobble_pavement_half_stairs.ordinal()]= register(id + "_cobble_pavement" + "_half_stairs", HalfStairs::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_pavement_stairs.ordinal()]= register(id + "_cobble_pavement" + "_stairs", (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
             this.construction[Construction.pillar.ordinal()]                = register(id + "_pillar", Pillar::new, settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.thin_pillar.ordinal()]           = register("thin_" + id + "_pillar", ThinPillar::new, settings, STONE_DECO_GROUP_KEY);
@@ -70,20 +83,31 @@ public class StoneGroup {
 
     public enum Common {
         layered,
+        quarter_stairs,
+        half_stairs,
         stairs,
         cobble_layered,
+        cobble_half_stairs,
         cobble_stairs
     }
 
     public enum Construction {
         //Common
         bricks,
+        bricks_quarter_stairs,
+        bricks_half_stairs,
         bricks_stairs,
         pavement,
+        pavement_quarter_stairs,
+        pavement_half_stairs,
         pavement_stairs,
         cobble_bricks,
+        cobble_bricks_quarter_stairs,
+        cobble_bricks_half_stairs,
         cobble_bricks_stairs,
         cobble_pavement,
+        cobble_pavement_quarter_stairs,
+        cobble_pavement_half_stairs,
         cobble_pavement_stairs,
         //Pillar
         pillar,

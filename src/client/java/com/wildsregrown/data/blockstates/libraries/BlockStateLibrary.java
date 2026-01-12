@@ -6,7 +6,9 @@ import com.wildsregrown.blocks.properties.*;
 import com.wildsregrown.blocks.properties.connecting.CornerConnecting;
 import com.wildsregrown.blocks.properties.connecting.VerticalConnected;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.BlockHalf;
+import net.minecraft.block.enums.StairShape;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.model.json.ModelVariant;
 import net.minecraft.client.render.model.json.ModelVariantOperator;
@@ -14,6 +16,7 @@ import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Triple;
@@ -42,6 +45,122 @@ public class BlockStateLibrary {
         BlockStateLibrary.applyTextureToModel(generator, "vanilla_" + name, "block/vanilla_stairs", texture);
         generator.blockStateCollector.accept(createStairsBlockState(block, createWeightedVariant(Identifier.of(modid, root+"inner_" + name)), createWeightedVariant(Identifier.of(modid, root+"vanilla_" + name)), createWeightedVariant(Identifier.of(modid, root+"outer_" + name))));
         generator.registerParentedItemModel(block, Identifier.of(modid, root+"vanilla_" + name));
+    }
+
+    public static void halfStairs(BlockStateModelGenerator generator, String name, Block block, String texture) {
+
+        String loc0 = "half_stairs/" + name;
+        String inner = "_inner";
+        String outer = "_outer";
+        String straight = "_straight";
+        String top = "_top";
+        String bottom = "_bottom";
+        
+        applyTextureToModel(generator, loc0 + inner + top, "block/half_stairs_top_inner", texture);
+        applyTextureToModel(generator, loc0 + outer + top, "block/half_stairs_top_outer", texture);
+        applyTextureToModel(generator, loc0 + straight + top, "block/half_stairs_top", texture);
+        applyTextureToModel(generator, loc0 + inner + bottom, "block/half_stairs_bottom_inner", texture);
+        applyTextureToModel(generator, loc0 + outer + bottom, "block/half_stairs_bottom_outer", texture);
+        applyTextureToModel(generator, loc0 + straight + bottom, "block/half_stairs_bottom", texture);
+        
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0+straight+bottom));
+
+        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction, HalfStair, StairShape> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.HALF, Properties.STAIR_SHAPE);
+        
+        for(Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+            int dir = 90 + (direction.getHorizontalQuarterTurns() * 90);
+            if (dir > 360){dir -= 360;}
+            map.register(direction, HalfStair.TOP_INVERT, StairShape.INNER_LEFT, modelOf(loc0+inner+top, true, dir, 180));
+            map.register(direction, HalfStair.TOP_INVERT, StairShape.INNER_RIGHT, modelOf(loc0+inner+top, true, dir + 90, 180));
+            map.register(direction, HalfStair.TOP_INVERT, StairShape.OUTER_LEFT, modelOf(loc0+outer+top, true, dir, 180));
+            map.register(direction, HalfStair.TOP_INVERT, StairShape.OUTER_RIGHT, modelOf(loc0+outer+top, true, dir + 90, 180));
+            map.register(direction, HalfStair.TOP_INVERT, StairShape.STRAIGHT, modelOf(loc0+straight+top, true, dir, 180));
+            map.register(direction, HalfStair.BOTTOM_INVERT, StairShape.INNER_LEFT, modelOf(loc0+inner+bottom, true, dir, 180));
+            map.register(direction, HalfStair.BOTTOM_INVERT, StairShape.INNER_RIGHT, modelOf(loc0+inner+bottom, true, dir + 90, 180));
+            map.register(direction, HalfStair.BOTTOM_INVERT, StairShape.OUTER_LEFT, modelOf(loc0+outer+bottom, true, dir, 180));
+            map.register(direction, HalfStair.BOTTOM_INVERT, StairShape.OUTER_RIGHT, modelOf(loc0+outer+bottom, true, dir + 90, 180));
+            map.register(direction, HalfStair.BOTTOM_INVERT, StairShape.STRAIGHT, modelOf(loc0+straight+bottom, true, dir, 180));
+
+            map.register(direction, HalfStair.TOP, StairShape.INNER_LEFT, modelOf(loc0+inner+top, true, dir - 90, 0));
+            map.register(direction, HalfStair.TOP, StairShape.INNER_RIGHT, modelOf(loc0+inner+top, true, dir, 0));
+            map.register(direction, HalfStair.TOP, StairShape.OUTER_LEFT, modelOf(loc0+outer+top, true, dir - 90, 0));
+            map.register(direction, HalfStair.TOP, StairShape.OUTER_RIGHT, modelOf(loc0+outer+top, true, dir, 0));
+            map.register(direction, HalfStair.TOP, StairShape.STRAIGHT, modelOf(loc0+straight+top, true, dir, 0));
+            map.register(direction, HalfStair.BOTTOM, StairShape.INNER_LEFT, modelOf(loc0+inner+bottom, true, dir - 90, 0));
+            map.register(direction, HalfStair.BOTTOM, StairShape.INNER_RIGHT, modelOf(loc0+inner+bottom, true, dir, 0));
+            map.register(direction, HalfStair.BOTTOM, StairShape.OUTER_LEFT, modelOf(loc0+outer+bottom, true, dir - 90, 0));
+            map.register(direction, HalfStair.BOTTOM, StairShape.OUTER_RIGHT, modelOf(loc0+outer+bottom, true, dir, 0));
+            map.register(direction, HalfStair.BOTTOM, StairShape.STRAIGHT, modelOf(loc0+straight+bottom, true, dir, 0));
+        }
+        CreateVariants(generator, block, map);
+    }
+
+    public static void quarterStairs(BlockStateModelGenerator generator, String name, Block block, String texture) {
+
+        String loc = "quarter_stairs/" + name;
+        String side = "_side";
+
+        applyTextureToModel(generator, loc + "_0", "block/quarter_stairs_0", texture);
+        applyTextureToModel(generator, loc + "_1", "block/quarter_stairs_1", texture);
+        applyTextureToModel(generator, loc + "_2", "block/quarter_stairs_2", texture);
+        applyTextureToModel(generator, loc + "_3", "block/quarter_stairs_3", texture);
+        applyTextureToModel(generator, loc + "_0" + side, "block/quarter_stairs_0" + side, texture);
+        applyTextureToModel(generator, loc + "_1" + side, "block/quarter_stairs_1" + side, texture);
+        applyTextureToModel(generator, loc + "_2" + side, "block/quarter_stairs_2" + side, texture);
+        applyTextureToModel(generator, loc + "_3" + side, "block/quarter_stairs_3" + side, texture);
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc+"_0"));
+
+        BlockStateVariantMap.TripleProperty<WeightedVariant, Integer, Direction, Orientation> map = BlockStateVariantMap.models(ModProperties.QUARTER_LAYERS, Properties.FACING, ModProperties.ORIENTATION);
+
+        for(Direction direction : Properties.FACING.getValues()) {
+            for (int k : ModProperties.QUARTER_LAYERS.getValues()) {
+                switch (direction){
+                    case UP -> {
+                        map.register(k, direction, Orientation.UP, modelOf(loc + "_" + (k - 1), true, 0, 180));
+                        map.register(k, direction, Orientation.RIGHT, modelOf(loc + "_" + (k - 1), true, 90, 180));
+                        map.register(k, direction, Orientation.DOWN, modelOf(loc + "_" + (k - 1), true, 180, 180));
+                        map.register(k, direction, Orientation.LEFT, modelOf(loc + "_" + (k - 1), true, 270, 180));
+                    }
+                    case DOWN -> {
+                        map.register(k, direction, Orientation.UP, modelOf(loc + "_" + (k - 1), true, 0, 0));
+                        map.register(k, direction, Orientation.RIGHT, modelOf(loc + "_" + (k - 1), true, 90, 0));
+                        map.register(k, direction, Orientation.DOWN, modelOf(loc + "_" + (k - 1), true, 180, 0));
+                        map.register(k, direction, Orientation.LEFT, modelOf(loc + "_" + (k - 1), true, 270, 0));
+                    }
+                    case NORTH -> {
+                        map.register(k, direction, Orientation.UP, modelOf(loc + "_" + (k - 1), true, 0, 270));
+                        map.register(k, direction, Orientation.DOWN, modelOf(loc + "_" + (k - 1), true, 180, 90));
+                        map.register(k, direction, Orientation.RIGHT, modelOf(loc + "_" + (k - 1) + side, true, 0, 270));
+                        map.register(k, direction, Orientation.LEFT, modelOf(loc + "_" + (k - 1) + side, true, 180, 90));
+                    }
+                    case SOUTH -> {
+                        map.register(k, direction, Orientation.UP, modelOf(loc + "_" + (k - 1), true, 0, 90));
+                        map.register(k, direction, Orientation.DOWN, modelOf(loc + "_" + (k - 1), true, 180, 270));
+                        map.register(k, direction, Orientation.RIGHT, modelOf(loc + "_" + (k - 1) + side, true, 0, 90));
+                        map.register(k, direction, Orientation.LEFT, modelOf(loc + "_" + (k - 1) + side, true, 180, 270));
+                    }
+                    case EAST -> {
+                        map.register(k, direction, Orientation.UP, modelOf(loc + "_" + (k - 1), true, 90, 270));
+                        map.register(k, direction, Orientation.DOWN, modelOf(loc + "_" + (k - 1), true, 270, 90));
+                        map.register(k, direction, Orientation.RIGHT, modelOf(loc + "_" + (k - 1) + side, true, 270, 90));
+                        map.register(k, direction, Orientation.LEFT, modelOf(loc + "_" + (k - 1) + side, true, 90, 270));
+                    }
+                    case WEST -> {
+                        map.register(k, direction, Orientation.UP, modelOf(loc + "_" + (k - 1), true, 270, 270));
+                        map.register(k, direction, Orientation.DOWN, modelOf(loc + "_" + (k - 1), true, 90, 90));
+                        map.register(k, direction, Orientation.RIGHT, modelOf(loc + "_" + (k - 1) + side, true, 90,90));
+                        map.register(k, direction, Orientation.LEFT, modelOf(loc + "_" + (k - 1) + side, true, 270, 270));
+                    }
+                    default -> {
+                        map.register(k, direction, Orientation.UP, modelOf(loc + "_" + (k - 1), true, 0, 90));
+                        map.register(k, direction, Orientation.RIGHT, modelOf(loc + "_" + (k - 1), true, 0, 90));
+                        map.register(k, direction, Orientation.DOWN, modelOf(loc + "_" + (k - 1), true, 0, 90));
+                        map.register(k, direction, Orientation.LEFT, modelOf(loc + "_" + (k - 1), true, 0, 90));
+                    }
+                }
+            }
+        }
+        CreateVariants(generator, block, map);
     }
 
     public static void halfArch(BlockStateModelGenerator generator, String id, Block block, String texture) {
@@ -574,6 +693,30 @@ public class BlockStateLibrary {
             case 180-> variant.apply(ROTATE_X_180);
             case 270-> variant.apply(ROTATE_X_270);
             default -> variant;
+        };
+        return variant;
+    }
+
+    public static WeightedVariant modelOf(String key, boolean UVlock, int rotateX, int rotateY, int rotateZ) {
+        WeightedVariant variant = modelOf(key);
+        if (UVlock) {variant = variant.apply(UV_LOCK);}
+        variant = switch (rotateX) {
+            case 90 -> variant.apply(ROTATE_X_90);
+            case 180-> variant.apply(ROTATE_X_180);
+            case 270-> variant.apply(ROTATE_X_270);
+            default -> variant;
+        };
+        variant = switch (rotateY) {
+            case 90 -> variant.apply(ROTATE_Y_90);
+            case 180-> variant.apply(ROTATE_Y_180);
+            case 270-> variant.apply(ROTATE_Y_270);
+            default -> variant;
+        };
+        variant = switch (rotateZ) {
+            case 90 -> variant.apply(ModelVariantOperator.ROTATION_Z.withValue(AxisRotation.R90));
+            case 180-> variant.apply(ModelVariantOperator.ROTATION_Z.withValue(AxisRotation.R180));
+            case 270-> variant.apply(ModelVariantOperator.ROTATION_Z.withValue(AxisRotation.R270));
+            default -> variant.apply(ModelVariantOperator.ROTATION_Z.withValue(AxisRotation.R0));
         };
         return variant;
     }

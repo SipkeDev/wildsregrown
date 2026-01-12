@@ -150,7 +150,7 @@ public class GenericSmallStorageEntity extends LootableContainerBlockEntity {
             double d = pos.getX() + 0.5F + vec3i.getX() / 2.0F;
             double e = pos.getY() + 0.5F + vec3i.getY() / 2.0F;
             double f = pos.getZ() + 0.5F + vec3i.getZ() / 2.0F;
-            world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+            world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 1.5F, world.random.nextFloat() * 0.1F + 0.9F);
         }
 
     }

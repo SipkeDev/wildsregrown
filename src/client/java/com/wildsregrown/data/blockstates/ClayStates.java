@@ -2,9 +2,11 @@ package com.wildsregrown.data.blockstates;
 
 import com.wildsregrown.data.blockstates.libraries.BlockStateLibrary;
 import com.wildsregrown.registries.groups.ClayGroup;
+import com.wildsregrown.registries.groups.StoneGroup;
 import net.minecraft.block.Block;
 import net.minecraft.client.data.BlockStateModelGenerator;
 
+import static com.wildsregrown.data.DataGeneratorProvider.idFromBlock;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.root;
 import static com.wildsregrown.registries.ModItemGroups.id;
 
@@ -25,6 +27,10 @@ public class ClayStates {
         block = group.get(ClayGroup.Bricks.block);
         BlockStateLibrary.layered(generator, "layered/" + name + "_bricks", root+"soil/" + name + "_bricks", block, false);
 
+        block = group.get(ClayGroup.Bricks.quarter_stairs);
+        BlockStateLibrary.quarterStairs(generator, idFromBlock(block), block, texture);
+        block = group.get(ClayGroup.Bricks.half_stairs);
+        BlockStateLibrary.halfStairs(generator, idFromBlock(block), block, texture);
         block = group.get(ClayGroup.Bricks.stairs);
         BlockStateLibrary.stairs(generator, id(block) + "_bricks", block, texture);
 
@@ -46,7 +52,10 @@ public class ClayStates {
         texture = root+"soil/" + name + "_old_bricks";
         block = group.get(ClayGroup.OldBricks.block);
         BlockStateLibrary.layered(generator, "layered/" + name + "_old_bricks", texture, block, false);
-
+        block = group.get(ClayGroup.OldBricks.quarter_stairs);
+        BlockStateLibrary.quarterStairs(generator, idFromBlock(block), block, texture);
+        block = group.get(ClayGroup.OldBricks.half_stairs);
+        BlockStateLibrary.halfStairs(generator, idFromBlock(block), block, texture);
         block = group.get(ClayGroup.OldBricks.stairs);
         BlockStateLibrary.stairs(generator, id(block) + "_old_bricks", block, texture);
 
@@ -69,6 +78,10 @@ public class ClayStates {
         texture = root+"soil/" + id(group.soil) + "_roof_tiles";
         block = group.get(ClayGroup.Tiles.block);
         BlockStateLibrary.layered(generator, name + "_roof_tiles", texture, block, false);
+        block = group.get(ClayGroup.Tiles.quarter_stairs);
+        BlockStateLibrary.quarterStairs(generator, idFromBlock(block), block, texture);
+        block = group.get(ClayGroup.Tiles.half_stairs);
+        BlockStateLibrary.halfStairs(generator, idFromBlock(block), block, texture);
         block = group.get(ClayGroup.Tiles.stairs);
         BlockStateLibrary.stairs(generator, name + "_roof_tiles", block, texture);
 

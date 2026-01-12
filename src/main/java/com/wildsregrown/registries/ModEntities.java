@@ -223,7 +223,14 @@ public class ModEntities {
             ModBlocks.willow.get(WoodGroup.Furniture.night_stand),
             ModBlocks.oak.get(WoodGroup.Furniture.night_stand),
             ModBlocks.beech.get(WoodGroup.Furniture.night_stand),
-            ModBlocks.ash.get(WoodGroup.Furniture.night_stand)
+            ModBlocks.ash.get(WoodGroup.Furniture.night_stand),
+
+            ModBlocks.ancient_oak.get(WoodGroup.Framing.barrel),
+            ModBlocks.jacaranda.get(WoodGroup.Framing.barrel),
+            ModBlocks.larch.get(WoodGroup.Framing.barrel),
+            ModBlocks.spruce.get(WoodGroup.Framing.barrel),
+            ModBlocks.oak.get(WoodGroup.Framing.barrel),
+            ModBlocks.ash.get(WoodGroup.Framing.barrel)
     );
     
     public static final BlockEntityType<ShelvesEntity> shelvesEntity = register("shelves_entity", ShelvesEntity::new,

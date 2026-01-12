@@ -456,4 +456,56 @@ public class FramingLibrary {
         CreateVariants(generator, block, map);
     }
 
+    public static void barrel(BlockStateModelGenerator generator, Block block, String name) {
+
+        String loc0 = "log/" + name + "_barrel";
+        String loc1 = "log/" + name + "_paintable" + "_barrel";
+        boolean pines = name.contains("larch") || name.contains("spruce");
+        boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
+
+        applyTextureToModel(generator, loc0, root + modelPath + "barrel", log_path + name + "_wood");
+        if (pines)
+            applyTextureToModel(generator, loc1, root + modelPath + "barrel", log_path + "pine_paintable" + "_wood");
+        else if(fruit){
+            applyTextureToModel(generator, loc1, root + modelPath + "barrel", log_path + "fruit_paintable" + "_wood");
+        }else {
+            applyTextureToModel(generator, loc1, root + modelPath + "barrel", log_path + name + "_paintable" + "_wood");
+        }
+        applyTextureToModel(generator, loc0+"_open", root + modelPath + "barrel"+"_open", log_path + name + "_wood");
+        if (pines)
+            applyTextureToModel(generator, loc1+"_open", root + modelPath + "barrel"+"_open", log_path + "pine_paintable" + "_wood");
+        else if(fruit){
+            applyTextureToModel(generator, loc1+"_open", root + modelPath + "barrel"+"_open", log_path + "fruit_paintable" + "_wood");
+        }else {
+            applyTextureToModel(generator, loc1+"_open", root + modelPath + "barrel"+"_open", log_path + name + "_paintable" + "_wood");
+        }
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
+
+        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction, LinSeedPaintable, Boolean> map = BlockStateVariantMap.models(Properties.FACING, ModProperties.LINSEED_PAINT, Properties.OPEN);
+
+        for (LinSeedPaintable paint : LinSeedPaintable.values()) {
+            String finalLoc;
+            if (paint.asString().equals("none")){
+                finalLoc = loc0;
+            }else {
+                finalLoc = loc1;
+            }
+            map
+                    .register(Direction.UP, paint, false, modelOf(finalLoc, false, 0, 0))
+                    .register(Direction.DOWN, paint, false, modelOf(finalLoc, false, 0, 180))
+                    .register(Direction.NORTH, paint, false, modelOf(finalLoc, false, 0, 90))
+                    .register(Direction.SOUTH, paint, false, modelOf(finalLoc, false, 180, 90))
+                    .register(Direction.EAST, paint, false, modelOf(finalLoc, false, 90, 90))
+                    .register(Direction.WEST, paint, false, modelOf(finalLoc, false, 270, 90))
+                    .register(Direction.UP, paint, true, modelOf(finalLoc+"_open", false, 0, 0))
+                    .register(Direction.DOWN, paint, true, modelOf(finalLoc+"_open", false, 0, 180))
+                    .register(Direction.NORTH, paint, true, modelOf(finalLoc+"_open", false, 0, 90))
+                    .register(Direction.SOUTH, paint, true, modelOf(finalLoc+"_open", false, 180, 90))
+                    .register(Direction.EAST, paint, true, modelOf(finalLoc+"_open", false, 90, 90))
+                    .register(Direction.WEST, paint, true, modelOf(finalLoc+"_open", false, 270, 90));
+
+        }
+        CreateVariants(generator, block, map);
+    }
+
 }

@@ -5,6 +5,7 @@ import com.wildsregrown.blocks.properties.*;
 import com.wildsregrown.blocks.wood.tree.FruitingLeaves;
 import com.wildsregrown.blocks.wood.tree.HalfLog;
 import com.wildsregrown.data.blockstates.libraries.FramingLibrary;
+import com.wildsregrown.data.blockstates.libraries.TudorLibrary;
 import com.wildsregrown.registries.groups.WoodGroup;
 import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockHalf;
@@ -118,6 +119,17 @@ public class WoodGroupBlockStates {
             block = group.get(WoodGroup.Framing.crate_lid);
             crateLid(generator, block, id(block), name);
 
+            block = group.get(WoodGroup.Framing.barrel);
+            barrel(generator, block, name);
+
+            //Tudors
+            block = group.get(WoodGroup.Framing.tudor_square);
+            TudorLibrary.square(generator, block, name);
+            block = group.get(WoodGroup.Framing.tudor_horizontal);
+            TudorLibrary.horizontal(generator, block, name);
+            block = group.get(WoodGroup.Framing.tudor_vertical);
+            TudorLibrary.vertical(generator, block, name);
+
         }
 
         if (group.furnitureExist()) {
@@ -135,6 +147,15 @@ public class WoodGroupBlockStates {
 
             block = group.get(WoodGroup.Furniture.chair);
             chair(generator, block, id(block), name);
+
+            block = group.get(WoodGroup.Furniture.bench);
+            woodenBench(generator, block, id(block), name);
+
+            block = group.get(WoodGroup.Furniture.bench);
+            woodenBench(generator, block, id(block), name);
+
+            block = group.get(WoodGroup.Furniture.dining_table);
+            woodenDiningTable(generator, block, id(block), name);
 
             block = group.get(WoodGroup.Furniture.table);
             table(generator, block, id(block), name);

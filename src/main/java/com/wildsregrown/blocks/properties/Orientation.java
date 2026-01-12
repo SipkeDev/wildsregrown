@@ -1,17 +1,18 @@
 package com.wildsregrown.blocks.properties;
 
+
 import net.minecraft.util.StringIdentifiable;
 
-@Deprecated
-public enum FloralMoisture implements StringIdentifiable {
+public enum Orientation implements StringIdentifiable {
 
-    DRY("dry"),
-    NORMAL("normal"),
-    WET("wet");
+    UP("up"),
+    RIGHT("right"),
+    DOWN("down"),
+    LEFT("left");
 
     private final String name;
 
-    FloralMoisture(String name) {
+    Orientation(String name) {
         this.name = name;
     }
 
@@ -19,4 +20,5 @@ public enum FloralMoisture implements StringIdentifiable {
     public String asString() {
         return this.name;
     }
+
 }
