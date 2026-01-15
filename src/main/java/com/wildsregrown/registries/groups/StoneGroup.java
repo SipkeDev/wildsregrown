@@ -5,8 +5,12 @@ import com.wildsregrown.blocks.Layered;
 import com.wildsregrown.blocks.QuarterStairs;
 import com.wildsregrown.blocks.StoneBlock;
 import com.wildsregrown.blocks.dungeon.DungeonItemLootPedestal;
-import com.wildsregrown.blocks.stone.*;
 import com.wildsregrown.blocks.stone.castle.*;
+import com.wildsregrown.blocks.stone.decoration.StoneBrazier;
+import com.wildsregrown.blocks.stone.furniture.StoneBench;
+import com.wildsregrown.blocks.stone.furniture.StoneDiningTable;
+import com.wildsregrown.blocks.stone.furniture.StoneStool;
+import com.wildsregrown.blocks.stone.furniture.StoneTable;
 import net.minecraft.block.*;
 
 import static com.wildsregrown.registries.ModBlocks.*;
@@ -57,6 +61,7 @@ public class StoneGroup {
             this.construction[Construction.bricks_arch.ordinal()]           = register(id + "_bricks_arch", ArchBlock::new, settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.bricks_arrow_slit.ordinal()]     = register(id + "_bricks_arrow_slit", ArrowSlitBlock::new, settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.bricks_machicolations.ordinal()] = register(id + "_bricks_machicolations", MachicolationsBlock::new, settings, STONE_DECO_GROUP_KEY);
+            this.construction[Construction.bricks_peeking_hole.ordinal()]   = register(id + "_bricks_peeking_hole", PeekingHole::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.battlements.ordinal()]           = register(id + "_battlements", BattlementsBlock::new, settings, STONE_DECO_GROUP_KEY);
         }
 
@@ -77,6 +82,16 @@ public class StoneGroup {
             this.luxury[Luxury.polished_half_arch.ordinal()]    = register(id + "_polished_half_arch", (s) -> new HalfArchBlock(common[Common.layered.ordinal()].getDefaultState(),s), settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.polished_arch.ordinal()]         = register(id + "_polished_arch", ArchBlock::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.polished_arrow_slit.ordinal()]   = register(id + "_polished_arrow_slit", ArrowSlitBlock::new, settings, STONE_DECO_GROUP_KEY);
+            //Furniture
+            this.luxury[Luxury.smooth_bench.ordinal()]          = register(id + "_smooth_bench", StoneBench::new, settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.polished_bench.ordinal()]        = register(id + "_polished_bench", StoneBench::new, settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.smooth_table.ordinal()]          = register(id + "_smooth_table", StoneTable::new, settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.polished_table.ordinal()]        = register(id + "_polished_table", StoneTable::new, settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.smooth_dining_table.ordinal()]   = register(id + "_smooth_dining_table", StoneDiningTable::new, settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.polished_dining_table.ordinal()] = register(id + "_polished_dining_table", StoneDiningTable::new, settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.smooth_stool.ordinal()]          = register(id + "_smooth_stool", StoneStool::new, settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.polished_stool.ordinal()]        = register(id + "_polished_stool", StoneStool::new, settings, STONE_DECO_GROUP_KEY);
+
         }
 
     }
@@ -120,6 +135,7 @@ public class StoneGroup {
         bricks_arch,
         bricks_arrow_slit,
         bricks_machicolations,
+        bricks_peeking_hole,
         battlements
     }
 
@@ -140,7 +156,16 @@ public class StoneGroup {
         polished_half_arch,
         polished_arch,
         smooth_arrow_slit,
-        polished_arrow_slit
+        polished_arrow_slit,
+        //Furniture
+        smooth_bench,
+        polished_bench,
+        smooth_table,
+        polished_table,
+        smooth_dining_table,
+        polished_dining_table,
+        smooth_stool,
+        polished_stool
     }
 
     private final Block[] common;

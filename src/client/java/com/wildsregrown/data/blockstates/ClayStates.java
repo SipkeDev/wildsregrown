@@ -84,12 +84,19 @@ public class ClayStates {
         BlockStateLibrary.halfStairs(generator, idFromBlock(block), block, texture);
         block = group.get(ClayGroup.Tiles.stairs);
         BlockStateLibrary.stairs(generator, name + "_roof_tiles", block, texture);
+        block = group.get(ClayGroup.Tiles.roof);
+        BlockStateLibrary.roof(generator, block,name + "_roof_tiles", texture);
+
 
         texture = root+"soil/" + id(group.soil) + "_plaster";
         block = group.get(ClayGroup.Plaster.layered);
-        //BlockStateLibrary.layered(generator, name + "_plaster", texture, block, false);
+        BlockStateLibrary.layered(generator, name + "_plaster", texture, block, false);
+        texture = root+"soil/" + id(group.soil) + "_old_plaster";
+        block = group.get(ClayGroup.Plaster.old_layered);
+        BlockStateLibrary.layered(generator, name + "_old_plaster", texture, block, false);
+        texture = root+"soil/" + id(group.soil) + "_waved_plaster";
+        block = group.get(ClayGroup.Plaster.waved_layered);
+        BlockStateLibrary.layered(generator, name + "_waved_plaster", texture, block, false);
 
-        block = group.get(ClayGroup.Plaster.stairs);
-        //BlockStateLibrary.stairs(generator, name + "_plaster", block, texture);
     }
 }

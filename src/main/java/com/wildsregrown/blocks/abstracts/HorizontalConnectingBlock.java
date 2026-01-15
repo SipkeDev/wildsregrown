@@ -95,7 +95,7 @@ public abstract class HorizontalConnectingBlock extends Block implements Waterlo
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder){
-        builder.add(SHAPE, FACING, Properties.WATERLOGGED);
+        builder.add(SHAPE, FACING);
     }
 
 }

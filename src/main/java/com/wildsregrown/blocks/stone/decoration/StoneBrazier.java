@@ -1,4 +1,4 @@
-package com.wildsregrown.blocks.stone;
+package com.wildsregrown.blocks.stone.decoration;
 
 import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.blocks.properties.FueledLight;

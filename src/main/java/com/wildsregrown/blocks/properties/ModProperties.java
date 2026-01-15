@@ -51,6 +51,7 @@ public class ModProperties {
     public static final IntProperty FUEL_64 = IntProperty.of("fuel", 0, 64);
     public static final EnumProperty<TorchHolderState> TORCH_HOLDER_STATE = EnumProperty.of("torch_holder", TorchHolderState.class);
 
+    public static final EnumProperty<DoorState> DOOR = EnumProperty.of("part", DoorState.class);
     public static final EnumProperty<Tudor> TUDOR = EnumProperty.of("shape", Tudor.class);
     public static final EnumProperty<Orientation> ORIENTATION = EnumProperty.of("orientation", Orientation.class);
     public static final EnumProperty<HalfStair> HALF = EnumProperty.of("half", HalfStair.class);

@@ -2,14 +2,18 @@ package com.wildsregrown.data.blockstates.libraries;
 
 import com.google.gson.JsonObject;
 import com.wildsregrown.WildsRegrown;
+import com.wildsregrown.blocks.decoration.Candles;
 import com.wildsregrown.blocks.properties.*;
 import com.wildsregrown.blocks.properties.connecting.CornerConnecting;
 import com.wildsregrown.blocks.properties.connecting.VerticalConnected;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CandleBlock;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.client.data.*;
+import net.minecraft.client.render.item.tint.ConstantTintSource;
+import net.minecraft.client.render.item.tint.GrassTintSource;
 import net.minecraft.client.render.model.json.ModelVariant;
 import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.client.render.model.json.WeightedVariant;
@@ -554,6 +558,23 @@ public class BlockStateLibrary {
         );
     }
 
+    public static void peekingHole(BlockStateModelGenerator generator, String id, Block block, String texture) {
+
+        for (int i = 0; i < 2; i++) {
+            applyTextureToModel(generator, id + "_" + i, root + "castle/peeking_hole_" + i, texture);
+        }
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id+"_0"));
+
+        BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction.Axis, Integer> map = BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS, ModProperties.VARIATIONS_2);
+
+        for (int i = 0; i < 2; i++) {
+            map
+                    .register(Direction.Axis.X, i+1, modelOf(id + "_" + i, false, 90, 0))
+                    .register(Direction.Axis.Z, i+1, modelOf(id + "_" + i, false, 0, 0));
+        }
+        CreateVariants(generator, block, map);
+    }
+
     public static void roof(BlockStateModelGenerator generator, Block block, String id, String texture) {
 
         applyTextureToModel(generator, "misc/" + id, "block/framing/roof", texture);
@@ -605,6 +626,20 @@ public class BlockStateLibrary {
         );
     }
 
+    public static void candles(BlockStateModelGenerator generator, String id, Block block) {
+        for (int i : ModProperties.LAYERS.getValues()){
+            applyTextureToModel(generator, id + "_" + i,"block/decoration/misc/candle_" + i);
+        }
+        if (block instanceof Candles candles) {
+            generator.registerTintedItemModel(block, Identifier.of(modid, root + id + "_1"), new ConstantTintSource(candles.getRgb()));
+        }
+        BlockStateVariantMap.SingleProperty<WeightedVariant, Integer> map = BlockStateVariantMap.models(ModProperties.LAYERS);
+        for (int i : ModProperties.LAYERS.getValues()){
+            map.register(i, modelOf(id + "_" + i, false, 0, 0));
+        }
+        CreateVariants(generator, block, map);
+    }
+
     public static void itemLootPedestal(BlockStateModelGenerator generator, String id, Block block, String texture) {
 
         applyTextureToModel(generator, id + "_1","block/dungeon/item_loot_pedestal_1", texture);
@@ -624,8 +659,26 @@ public class BlockStateLibrary {
         );
     }
 
+    public static void glassPane(BlockStateModelGenerator generator, String id, Block block, String texture) {
+
+        for (int i = 0; i < 3; i++) {
+            applyTextureToModel(generator, id + "_" + i, root + "decoration/glass_pane_" + i, texture);
+        }
+
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+id+"_0"));
+
+        BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction.Axis, Integer> map = BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS, ModProperties.VARIATIONS_3);
+
+        for (int i = 0; i < 3; i++) {
+            map.register(Direction.Axis.X, i+1, modelOf(id + "_" + i, false, 90,0));
+            map.register(Direction.Axis.Z, i+1, modelOf(id + "_" + i, false, 0,0));
+        }
+
+        CreateVariants(generator, block, map);
+    }
+
     public static void axis(BlockStateModelGenerator generator, String id, Block block, String texture, String parent) {
-            applyTextureToModel(generator, id, "block/" + parent, texture);
+            applyTextureToModel(generator, id, root + parent, texture);
             generator.registerParentedItemModel(block, Identifier.of(modid, root+id));
             CreateVariants(generator, block, BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS)
                     .register(Direction.Axis.X, modelOf(id, false, 90,0))
@@ -662,6 +715,10 @@ public class BlockStateLibrary {
             jsonObject.addProperty("parent", modid + ":" + parentLoc);
             return jsonObject;
         });
+    }
+
+    public static void CreateSingleton(BlockStateModelGenerator generator, Block block, String variant) {
+        generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block, modelOf(variant)));
     }
 
     public static void CreateVariants(BlockStateModelGenerator generator, Block block, BlockStateVariantMap map) {
@@ -720,6 +777,5 @@ public class BlockStateLibrary {
         };
         return variant;
     }
-
 }
 

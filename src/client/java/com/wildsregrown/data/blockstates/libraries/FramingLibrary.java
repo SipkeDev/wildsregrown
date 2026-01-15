@@ -1,5 +1,6 @@
 package com.wildsregrown.data.blockstates.libraries;
 
+import com.wildsregrown.blocks.properties.DoorState;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.connecting.SupportConnected;
@@ -28,7 +29,7 @@ import static com.wildsregrown.data.blockstates.WoodGroupBlockStates.plank_path;
 public class FramingLibrary {
 
     private final static String modelPath = "framing/";
-    
+
     public static void planks(BlockStateModelGenerator generator, Block block, String id, String type) {
 
         String texture0 = plank_path + id + "_" + type;
@@ -506,6 +507,192 @@ public class FramingLibrary {
 
         }
         CreateVariants(generator, block, map);
+    }
+
+    public static void door(BlockStateModelGenerator generator, Block block, String name, boolean window) {
+
+        String id = idFromBlock(block);
+        String loc0 = modelPath + id;
+        String loc1 = modelPath + id + "_paintable";
+        boolean pines = id.contains("larch") || id.contains("spruce");
+        boolean fruit = id.contains("apple") || id.contains("pear") || id.contains("walnut");
+
+        String tex0 = plank_path + name + "_planks";
+        String tex1 = plank_path + name + "_paintable_planks";
+        if (pines){
+            tex1 = plank_path + "pine_paintable_planks";
+        }
+        if (fruit) {
+            tex1 = plank_path + "pine_paintable_planks";
+        }
+        String open = "_open";
+        String closed = "_closed";
+        String top = "_top";
+        String bottom = "_bottom";
+        String left = "_left";
+        String right = "_right";
+        String w = window ? "_window" : "";
+
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + bottom + left + closed, root+modelPath + "door/wooden_door" + bottom + left + closed, tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + bottom + left + open, root+modelPath + "door/wooden_door" + bottom + left + open, tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + top + left + closed, root+modelPath + "door/wooden_door" + w + top + left + closed, tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + top + left + open, root+modelPath + "door/wooden_door" + w + top + left + open, tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + bottom + right + closed, root+modelPath + "door/wooden_door" + bottom + right + closed, tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + bottom + right + open, root+modelPath + "door/wooden_door" + bottom + right + open, tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + top + right + closed, root+modelPath + "door/wooden_door" + w + top + right + closed, tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + top + right + open, root+modelPath + "door/wooden_door" + w + top + right + open, tex0);
+
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + bottom + left + closed, root+modelPath + "door/wooden_door" + bottom + left + closed, tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + bottom + left + open, root+modelPath + "door/wooden_door" + bottom + left + open, tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + top + left + closed, root+modelPath + "door/wooden_door" + w + top + left + closed, tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + top + left + open, root+modelPath + "door/wooden_door" + w + top + left + open, tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + bottom + right + closed, root+modelPath + "door/wooden_door" + bottom + right + closed, tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + bottom + right + open, root+modelPath + "door/wooden_door" + bottom + right + open, tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + top + right + closed, root+modelPath + "door/wooden_door" + w + top + right + closed, tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + top + right + open, root+modelPath + "door/wooden_door" + w + top + right + open, tex1);
+
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0+top+left+closed));
+
+        BlockStateVariantMap.QuadrupleProperty<WeightedVariant, Direction, Boolean, DoorState, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, Properties.OPEN, ModProperties.DOOR, ModProperties.LINSEED_PAINT);
+
+        for (Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+            for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
+                int dir = direction.getHorizontalQuarterTurns() * 90;
+                String loc = loc1;
+                if (paintable == LinSeedPaintable.NONE) {
+                    loc = loc0;
+                }
+                map.register(direction, true, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + open, false, dir, 0));
+                map.register(direction, false, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + closed, false, dir, 0));
+                map.register(direction, true, DoorState.left_top, paintable, modelOf(loc + top + left + open, false, dir, 0));
+                map.register(direction, false, DoorState.left_top, paintable, modelOf(loc + top + left + closed, false, dir, 0));
+                map.register(direction, true, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + open, false, dir, 0));
+                map.register(direction, false, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + closed, false, dir, 0));
+                map.register(direction, true, DoorState.right_top, paintable, modelOf(loc + top + right + open, false, dir, 0));
+                map.register(direction, false, DoorState.right_top, paintable, modelOf(loc + top + right + closed, false, dir, 0));
+            }
+        }
+
+        CreateVariants(generator, block, map);
+
+    }
+
+    public static void enforcedDoor(BlockStateModelGenerator generator, Block block, String name, boolean window) {
+
+        String id = idFromBlock(block);
+        String loc0 = modelPath + id;
+        String loc1 = modelPath + id + "_paintable";
+        boolean pines = id.contains("larch") || id.contains("spruce");
+        boolean fruit = id.contains("apple") || id.contains("pear") || id.contains("walnut");
+
+        String tex0 = plank_path + name + "_planks";
+        String tex1 = plank_path + name + "_paintable_planks";
+        String tex2 = log_path + name + "_wood";
+        String tex3 = log_path + name + "_paintable_wood";
+        if (pines){
+            tex1 = plank_path + "pine_paintable_planks";
+            tex3 = log_path + "pine_paintable_wood";
+        }
+        if (fruit) {
+            tex1 = plank_path + "pine_paintable_planks";
+            tex3 = log_path + "fruit_paintable_wood";
+        }
+        String open = "_open";
+        String closed = "_closed";
+        String top = "_top";
+        String bottom = "_bottom";
+        String left = "_left";
+        String right = "_right";
+        String w = window ? "_window" : "";
+
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + bottom + left + closed, root+modelPath + "door/enforced_wooden_door" + bottom + left + closed, tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + bottom + left + open, root+modelPath + "door/enforced_wooden_door" + bottom + left + open, tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + top + left + closed, root+modelPath + "door/enforced_wooden_door" + w + top + left + closed, tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + top + left + open, root+modelPath + "door/enforced_wooden_door" + w + top + left + open, tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + bottom + right + closed, root+modelPath + "door/enforced_wooden_door" + bottom + right + closed, tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + bottom + right + open, root+modelPath + "door/enforced_wooden_door" + bottom + right + open, tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + top + right + closed, root+modelPath + "door/enforced_wooden_door" + w + top + right + closed, tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + top + right + open, root+modelPath + "door/enforced_wooden_door" + w + top + right + open, tex0, tex2);
+
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + bottom + left + closed, root+modelPath + "door/enforced_wooden_door" + bottom + left + closed, tex1, tex3);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + bottom + left + open, root+modelPath + "door/enforced_wooden_door" + bottom + left + open, tex1, tex3);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + top + left + closed, root+modelPath + "door/enforced_wooden_door" + w + top + left + closed, tex1, tex3);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + top + left + open, root+modelPath + "door/enforced_wooden_door" + w + top + left + open, tex1, tex3);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + bottom + right + closed, root+modelPath + "door/enforced_wooden_door" + bottom + right + closed, tex1, tex3);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + bottom + right + open, root+modelPath + "door/enforced_wooden_door" + bottom + right + open, tex1, tex3);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + top + right + closed, root+modelPath + "door/enforced_wooden_door" + w + top + right + closed, tex1, tex3);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + top + right + open, root+modelPath + "door/enforced_wooden_door" + w + top + right + open, tex1, tex3);
+
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + top + left + closed));
+
+        BlockStateVariantMap.QuadrupleProperty<WeightedVariant, Direction, Boolean, DoorState, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, Properties.OPEN, ModProperties.DOOR, ModProperties.LINSEED_PAINT);
+
+        for (Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+            for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
+                int dir = direction.getHorizontalQuarterTurns() * 90;
+                String loc = loc1;
+                if (paintable == LinSeedPaintable.NONE) {
+                    loc = loc0;
+                }
+                map.register(direction, true, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + open, false, dir, 0));
+                map.register(direction, false, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + closed, false, dir, 0));
+                map.register(direction, true, DoorState.left_top, paintable, modelOf(loc + top + left + open, false, dir, 0));
+                map.register(direction, false, DoorState.left_top, paintable, modelOf(loc + top + left + closed, false, dir, 0));
+                map.register(direction, true, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + open, false, dir, 0));
+                map.register(direction, false, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + closed, false, dir, 0));
+                map.register(direction, true, DoorState.right_top, paintable, modelOf(loc + top + right + open, false, dir, 0));
+                map.register(direction, false, DoorState.right_top, paintable, modelOf(loc + top + right + closed, false, dir, 0));
+            }
+        }
+
+        CreateVariants(generator, block, map);
+
+    }
+
+    public static void trapDoor(BlockStateModelGenerator generator, Block block, String name) {
+
+        String id = idFromBlock(block);
+        String loc0 = modelPath + id;
+        String loc1 = modelPath + id + "_paintable";
+        boolean pines = id.contains("larch") || id.contains("spruce");
+        boolean fruit = id.contains("apple") || id.contains("pear") || id.contains("walnut");
+
+        String tex0 = plank_path + name + "_planks";
+        String tex1 = plank_path + name + "_paintable_planks";
+        String tex2 = log_path + name + "_wood";
+        String tex3 = log_path + name + "_paintable_wood";
+        if (pines){
+            tex1 = plank_path + "pine_paintable_planks";
+            tex3 = log_path + "pine_paintable_wood";
+        }
+        if (fruit) {
+            tex1 = plank_path + "pine_paintable_planks";
+            tex3 = log_path + "fruit_paintable_wood";
+        }
+
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_closed", root+modelPath + "trapdoor_closed", tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_open", root+modelPath + "trapdoor_open", tex0, tex2);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_closed", root+modelPath + "trapdoor_closed", tex1, tex3);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_open", root+modelPath + "trapdoor_open", tex1, tex3);
+
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_closed"));
+
+        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction, Boolean, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, Properties.OPEN, ModProperties.LINSEED_PAINT);
+
+        for (Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+            for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
+                int dir = direction.getHorizontalQuarterTurns() * 90;
+                String path = loc1;
+                if (paintable == LinSeedPaintable.NONE) {
+                    path = loc0;
+                }
+                map.register(direction, true, paintable, modelOf(path + "_open", false, dir, 0));
+                map.register(direction, false, paintable, modelOf(path + "_closed", false, dir, 0));
+            }
+        }
+
+        CreateVariants(generator, block, map);
+
     }
 
 }

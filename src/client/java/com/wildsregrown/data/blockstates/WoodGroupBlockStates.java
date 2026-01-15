@@ -121,6 +121,16 @@ public class WoodGroupBlockStates {
 
             block = group.get(WoodGroup.Framing.barrel);
             barrel(generator, block, name);
+            block = group.get(WoodGroup.Framing.door);
+            door(generator, block, name, false);
+            block = group.get(WoodGroup.Framing.door_window);
+            door(generator, block, name, true);
+            block = group.get(WoodGroup.Framing.enforced_door);
+            enforcedDoor(generator, block, name, false);
+            block = group.get(WoodGroup.Framing.enforced_door_window);
+            enforcedDoor(generator, block, name, true);
+            block = group.get(WoodGroup.Framing.trapdoor);
+            trapDoor(generator, block, name);
 
             //Tudors
             block = group.get(WoodGroup.Framing.tudor_square);
@@ -151,8 +161,8 @@ public class WoodGroupBlockStates {
             block = group.get(WoodGroup.Furniture.bench);
             woodenBench(generator, block, id(block), name);
 
-            block = group.get(WoodGroup.Furniture.bench);
-            woodenBench(generator, block, id(block), name);
+            block = group.get(WoodGroup.Furniture.bench_with_backrest);
+            woodenBenchWithBackrest(generator, block, id(block), name);
 
             block = group.get(WoodGroup.Furniture.dining_table);
             woodenDiningTable(generator, block, id(block), name);

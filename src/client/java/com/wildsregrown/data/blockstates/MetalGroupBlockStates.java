@@ -33,7 +33,7 @@ public class MetalGroupBlockStates {
         if (group.decoExist()) {
 
             block = group.get(MetalGroup.Deco.bars);
-            MetalGroupBlockStates.axis(generator, id(block), block, texture, "decoration/metal_bars", group.isOxidation());
+            MetalGroupBlockStates.metalBars(generator, id(block), block, texture);
 
             block = group.get(MetalGroup.Deco.wall_anchor);
             MetalGroupBlockStates.horizontalFacing(generator, id(block), block, texture, "decoration/metal_wall_anchor", group.isOxidation());
@@ -57,6 +57,12 @@ public class MetalGroupBlockStates {
 
             block = group.get(MetalGroup.Lights.lantern);
             MetalGroupBlockStates.lantern(generator, id(block), block, texture, "lights/iron_lantern_off", "lights/iron_lantern_on");
+
+            block = group.get(MetalGroup.Lights.candle_lantern);
+            MetalGroupBlockStates.candleLantern(generator, id(block), block, texture);
+
+            block = group.get(MetalGroup.Lights.oil_lantern);
+            MetalGroupBlockStates.oilLantern(generator, id(block), block, texture);
 
         }
     }
@@ -340,6 +346,71 @@ public class MetalGroupBlockStates {
             map.register(oxidation, true, modelOf(id+"_lit_"+oxidation));
         }
 
+        CreateVariants(generator, block, map);
+
+    }
+
+    public static void metalBars(BlockStateModelGenerator generator, String id, Block block, String texture) {
+
+        for (int i = 0; i < 3; i++) {
+            applyTextureToModel(generator, id + "_" + i + "_0", root + "decoration/metals/metal_bars_" + i, texture + "_0");
+            applyTextureToModel(generator, id + "_" + i +  "_1", root + "decoration/metals/metal_bars_" + i, texture + "_1");
+            applyTextureToModel(generator, id + "_" + i +  "_2", root + "decoration/metals/metal_bars_" + i, texture + "_2");
+            applyTextureToModel(generator, id + "_" + i +  "_3", root + "decoration/metals/metal_bars_" + i, texture + "_3");
+        }
+        generator.registerParentedItemModel(block, Identifier.of(modid, root + id + "_0_0"));
+
+        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction.Axis, Integer, Integer> map = BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS, ModProperties.OXIDATION, ModProperties.VARIATIONS_3);
+
+        for (int i = 0; i < 3; i++) {
+            map.register(Direction.Axis.X, 0, i+1,  modelOf(id + "_" + i + "_0", false, 90, 0))
+                    .register(Direction.Axis.Z, 0,i+1, modelOf(id + "_" + i + "_0", false, 0, 0))
+                    .register(Direction.Axis.X, 1,i+1, modelOf(id + "_" + i + "_1", false, 90, 0))
+                    .register(Direction.Axis.Z, 1,i+1, modelOf(id + "_" + i + "_1", false, 0, 0))
+                    .register(Direction.Axis.X, 2,i+1, modelOf(id + "_" + i + "_2", false, 90, 0))
+                    .register(Direction.Axis.Z, 2,i+1, modelOf(id + "_" + i + "_2", false, 0, 0))
+                    .register(Direction.Axis.X, 3,i+1, modelOf(id + "_" + i + "_3", false, 90, 0))
+                    .register(Direction.Axis.Z, 3,i+1, modelOf(id + "_" + i + "_3", false, 0, 0));
+        }
+
+        CreateVariants(generator, block, map);
+
+    }
+
+    public static void candleLantern(BlockStateModelGenerator generator, String id, Block block, String texture) {
+
+        applyTextureToModel(generator, id + "_0", root + "decoration/metals/metal_candle_lantern", texture + "_0");
+        applyTextureToModel(generator, id + "_1", root + "decoration/metals/metal_candle_lantern", texture + "_1");
+        applyTextureToModel(generator, id + "_2", root + "decoration/metals/metal_candle_lantern", texture + "_2");
+        applyTextureToModel(generator, id + "_3", root + "decoration/metals/metal_candle_lantern", texture + "_3");
+
+        generator.registerParentedItemModel(block, Identifier.of(modid, root + id + "_0"));
+
+        BlockStateVariantMap.SingleProperty<WeightedVariant, Integer> map = BlockStateVariantMap.models(ModProperties.OXIDATION);
+
+        map.register(0, modelOf(id + "_0", false, 0, 0))
+                    .register(1, modelOf(id + "_1", false, 0, 0))
+                    .register(2, modelOf(id + "_2", false, 0, 0))
+                    .register(3, modelOf(id + "_3", false, 0, 0));
+        CreateVariants(generator, block, map);
+
+    }
+
+    public static void oilLantern(BlockStateModelGenerator generator, String id, Block block, String texture) {
+
+        applyTextureToModel(generator, id + "_0", root + "decoration/metals/metal_oil_lantern", texture + "_0");
+        applyTextureToModel(generator, id + "_1", root + "decoration/metals/metal_oil_lantern", texture + "_1");
+        applyTextureToModel(generator, id + "_2", root + "decoration/metals/metal_oil_lantern", texture + "_2");
+        applyTextureToModel(generator, id + "_3", root + "decoration/metals/metal_oil_lantern", texture + "_3");
+
+        generator.registerParentedItemModel(block, Identifier.of(modid, root + id + "_0"));
+
+        BlockStateVariantMap.SingleProperty<WeightedVariant, Integer> map = BlockStateVariantMap.models(ModProperties.OXIDATION);
+
+        map.register(0, modelOf(id + "_0", false, 0, 0))
+                .register(1, modelOf(id + "_1", false, 0, 0))
+                .register(2, modelOf(id + "_2", false, 0, 0))
+                .register(3, modelOf(id + "_3", false, 0, 0));
         CreateVariants(generator, block, map);
 
     }

@@ -1,6 +1,7 @@
 package com.wildsregrown.data.blockstates;
 
 import com.wildsregrown.data.blockstates.libraries.BlockStateLibrary;
+import com.wildsregrown.data.blockstates.libraries.StoneFurnitureLibrary;
 import com.wildsregrown.registries.groups.StoneGroup;
 import net.minecraft.block.Block;
 import net.minecraft.client.data.BlockStateModelGenerator;
@@ -86,6 +87,8 @@ public class StoneGroupBlockStates {
             BlockStateLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_bricks");
             block = group.get(StoneGroup.Construction.bricks_machicolations);
             BlockStateLibrary.machicolations(generator, idFromBlock(block), block, texture + "_bricks");
+            block = group.get(StoneGroup.Construction.bricks_peeking_hole);
+            BlockStateLibrary.peekingHole(generator, idFromBlock(block), block, texture + "_bricks");
             block = group.get(StoneGroup.Construction.battlements);
             BlockStateLibrary.battlements(generator, idFromBlock(block), block, texture);
         }
@@ -121,6 +124,26 @@ public class StoneGroupBlockStates {
             BlockStateLibrary.halfArch(generator, idFromBlock(block), block, texture + "_polished");
             block = group.get(StoneGroup.Luxury.polished_arch);
             BlockStateLibrary.arch(generator, idFromBlock(block), block, texture + "_polished");
+
+            //Furniture
+            block = group.get(StoneGroup.Luxury.smooth_bench);
+            StoneFurnitureLibrary.stoneBench(generator, block, idFromBlock(block),texture + "_smooth");
+            block = group.get(StoneGroup.Luxury.polished_bench);
+            StoneFurnitureLibrary.stoneBench(generator, block, idFromBlock(block),texture + "_polished");
+            block = group.get(StoneGroup.Luxury.smooth_stool);
+            StoneFurnitureLibrary.stoneStool(generator, block, idFromBlock(block),texture + "_smooth");
+            block = group.get(StoneGroup.Luxury.polished_stool);
+            StoneFurnitureLibrary.stoneStool(generator, block, idFromBlock(block),texture + "_polished");
+            block = group.get(StoneGroup.Luxury.smooth_table);
+            StoneFurnitureLibrary.stoneTable(generator, block, idFromBlock(block),texture + "_smooth");
+            block = group.get(StoneGroup.Luxury.polished_table);
+            StoneFurnitureLibrary.stoneTable(generator, block, idFromBlock(block),texture + "_polished");
+            block = group.get(StoneGroup.Luxury.smooth_dining_table);
+            StoneFurnitureLibrary.stoneDiningTable(generator, block, idFromBlock(block),texture + "_smooth");
+            block = group.get(StoneGroup.Luxury.polished_dining_table);
+            StoneFurnitureLibrary.stoneDiningTable(generator, block, idFromBlock(block),texture + "_polished");
+
+
         }
 
     }

@@ -105,14 +105,13 @@ public class SoilBlock extends FallingBlock implements Waterloggable, ITintedBlo
     }
 
     @Override
-    public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
-        BlockPos loc = pos.up();
-        if (world.getBlockState(loc).getBlock() instanceof Flora){
-            world.breakBlock(loc,true, player);
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        BlockPos up = pos.up();
+        if (world.getBlockState(up).getBlock() instanceof Flora){
+            world.breakBlock(up, true);
         }
-        super.onBlockBreakStart(state, world, pos, player);
+        return super.onBreak(world, pos, state, player);
     }
-
 
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return LAYERS_TO_SHAPE[state.get(LAYERS)];

@@ -54,8 +54,8 @@ public class TudorSquare extends Block implements ITintedBlock {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx) {
         switch (state.get(Properties.HORIZONTAL_FACING)) {
             case NORTH -> {return shape[0];}
-            case SOUTH  -> {return shape[1];}
-            case EAST  -> {return shape[2];}
+            case EAST  -> {return shape[1];}
+            case SOUTH  -> {return shape[2];}
             case WEST  -> {return shape[3];}
             default -> {return shape[0];}
         }

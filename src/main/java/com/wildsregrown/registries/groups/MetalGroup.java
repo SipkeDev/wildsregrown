@@ -2,9 +2,7 @@ package com.wildsregrown.registries.groups;
 
 import com.wildsregrown.blocks.Layered;
 import com.wildsregrown.blocks.metal.*;
-import com.wildsregrown.blocks.metal.lights.MetalAndIrons;
-import com.wildsregrown.blocks.metal.lights.MetalBrazier;
-import com.wildsregrown.blocks.metal.lights.MetalLantern;
+import com.wildsregrown.blocks.metal.lights.*;
 import com.wildsregrown.registries.ModBlocks;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -38,6 +36,8 @@ public class MetalGroup {
             this.lights[Lights.brazier.ordinal()]   = ModBlocks.register(id + "_brazier"  , MetalBrazier::new , settings, METALS_GROUP_KEY);
             this.lights[Lights.and_irons.ordinal()] = ModBlocks.register(id + "_and_irons", MetalAndIrons::new, settings, METALS_GROUP_KEY);
             this.lights[Lights.lantern.ordinal()]   = ModBlocks.register(id + "_lantern"  , MetalLantern::new , settings, METALS_GROUP_KEY);
+            this.lights[Lights.candle_lantern.ordinal()]   = ModBlocks.register(id + "_candle_lantern"  , MetalCandleLantern::new , settings, METALS_GROUP_KEY);
+            this.lights[Lights.oil_lantern.ordinal()]   = ModBlocks.register(id + "_oil_lantern"  , MetalOilLantern::new , settings, METALS_GROUP_KEY);
             CUTOUTS.add(this.lights[Lights.brazier.ordinal()]);
             CUTOUTS.add(this.lights[Lights.and_irons.ordinal()]);
             CUTOUTS.add(this.lights[Lights.lantern.ordinal()]);
@@ -59,7 +59,9 @@ public class MetalGroup {
         torch_holder,
         brazier,
         and_irons,
-        lantern
+        lantern,
+        candle_lantern,
+        oil_lantern
     }
 
     public  final Block block;

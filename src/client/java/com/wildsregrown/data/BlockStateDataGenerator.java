@@ -2,7 +2,8 @@ package com.wildsregrown.data;
 
 import com.wildsregrown.blocks.GravelBlock;
 import com.wildsregrown.blocks.SoilBlock;
-import com.wildsregrown.blocks.decoration.GlassWindows;
+import com.wildsregrown.blocks.decoration.Candles;
+import com.wildsregrown.blocks.decoration.GlassPane;
 import com.wildsregrown.blocks.flora.flowers.*;
 import com.wildsregrown.blocks.flora.grass.*;
 import com.wildsregrown.blocks.flora.rooted.*;
@@ -130,9 +131,14 @@ public class BlockStateDataGenerator extends FabricModelProvider {
                     else if (block instanceof FlowerFlora || block instanceof ColoredFlowers){
                         FloraLibrary.flower(generator, block, id);
                     }
-                    //handle misc
-                    else if(block instanceof GlassWindows){
-                        BlockStateLibrary.axis(generator, id, block, "block/misc/" + id, "decoration/glass_window");
+                    else if (block instanceof Candles) {
+                        BlockStateLibrary.candles(generator, id, block);
+                    }else if (block instanceof GlassPane) {
+                        if (block.getTranslationKey().contains("window")){
+                            BlockStateLibrary.glassPane(generator, id, block, "block/misc/glass_window");
+                        }else {
+                            BlockStateLibrary.glassPane(generator, id, block, "block/misc/glass_frosted");
+                        }
                     }
                     //SKIP
                 });

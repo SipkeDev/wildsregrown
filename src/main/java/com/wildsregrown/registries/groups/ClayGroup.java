@@ -5,6 +5,7 @@ import com.wildsregrown.blocks.Layered;
 import com.wildsregrown.blocks.QuarterStairs;
 import com.wildsregrown.blocks.SoilBlock;
 import com.wildsregrown.blocks.stone.castle.*;
+import com.wildsregrown.blocks.wood.framing.Roof;
 import com.wildsregrown.registries.ModBlocks;
 import net.minecraft.block.*;
 
@@ -22,8 +23,10 @@ public class ClayGroup {
         this.tiles      = new Block[Tiles.values().length];
         this.plaster    = new Block[Plaster.values().length];
 
+        //Soil
         this.soil = ModBlocks.register(id, SoilBlock::new, AbstractBlock.Settings.copy(Blocks.CLAY), SOIL_GROUP_KEY);
 
+        //Bricks
         this.bricks[Bricks.block.ordinal()]        = ModBlocks.register(id + "_bricks"            , Layered::new      , settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.quarter_stairs.ordinal()]= ModBlocks.register(id + "_brick_quarter_stairs", QuarterStairs::new, settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.half_stairs.ordinal()]   = ModBlocks.register(id + "_brick_half_stairs", HalfStairs::new, settings, SOIL_GROUP_KEY);
@@ -34,6 +37,7 @@ public class ClayGroup {
         this.bricks[Bricks.arrow_slit.ordinal()]   = ModBlocks.register(id + "_brick_arrow_slit"  , ArrowSlitBlock::new, settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.half_arch.ordinal()]    = ModBlocks.register(id + "_brick_half_arch"   , (s) -> new HalfArchBlock(bricks[Bricks.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
 
+        //Old Bricks
         this.old_bricks[OldBricks.block.ordinal()]        = ModBlocks.register("old_" + id + "_bricks"            , Layered::new       , settings, SOIL_GROUP_KEY);
         this.old_bricks[OldBricks.quarter_stairs.ordinal()]= ModBlocks.register("old_" + id + "_brick_quarter_stairs", QuarterStairs::new, settings, SOIL_GROUP_KEY);
         this.old_bricks[OldBricks.half_stairs.ordinal()]   = ModBlocks.register("old_" + id + "_brick_half_stairs", HalfStairs::new, settings, SOIL_GROUP_KEY);
@@ -44,13 +48,17 @@ public class ClayGroup {
         this.old_bricks[OldBricks.arrow_slit.ordinal()]   = ModBlocks.register("old_" + id + "_brick_arrow_slit"  , ArrowSlitBlock::new, settings, SOIL_GROUP_KEY);
         this.old_bricks[OldBricks.half_arch.ordinal()]    = ModBlocks.register("old_" + id + "_brick_half_arch"   , (s) -> new HalfArchBlock(old_bricks[Bricks.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
 
+        //Roof Tiles
         this.tiles[Tiles.block.ordinal()] = ModBlocks.register(id + "_tiles", Layered::new, settings, SOIL_GROUP_KEY);
         this.tiles[Tiles.quarter_stairs.ordinal()]= ModBlocks.register(id + "_tile" + "_quarter_stairs", QuarterStairs::new, settings, SOIL_GROUP_KEY);
         this.tiles[Tiles.half_stairs.ordinal()]   = ModBlocks.register(id + "_tile" + "_half_stairs", HalfStairs::new, settings, SOIL_GROUP_KEY);
         this.tiles[Tiles.stairs.ordinal()]  = ModBlocks.register(id + "_tile_stairs" , (s) -> new StairsBlock(tiles[Tiles.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
+        this.tiles[Tiles.roof.ordinal()]  = ModBlocks.register(id + "_tile_roof" , Roof::new, settings, SOIL_GROUP_KEY);
 
-        //this.plaster[Plaster.layered.ordinal()] = ModBlocks.register(id + "_layered_plaster", Layered::new, settings, SOIL_GROUP_KEY);
-        //this.plaster[Plaster.stairs.ordinal()]  = ModBlocks.register(id + "_plaster_stairs" , (s) -> new StairsBlock(tiles[Tiles.block.ordinal()].getDefaultState(),s), settings, SOIL_GROUP_KEY);
+        //Plaster
+        this.plaster[Plaster.layered.ordinal()] = ModBlocks.register(id + "_plaster_layered", Layered::new, settings, SOIL_GROUP_KEY);
+        this.plaster[Plaster.old_layered.ordinal()] = ModBlocks.register(id + "_old_plaster_layered", Layered::new, settings, SOIL_GROUP_KEY);
+        this.plaster[Plaster.waved_layered.ordinal()] = ModBlocks.register(id + "_waved_plaster_layered", Layered::new, settings, SOIL_GROUP_KEY);
 
     }
 
@@ -117,9 +125,8 @@ public class ClayGroup {
 
     public enum Plaster{
         layered,
-        quarter_stairs,
-        half_stairs,
-        stairs
+        old_layered,
+        waved_layered
     }
 
 }

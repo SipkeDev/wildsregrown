@@ -39,6 +39,7 @@ public class TudorHorizontal extends HorizontalConnectingBlock implements ITinte
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(Properties.HORIZONTAL_FACING, rotation.rotate(state.get(Properties.HORIZONTAL_FACING)));
     }
+
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         return state.rotate(mirror.getRotation(state.get(Properties.HORIZONTAL_FACING)));
     }
@@ -61,8 +62,8 @@ public class TudorHorizontal extends HorizontalConnectingBlock implements ITinte
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx) {
         switch (state.get(Properties.HORIZONTAL_FACING)) {
             case NORTH -> {return shape[0];}
-            case SOUTH  -> {return shape[1];}
-            case EAST  -> {return shape[2];}
+            case EAST  -> {return shape[1];}
+            case SOUTH  -> {return shape[2];}
             case WEST  -> {return shape[3];}
             default -> {return shape[0];}
         }

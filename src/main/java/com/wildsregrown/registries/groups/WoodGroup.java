@@ -1,6 +1,5 @@
 package com.wildsregrown.registries.groups;
 
-import com.wildsregrown.blocks.properties.Tudor;
 import com.wildsregrown.blocks.wood.PortableWorkBench;
 import com.wildsregrown.blocks.wood.framing.WoodenArchBlock;
 import com.wildsregrown.blocks.wood.framing.WoodenArrowSlit;
@@ -9,7 +8,6 @@ import com.wildsregrown.blocks.wood.framing.SodRoof;
 import com.wildsregrown.blocks.wood.tree.HalfLog;
 import com.wildsregrown.blocks.wood.tree.Leaves;
 import com.wildsregrown.blocks.wood.tree.Log;
-import com.wildsregrown.blocks.wood.tree.TreeBranch;
 import com.wildsregrown.blocks.wood.*;
 import com.wildsregrown.blocks.wood.framing.*;
 import com.wildsregrown.blocks.wood.utensils.*;
@@ -71,8 +69,11 @@ public class WoodGroup {
             this.framing[Framing.arrow_slit.ordinal()]        = ModBlocks.register(id + "_arrow_slit",    WoodenArrowSlit::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.ladder.ordinal()]            = ModBlocks.register(id + "_ladder",        LadderBlock::new, settings, WOOD_FRAMING_GROUP_KEY); ModBlocks.CLIMBABLE.add(this.framing[Framing.ladder.ordinal()]);
             this.framing[Framing.window_cover.ordinal()]      = ModBlocks.register(id + "_window_cover",  WindowCover::new, settings, WOOD_GROUP_KEY);
-            //this.framing[Framing.door.ordinal()]              = ModBlocks.register(id + "_door",          WoodenDoor::new, settings, WOOD_FRAMING_GROUP_KEY);
-            //this.framing[Framing.trapdoor.ordinal()]        = ModBlocks.register(id + "_door",               WoodenDoor::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.door.ordinal()]              = ModBlocks.register(id + "_door",          Door::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.door_window.ordinal()]       = ModBlocks.register(id + "_door_window",   Door::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.enforced_door.ordinal()]     = ModBlocks.register(id + "_enforced_door",       Door::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.enforced_door_window.ordinal()]= ModBlocks.register(id + "_enforced_door_window",Door::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.trapdoor.ordinal()]          = ModBlocks.register(id + "_trapdoor",      Trapdoor::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.crate_lid.ordinal()]         = ModBlocks.register(id + "_crate_lid",     CrateLid::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.crate.ordinal()]             = ModBlocks.register(id + "_crate",         (ctx -> new Crate(get(Framing.crate_lid).asItem(), ctx)), settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.barrel.ordinal()]            = ModBlocks.register(id + "_barrel",        Barrel::new, settings, WOOD_FRAMING_GROUP_KEY);
@@ -91,7 +92,8 @@ public class WoodGroup {
             this.furniture[Furniture.stool.ordinal()]           = ModBlocks.register(id + "_stool", (ctx) -> new Stool(ctx, 0.5f), settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.chair.ordinal()]           = ModBlocks.register(id + "_chair", (ctx) -> new Chair(ctx, 0.5f), settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.bench.ordinal()]           = ModBlocks.register(id + "_bench", WoodenBenchBlock::new, settings, WOOD_FURNITURE_GROUP_KEY);
-            this.furniture[Furniture.dining_table.ordinal()]           = ModBlocks.register(id + "_dining_table", WoodenDiningTable::new, settings, WOOD_FURNITURE_GROUP_KEY);
+            this.furniture[Furniture.bench_with_backrest.ordinal()]= ModBlocks.register(id + "_bench_with_backrest", WoodenBenchWithBackrestBlock::new, settings, WOOD_FURNITURE_GROUP_KEY);
+            this.furniture[Furniture.dining_table.ordinal()]     = ModBlocks.register(id + "_dining_table", WoodenDiningTable::new, settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.table.ordinal()]           = ModBlocks.register(id + "_table",    Table::new, settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.throne.ordinal()]          = ModBlocks.register(id + "_throne", (ctx -> new Throne(ctx, 0.5f)), settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.mirror.ordinal()]          = ModBlocks.register(id + "_mirror", MirrorBlock::new, settings, WOOD_FURNITURE_GROUP_KEY);
@@ -132,8 +134,8 @@ public class WoodGroup {
         parquet_stairs,
         siding,
         siding_stairs,
-        open_stairs,
         //Blocks
+        open_stairs,
         support,
         arch,
         half_arch,
@@ -143,9 +145,13 @@ public class WoodGroup {
         ladder,
         window_cover,
         door,
+        door_window,
+        enforced_door,
+        enforced_door_window,
         crate_lid,
         crate,
         barrel,
+        trapdoor,
         tudor_square,
         tudor_horizontal,
         tudor_vertical,
@@ -158,6 +164,7 @@ public class WoodGroup {
         stool,
         chair,
         bench,
+        bench_with_backrest,
         dining_table,
         table,
         throne,

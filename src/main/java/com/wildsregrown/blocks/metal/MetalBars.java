@@ -28,12 +28,13 @@ public class MetalBars extends Block {
 
     private static final VoxelShape X;
     private static final VoxelShape Z;
-    private static final IntProperty OXIDATION;
+    private static final IntProperty OXIDATION = ModProperties.OXIDATION;
+    private static final IntProperty VARS = ModProperties.VARIATIONS_3;
     private static final EnumProperty<Direction.Axis> FACING = Properties.HORIZONTAL_AXIS;
 
     public MetalBars(Settings settings) {
         super(settings);
-        this.setDefaultState(getDefaultState().with(FACING, Direction.Axis.X).with(OXIDATION, 0).with(Properties.WATERLOGGED, Boolean.FALSE));
+        this.setDefaultState(getDefaultState().with(VARS, 1).with(FACING, Direction.Axis.X).with(OXIDATION, 0).with(Properties.WATERLOGGED, Boolean.FALSE));
     }
 
     @Override
@@ -53,7 +54,7 @@ public class MetalBars extends Block {
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder){
-        builder.add(FACING, OXIDATION, Properties.WATERLOGGED);
+        builder.add(FACING, VARS, OXIDATION, Properties.WATERLOGGED);
     }
 
     public BlockState getPlacementState(ItemPlacementContext context) {
@@ -83,7 +84,6 @@ public class MetalBars extends Block {
     }
 
     static {
-        OXIDATION = ModProperties.OXIDATION;
         Z = VoxelShapes.union(
                 VoxelShapes.cuboid(0.4375, 0, 0.4375, 0.5625, 1, 0.5625),
                 VoxelShapes.cuboid(0, 0.46875, 0.46875, 1, 0.53125, 0.5312500000000001),

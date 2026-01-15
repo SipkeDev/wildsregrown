@@ -4,7 +4,9 @@ import com.sipke.registeries.Trees;
 import com.wildsregrown.WildsRegrown;
 import com.sipke.api.features.Colors;
 import com.wildsregrown.blocks.*;
-import com.wildsregrown.blocks.decoration.GlassWindows;
+import com.wildsregrown.blocks.decoration.Candles;
+import com.wildsregrown.blocks.decoration.ColoredGlassPane;
+import com.wildsregrown.blocks.decoration.GlassPane;
 import com.wildsregrown.blocks.dungeon.StructureBlock;
 import com.wildsregrown.blocks.flora.flowers.ColoredFlowers;
 import com.wildsregrown.blocks.flora.flowers.FlowerFlora;
@@ -31,6 +33,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.function.Function;
 
+import static com.sipke.api.features.Colors.pack;
 import static com.wildsregrown.WildsRegrown.modid;
 import static com.wildsregrown.registries.ModItemGroups.*;
 
@@ -145,7 +148,6 @@ public class ModBlocks {
     public static final Block ash_source = register("ash_source", ctx -> new TreeSource(ctx, Trees.ash.getKey()), AbstractBlock.Settings.copy(Blocks.OAK_WOOD), WOOD_GROUP_KEY);
 
     //MISC
-    public static final Block glass_window = register("glass_window", GlassWindows::new, AbstractBlock.Settings.copy(Blocks.GLASS)      , DECORATION_GROUP_KEY);    static {CUTOUTS.add(glass_window);}
     public static final Block thatch_roof = register("thatch_roof", Roof::new         , AbstractBlock.Settings.copy(Blocks.HAY_BLOCK)   , DECORATION_GROUP_KEY);
     public static final Block torch = registerWithoutItem("torch", TorchBlock::new, AbstractBlock.Settings.copy(Blocks.TORCH));
 
@@ -335,6 +337,28 @@ public class ModBlocks {
     public static final FabricGroup jute_natural = new FabricGroup("jute_natural", Colors.linen);
     public static final FabricGroup burlap_natural = new FabricGroup("burlap_natural", Colors.linen);
     public static final FabricGroup leather_natural = new FabricGroup("leather_natural", Colors.linen);
+
+    //Candles
+    public static final Block candle_white = register("candle_white", ctx-> new Candles(ctx, Colors.ivory), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_grey = register("candle_grey", ctx-> new Candles(ctx, Colors.grey), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_dark_grey = register("candle_dark_grey", ctx-> new Candles(ctx, Colors.darkGrey), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_beige = register("candle_beige", ctx-> new Candles(ctx, Colors.linen), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_brown = register("candle_brown", ctx-> new Candles(ctx, Colors.darkOliveGreen), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_black = register("candle_black", ctx-> new Candles(ctx, Colors.black), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_yellow = register("candle_yellow", ctx-> new Candles(ctx, Colors.darkYellow), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_orange = register("candle_orange", ctx-> new Candles(ctx, Colors.darkPastelOrange), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_red = register("candle_red", ctx-> new Candles(ctx, Colors.darkPastelRed), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+    public static final Block candle_blue = register("candle_blue", ctx-> new Candles(ctx, Colors.darkPastelBlue), AbstractBlock.Settings.copy(Blocks.CANDLE), DECORATION_GROUP_KEY);
+
+    //Glass
+    public static final Block frosted_glass_white = register("frosted_glass_white", ctx-> new ColoredGlassPane(ctx, Colors.ivory), AbstractBlock.Settings.copy(Blocks.GLASS).nonOpaque(), DECORATION_GROUP_KEY);
+    public static final Block frosted_glass_grey = register("frosted_glass_grey", ctx-> new ColoredGlassPane(ctx, Colors.grey), AbstractBlock.Settings.copy(Blocks.GLASS).nonOpaque(), DECORATION_GROUP_KEY);
+    public static final Block frosted_glass_beige = register("frosted_glass_beige", ctx-> new ColoredGlassPane(ctx, Colors.linen), AbstractBlock.Settings.copy(Blocks.GLASS).nonOpaque(), DECORATION_GROUP_KEY);
+    public static final Block frosted_glass_clear = register("frosted_glass_clear", ctx-> new ColoredGlassPane(ctx, pack(125,125,125, 80)), AbstractBlock.Settings.copy(Blocks.GLASS).nonOpaque(), DECORATION_GROUP_KEY);
+
+    public static final Block glass_pane = register("glass_pane", ctx -> new ColoredGlassPane(ctx, pack(125,125,125, 60)), AbstractBlock.Settings.copy(Blocks.GLASS).nonOpaque(), DECORATION_GROUP_KEY);
+    public static final Block glass_pane_tinted = register("glass_pane_tinted", ctx -> new ColoredGlassPane(ctx, pack(0,0,0, 60)), AbstractBlock.Settings.copy(Blocks.GLASS).nonOpaque(), DECORATION_GROUP_KEY);
+    public static final Block glass_window = register("glass_window", GlassPane::new, AbstractBlock.Settings.copy(Blocks.GLASS), DECORATION_GROUP_KEY);
 
     //Crystals
     public static final Block amethyst      = register("amethyst", Layered::new, AbstractBlock.Settings.copy(Blocks.QUARTZ_BLOCK));

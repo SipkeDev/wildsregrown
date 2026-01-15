@@ -72,6 +72,10 @@ public class WildsRegrownClient implements ClientModInitializer {
 			if (ctx instanceof Leaves) {
 				BlockRenderLayerMap.putBlock(ctx, BlockRenderLayer.CUTOUT);
 			}
+			String key = ctx.getTranslationKey();
+			if (key.contains("glass") || key.contains("window")){
+				BlockRenderLayerMap.putBlock(ctx, BlockRenderLayer.TRANSLUCENT);
+			}
 		});
 
 		ModItemProperties.init();
