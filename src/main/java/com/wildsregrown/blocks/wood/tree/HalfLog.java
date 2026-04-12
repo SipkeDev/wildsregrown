@@ -3,6 +3,7 @@ package com.wildsregrown.blocks.wood.tree;
 import com.wildsregrown.blocks.VoxelTransform;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
+import com.wildsregrown.blocks.render.IRenderType;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,7 +22,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class HalfLog extends Block implements ITintedBlock {
+public class HalfLog extends Block implements ITintedBlock, IRenderType {
 
     protected static final VoxelShape DOWN;
     protected static final VoxelShape UP;
@@ -56,8 +57,9 @@ public class HalfLog extends Block implements ITintedBlock {
             boolean rotated = Math.abs(offset.x) > 0.2 || Math.abs(offset.z) > 0.2;
             return getDefaultState().with(HalfLog.rotated, !rotated).with(FACING, place);
         }else {
-            return getDefaultState().with(HalfLog.rotated, Math.abs(offset.y) > 0.2).with(FACING, place);
+            return getDefaultState().with(HalfLog.rotated, offset.y > 0).with(FACING, place);
         }
+
     }
 
     public BlockState rotate(BlockState state, BlockRotation rotation) {

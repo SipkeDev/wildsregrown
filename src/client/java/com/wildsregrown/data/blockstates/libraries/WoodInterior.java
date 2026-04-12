@@ -1,6 +1,7 @@
 package com.wildsregrown.data.blockstates.libraries;
 
-import com.wildsregrown.blocks.properties.DrawerState;
+import com.sipke.math.MathUtil;
+import com.wildsregrown.blocks.properties.framing.DrawerState;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
@@ -31,49 +32,41 @@ public class WoodInterior {
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
         applyTextureToModel(generator, loc0, "block/interior/counter", log_path + name + "_wood", log_path + name + "_wood");
-        applyTextureToModel(generator, loc0 + "_inner_right", "block/interior/counter_inner_right", log_path + name + "_wood", log_path + name + "_wood");
-        applyTextureToModel(generator, loc0 + "_inner_left", "block/interior/counter_inner_left", log_path + name + "_wood", log_path + name + "_wood");
-        applyTextureToModel(generator, loc0 + "_outer_right", "block/interior/counter_outer_right", log_path + name + "_wood", log_path + name + "_wood");
-        applyTextureToModel(generator, loc0 + "_outer_left", "block/interior/counter_outer_left", log_path + name + "_wood", log_path + name + "_wood");
+        applyTextureToModel(generator, loc0 + "_inner", "block/interior/counter_inner", log_path + name + "_wood", log_path + name + "_wood");
+        applyTextureToModel(generator, loc0 + "_outer", "block/interior/counter_outer", log_path + name + "_wood", log_path + name + "_wood");
         if (pines) {
             applyTextureToModel(generator, loc1, "block/interior/counter", log_path + "pine_paintable_wood", log_path + "pine_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_inner_right", "block/interior/counter_inner_right", log_path + "pine_paintable_wood", log_path + "pine_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_inner_left", "block/interior/counter_inner_left", log_path + "pine_paintable_wood", log_path + "pine_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_outer_right", "block/interior/counter_outer_right", log_path + "pine_paintable_wood", log_path + "pine_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_outer_left", "block/interior/counter_outer_left", log_path + "pine_paintable_wood", log_path + "pine_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_inner", "block/interior/counter_inner", log_path + "pine_paintable_wood", log_path + "pine_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_outer", "block/interior/counter_outer", log_path + "pine_paintable_wood", log_path + "pine_paintable_wood");
         }else if (fruit) {
             applyTextureToModel(generator, loc1, "block/interior/counter", log_path + "fruit_paintable_wood", log_path + "fruit_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_inner_right", "block/interior/counter_inner_right", log_path + "fruit_paintable_wood", log_path + "fruit_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_inner_left", "block/interior/counter_inner_left", log_path + "fruit_paintable_wood", log_path + "fruit_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_outer_right", "block/interior/counter_outer_right", log_path + "fruit_paintable_wood", log_path + "fruit_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_outer_left", "block/interior/counter_outer_left", log_path + "fruit_paintable_wood", log_path + "fruit_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_inner", "block/interior/counter_inner", log_path + "fruit_paintable_wood", log_path + "fruit_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_outer", "block/interior/counter_outer", log_path + "fruit_paintable_wood", log_path + "fruit_paintable_wood");
         }else {
             applyTextureToModel(generator, loc1, "block/interior/counter", log_path + name + "_paintable_wood", log_path + name + "_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_inner_right", "block/interior/counter_inner_right", log_path + name + "_paintable_wood", log_path + name + "_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_inner_left", "block/interior/counter_inner_left", log_path + name + "_paintable_wood", log_path + name + "_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_outer_right", "block/interior/counter_outer_right", log_path + name + "_paintable_wood", log_path + name + "_paintable_wood");
-            applyTextureToModel(generator, loc1 + "_outer_left", "block/interior/counter_outer_left", log_path + name + "_paintable_wood", log_path + name + "_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_inner", "block/interior/counter_inner", log_path + name + "_paintable_wood", log_path + name + "_paintable_wood");
+            applyTextureToModel(generator, loc1 + "_outer", "block/interior/counter_outer", log_path + name + "_paintable_wood", log_path + name + "_paintable_wood");
         }
 
         generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
         BlockStateVariantMap.TripleProperty<WeightedVariant,LinSeedPaintable, Direction, StairShape> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.STAIR_SHAPE);
 
-        int[] rotate = {0,0,0, 180, 270, 90};
         for (LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getValues()) {
             String finalLoc = paint == LinSeedPaintable.NONE ? loc0 : loc1;
             for (Direction dir : Properties.HORIZONTAL_FACING.getValues()) {
                 for (StairShape shape : StairShape.values()) {
                     String part = "";
+                    int rotateY = dir.getHorizontalQuarterTurns()*90;
                     switch (shape) {
                         case STRAIGHT -> part = "";
-                        case INNER_RIGHT -> part = "_inner_right";
-                        case INNER_LEFT -> part = "_inner_left";
-                        case OUTER_RIGHT -> part = "_outer_right";
-                        case OUTER_LEFT -> part = "_outer_left";
+                        case INNER_RIGHT -> part = "_inner";
+                        case INNER_LEFT -> {part = "_inner"; rotateY-=90;}
+                        case OUTER_RIGHT -> part = "_outer";
+                        case OUTER_LEFT -> {part = "_outer"; rotateY-=90;}
                     }
-
-                    map.register(paint, dir, shape, modelOf(finalLoc + part, false, rotate[dir.getHorizontalQuarterTurns()], 0));
+                    rotateY = (int) MathUtil.clampAngle(rotateY);
+                    map.register(paint, dir, shape, modelOf(finalLoc + part, false, rotateY, 0));
                 }
             }
         }
@@ -103,10 +96,9 @@ public class WoodInterior {
 
         for (LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getValues()){
             String finalLoc = paint == LinSeedPaintable.NONE ? loc0 : loc1;
-            map     .register(paint, Direction.NORTH, modelOf(finalLoc, false, 0, 0))
-                    .register(paint, Direction.SOUTH, modelOf(finalLoc, false, 180, 0))
-                    .register(paint, Direction.EAST , modelOf(finalLoc, false, 90, 0))
-                    .register(paint, Direction.WEST , modelOf(finalLoc, false, 270, 0));
+            for (Direction dir : Properties.HORIZONTAL_FACING.getValues()) {
+                map.register(paint, dir, modelOf(finalLoc, false, dir.getHorizontalQuarterTurns()*90, 0));
+            }
         }
 
         CreateVariants(generator, block, map);
@@ -139,14 +131,10 @@ public class WoodInterior {
         BlockStateVariantMap.TripleProperty<WeightedVariant,LinSeedPaintable, Direction, Boolean> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.OPEN);
         for (LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getValues()) {
             String finalLoc = paint == LinSeedPaintable.NONE ? loc0 : loc1;
-            map.register(paint,Direction.NORTH,true, modelOf(finalLoc + "_open", false, 0, 0))
-                    .register(paint,Direction.SOUTH,true, modelOf(finalLoc + "_open", false, 180, 0))
-                    .register(paint,Direction.EAST ,true, modelOf(finalLoc + "_open", false, 90, 0))
-                    .register(paint,Direction.WEST ,true, modelOf(finalLoc + "_open", false, 270, 0))
-                    .register(paint,Direction.NORTH,false, modelOf(finalLoc + "_closed", false, 0, 0))
-                    .register(paint,Direction.SOUTH,false, modelOf(finalLoc + "_closed", false, 180, 0))
-                    .register(paint,Direction.EAST ,false, modelOf(finalLoc + "_closed", false, 90, 0))
-                    .register(paint,Direction.WEST ,false, modelOf(finalLoc + "_closed", false, 270, 0));
+            for (Direction dir : Properties.HORIZONTAL_FACING.getValues()) {
+                map.register(paint, dir, true, modelOf(finalLoc + "_open", false, dir.getHorizontalQuarterTurns()*90, 0))
+                        .register(paint, dir, false, modelOf(finalLoc + "_closed", false, dir.getHorizontalQuarterTurns()*90, 0));
+            }
         }
 
         CreateVariants(generator, block, map);

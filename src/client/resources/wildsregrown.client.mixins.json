@@ -7,8 +7,7 @@
     "gui.BackgroundMixin",
     "gui.MessageScreenMixin",
     "render.SpriteContentsAccessor",
-    "render.WorldRenderAccessor",
-    "sodium.BlockRendererMixin"
+    "render.WorldRenderAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

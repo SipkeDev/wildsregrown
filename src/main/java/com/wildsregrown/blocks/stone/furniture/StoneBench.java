@@ -4,6 +4,7 @@ import com.wildsregrown.blocks.VoxelTransform;
 import com.wildsregrown.blocks.abstracts.HorizontalConnectingBlock;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
+import com.wildsregrown.blocks.wood.furniture.sitable.WoodenBenchBlock;
 import com.wildsregrown.entities.block.SitEntity;
 import com.wildsregrown.registries.ModEntities;
 import net.minecraft.block.Block;
@@ -15,7 +16,6 @@ import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -48,11 +48,8 @@ public class StoneBench extends HorizontalConnectingBlock {
     }
 
     @Override
-    public boolean isConnectingBlock(BlockState state) {
-        if (state.getBlock() instanceof StoneBench){
-            return true;
-        }
-        return false;
+    public boolean isConnectingBlock(BlockState neighbour, BlockState current) {
+        return (neighbour.getBlock() instanceof WoodenBenchBlock);
     }
 
     @Override

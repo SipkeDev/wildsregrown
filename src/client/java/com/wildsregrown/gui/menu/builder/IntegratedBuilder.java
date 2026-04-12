@@ -1,6 +1,7 @@
 package com.wildsregrown.gui.menu.builder;
 
 import com.sipke.builder.WorldBuilder;
+import com.sipke.registeries.WorldRegistries;
 import com.wildsregrown.gui.menu.BackgroundMessageScreen;
 import com.wildsregrown.gui.menu.main.MainMenu;
 import com.wildsregrown.gui.menu.world.SelectWorld;
@@ -63,7 +64,7 @@ public class IntegratedBuilder {
                 Text.of("Simulating rain"),
                 Identifier.of(modid, "gen_world_type")
         ));
-        this.builder.applyMoisture();
+        this.builder.applyRainfallShadow();
         this.ecosystemGrid();
     }
 

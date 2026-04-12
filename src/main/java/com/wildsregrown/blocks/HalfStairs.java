@@ -1,7 +1,7 @@
 package com.wildsregrown.blocks;
 
 import com.wildsregrown.blocks.abstracts.CornerConnectingBlock;
-import com.wildsregrown.blocks.properties.HalfStair;
+import com.wildsregrown.blocks.properties.framing.HalfStair;
 import com.wildsregrown.blocks.properties.ModProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

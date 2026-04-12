@@ -1,11 +1,10 @@
 package com.wildsregrown.blocks.wood.framing;
 
 import com.mojang.serialization.MapCodec;
-import com.wildsregrown.blocks.VoxelTransform;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.render.ITintedBlock;
-import com.wildsregrown.blocks.wood.furniture.CounterChestBlock;
+import com.wildsregrown.blocks.wood.furniture.kitchen.counter.CounterChestBlock;
 import com.wildsregrown.entities.block.GenericSmallStorageEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

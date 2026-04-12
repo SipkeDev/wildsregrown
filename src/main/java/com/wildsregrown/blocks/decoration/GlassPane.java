@@ -2,6 +2,7 @@ package com.wildsregrown.blocks.decoration;
 
 import com.wildsregrown.blocks.VoxelTransform;
 import com.wildsregrown.blocks.properties.ModProperties;
+import com.wildsregrown.blocks.render.IRenderType;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,7 +22,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class GlassPane extends Block{
+public class GlassPane extends Block implements IRenderType {
 
     private static final VoxelShape X;
     private static final VoxelShape Z;
@@ -68,6 +69,11 @@ public class GlassPane extends Block{
                 VoxelShapes.cuboid(0, 0, 0.4375, 1, 1, 0.5625)
         );
         X = VoxelTransform.rotate90(Z);
+    }
+
+    @Override
+    public int getRenderType(){
+        return 2;
     }
 
 }

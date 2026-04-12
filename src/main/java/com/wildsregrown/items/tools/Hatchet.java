@@ -161,6 +161,10 @@ public class Hatchet extends Item implements IRadialItem {
             this.tooltip = tooltip;
         }
 
+        public String getTooltip() {
+            return tooltip;
+        }
+
         public int getKey() {
             return key;
         }

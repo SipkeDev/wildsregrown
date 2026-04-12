@@ -3,11 +3,10 @@ package com.wildsregrown.blocks.flora.rooted;
 
 import com.wildsregrown.blocks.Dice;
 import com.wildsregrown.blocks.flora.Flora;
-import com.wildsregrown.blocks.properties.FloraStage;
+import com.wildsregrown.blocks.properties.flora.FloraStage;
 import com.wildsregrown.blocks.properties.ModProperties;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;

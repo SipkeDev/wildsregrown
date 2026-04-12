@@ -2,7 +2,7 @@ package com.wildsregrown.data.blockstates.libraries;
 
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
-import com.wildsregrown.blocks.properties.Tudor;
+import com.wildsregrown.blocks.properties.framing.Tudor;
 import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
 import com.wildsregrown.blocks.properties.connecting.VerticalConnected;
 import net.minecraft.block.Block;
@@ -16,7 +16,6 @@ import net.minecraft.util.math.Direction;
 import static com.wildsregrown.WildsRegrown.modid;
 import static com.wildsregrown.data.DataGeneratorProvider.idFromBlock;
 import static com.wildsregrown.data.blockstates.WoodGroupBlockStates.log_path;
-import static com.wildsregrown.data.blockstates.WoodGroupBlockStates.plank_path;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.*;
 
 public class TudorLibrary {

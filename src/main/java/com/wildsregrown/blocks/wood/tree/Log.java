@@ -5,6 +5,7 @@ import com.sipke.api.features.trees.type.TreeType;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.OrdinalDirection;
+import com.wildsregrown.blocks.render.IRenderType;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,7 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.WorldAccess;
 
-public class Log extends PillarBlock implements ITreeType, ITintedBlock {
+public class Log extends PillarBlock implements ITreeType, ITintedBlock, IRenderType {
 
     private static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
     private static final EnumProperty<LinSeedPaintable> PAINT = ModProperties.LINSEED_PAINT;

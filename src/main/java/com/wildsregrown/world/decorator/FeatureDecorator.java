@@ -1,23 +1,15 @@
 package com.wildsregrown.world.decorator;
 
 import com.sipke.api.chunk.Chunk;
-import com.sipke.api.chunk.Column;
+import com.sipke.api.chunk.tile.Column;
 import com.sipke.api.features.Feature;
-import com.sipke.api.features.trees.config.TreeConfig;
-import com.sipke.api.features.trees.spawn.TreePos;
-import com.wildsregrown.WildsRegrown;
-import com.wildsregrown.blocks.wood.tree.TreeEntity;
 import com.wildsregrown.world.WRGChunkGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
-
-import java.util.ArrayList;
 
 import static com.sipke.WorldConstants.chunkSize;
 import static com.wildsregrown.WildsRegrown.modid;

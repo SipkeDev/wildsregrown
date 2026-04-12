@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.sipke.api.features.trees.graph.TreeGraph;
 import com.sipke.api.features.trees.graph.TreeNode;
 import com.sipke.features.trees.TreeBuilder;
-import com.sipke.registeries.Trees;
+import com.wildsregrown.registries.world.Trees;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;

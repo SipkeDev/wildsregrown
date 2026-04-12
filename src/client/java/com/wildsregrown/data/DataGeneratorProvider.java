@@ -1,7 +1,8 @@
 package com.wildsregrown.data;
 
 import com.wildsregrown.WildsRegrown;
-import com.wildsregrown.world.biomes.WRGBiomes;
+import com.wildsregrown.data.tags.BiomeTagGenerator;
+import com.wildsregrown.data.tags.BlockTagGenerator;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.block.Block;
@@ -19,16 +20,17 @@ public class DataGeneratorProvider implements DataGeneratorEntrypoint {
 		pack.addProvider(BlockStateDataGenerator::new);
 		pack.addProvider(BlockTagGenerator::new);
 		pack.addProvider(ItemTagGenerator::new);
+		pack.addProvider(BiomeTagGenerator::new);
+		pack.addProvider(FluidTagProvider::new);
 		pack.addProvider(BlockDrops::new);
 		pack.addProvider(RecipeProvider::new);
+		pack.addProvider(WRGDynamicRegistry::new);
 	}
 
-	/**
 	@Override
 	public void buildRegistry(RegistryBuilder registryBuilder) {
-		registryBuilder.addRegistry(RegistryKeys.BIOME, WRGBiomes::register);
+		WRGDynamicRegistry.buildRegistry(registryBuilder);
 	}
-	*/
 
 	public static String idFromBlock(Block block) {
 		return Registries.BLOCK.getId(block).getPath().replaceFirst(".*\\.", "");

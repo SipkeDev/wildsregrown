@@ -36,8 +36,6 @@ public class StructureDecorator implements Decorator {
 
                 if (piece == null){continue;}
 
-                //LOGGER.info("Chunk structs: " + noiseChunk.getStructures().size());
-
                 //Creating BlockPos Instance.
                 BlockPos pos = new BlockPos(
                         piece.getX(),

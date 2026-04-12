@@ -19,10 +19,6 @@ public class FabricGroup {
         this.common[Common.stairs.ordinal()]    = ModBlocks.register(id + "_stairs", (ctx) -> new ColoredStairs(get(Common.layered).getDefaultState(), ctx, rgb), settings, FABRIC_GROUP_KEY);
         this.common[Common.tent.ordinal()]      = ModBlocks.register(id + "_tent", (ctx) -> new TentRoof(ctx, rgb), settings, FABRIC_GROUP_KEY);
 
-        ModBlocks.CUTOUTS.add(this.get(Common.layered));
-        ModBlocks.CUTOUTS.add(this.get(Common.stairs));
-        ModBlocks.CUTOUTS.add(this.get(Common.tent));
-
     }
 
     private final Block[] common;

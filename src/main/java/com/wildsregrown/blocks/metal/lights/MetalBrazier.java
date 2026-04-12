@@ -5,6 +5,7 @@ import com.wildsregrown.blocks.properties.ModProperties;
 import com.sipke.math.CellType;
 import com.sipke.math.HashUtil;
 import com.sipke.math.MathUtil;
+import com.wildsregrown.blocks.render.IRenderType;
 import com.wildsregrown.registries.ModComponents;
 import com.wildsregrown.registries.ModItems;
 import net.minecraft.block.Block;
@@ -34,7 +35,7 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
-public class MetalBrazier extends Block {
+public class MetalBrazier extends Block implements IRenderType {
 
     private static final VoxelShape SHAPE;
     private static final IntProperty OXIDATION = ModProperties.OXIDATION;

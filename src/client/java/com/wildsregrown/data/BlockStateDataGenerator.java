@@ -90,6 +90,8 @@ public class BlockStateDataGenerator extends FabricModelProvider {
         //Misc
         BlockStateLibrary.roof(generator, ModBlocks.thatch_roof, "thatch_roof", "block/misc/thatch_roof");
         BlockStateLibrary.singleton(generator, ModBlocks.structureBlock, idFromBlock(ModBlocks.structureBlock),"block/dungeon/structure_block");
+        BlockStateLibrary.singleton(generator, ModBlocks.portable_anvil, idFromBlock(ModBlocks.portable_anvil),"block/crafting/portable_anvil");
+
         //Lights
         BlockStateLibrary.torch(generator, ModBlocks.torch);
 

@@ -3,8 +3,10 @@ package com.wildsregrown.world;
 import com.wildsregrown.WildsRegrown;
 import com.sipke.api.PosTranslator;
 import com.sipke.builder.GridCtx;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtIo;
+import com.wildsregrown.world.biomes.WRGBiomes;
+import net.minecraft.nbt.*;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.world.biome.Biome;
 
 import java.io.*;
 import java.util.Objects;
@@ -29,7 +31,13 @@ public abstract class LevelWriter {
                     overworld.putString("type", "wildsregrown:wrg_dimension");
                     gen.putString("type", "wildsregrown:wrg_chunk");
                     biome.putString("type", "wildsregrown:wrg_biome");
-                    biome.putString("biome", "wildsregrown:empty");
+
+                    NbtList biomes = new NbtList();
+                    for (RegistryKey<Biome> b : WRGBiomes.BIOMES){
+                        WildsRegrown.LOGGER.info(b.toString());
+                        biomes.add(NbtString.of(b.getValue().toString()));
+                    }
+                    biome.put("biomes", biomes);
                     gen.put("biome_source", biome);
                     gen.putString("settings", "minecraft:overworld");
                     overworld.put("generator", gen);
@@ -49,8 +57,8 @@ public abstract class LevelWriter {
                     data.putByte("allowCommands", (byte) 1);
                     data.putInt("GameType", ctx.gamemode);
                     data.put("WorldGenSettings", world);
-                    data.putInt("SpawnX", PosTranslator.gridToGlobal(ctx.playerSpawn.getX(), ctx.size));
-                    data.putInt("SpawnZ", PosTranslator.gridToGlobal(ctx.playerSpawn.getZ(), ctx.size));
+                    data.putInt("SpawnX", PosTranslator.gridToGlobal(ctx.playerSpawn.getX(), ctx.size, ctx.config.getScaleMultiplier()));
+                    data.putInt("SpawnZ", PosTranslator.gridToGlobal(ctx.playerSpawn.getZ(), ctx.size, ctx.config.getScaleMultiplier()));
                     data.put("DragonFight", dragon);
 
                     levelNBT.put("Data", data);

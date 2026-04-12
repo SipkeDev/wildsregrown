@@ -12,7 +12,8 @@ public enum WorldAge implements StringIdentifiable {
     young(0, "Young"),
     normal(1, "Normal"),
     old(2, "Old"),
-    ancient(3, "Ancient");
+    ancient(3, "Ancient"),
+    max(4, "Hot CPU");
 
     public static final EnumCodec<WorldAge> CODEC = StringIdentifiable.createCodec(WorldAge::values);
     private static final IntFunction<WorldAge> BY_ID = ValueLists.createIndexToValueFunction(WorldAge::getId, values(), ValueLists.OutOfBoundsHandling.WRAP);

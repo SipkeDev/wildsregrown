@@ -1,6 +1,7 @@
 package com.wildsregrown.blocks.stone;
 
 import com.wildsregrown.blocks.VoxelTransform;
+import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.Quadrant;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,7 +30,7 @@ public class Edge extends Block implements Waterloggable {
     private static final VoxelShape[] Y;
     private static final VoxelShape[] Z;
     private static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
-    private static final EnumProperty<Quadrant> QUADRANT = Quadrant.QUADRANT;
+    private static final EnumProperty<Quadrant> QUADRANT = ModProperties.QUADRANT;
     public Edge(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(AXIS, Direction.Axis.Y).with(QUADRANT, Quadrant.PP).with(Properties.WATERLOGGED, false));

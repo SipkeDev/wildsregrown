@@ -1,5 +1,6 @@
 package com.wildsregrown.blocks.wood.tree;
 
+import com.sipke.api.features.Colors;
 import com.sipke.api.features.trees.type.ITreeType;
 import com.sipke.api.features.trees.type.TreeType;
 import com.sipke.math.MathUtil;
@@ -25,7 +26,7 @@ import java.awt.*;
 
 import static com.wildsregrown.blocks.render.TintUtil.buildBlendMap;
 
-public class Leaves extends Block implements ITintedBlock, ITreeType {
+public class Leaves extends Block implements ITreeType, ITintedBlock {
 
     private static final VoxelShape shape;
     public static final IntProperty MOISTURE = ModProperties.MOISTURE;
@@ -87,9 +88,9 @@ public class Leaves extends Block implements ITintedBlock, ITreeType {
                 VoxelShapes.cuboid(0.1875, 0.1875, 0.125, 0.8125, 0.8125, 0.875)
         );
         //Set colorfull life
-        int dry = Color.decode("#c8b478").getRGB();
-        int temperate = Color.decode("#748937").getRGB();
-        int wet = Color.decode("#93ad46").getRGB();
+        int dry = Colors.pack("#ded2ae");
+        int temperate = Colors.pack("#748937");
+        int wet = Colors.pack("#657730");
         rgb = buildBlendMap(temperate, dry, wet, MOISTURE.getValues().size());
     }
 

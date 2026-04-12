@@ -16,6 +16,9 @@
 	"icon": "assets/wildsregrown/icon.png",
 	"environment": "*",
 	"entrypoints": {
+		"preLaunch": [
+			"com.wildsregrown.PreWildsRegrown"
+		],
 		"main": [
 			"com.wildsregrown.WildsRegrown"
 		],

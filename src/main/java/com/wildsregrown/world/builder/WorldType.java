@@ -19,7 +19,7 @@ public enum WorldType implements StringIdentifiable {
     archipelago(6, "Archipelago", new Archipelago()),
     islands(7, "Islands", new Islands()),
     mediterranean(8, "Mediterranean", new Mediterranean()),
-    watering_hole(9, "African watering hole", new AfricanWateringHole()),
+    central_lake(9, "Central Lake", new CentralLake()),
     //heightmaps
     europa(10, "Europa", new Europa()),
     england(11, "England", new England()),

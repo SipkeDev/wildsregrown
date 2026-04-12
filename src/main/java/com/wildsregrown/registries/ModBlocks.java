@@ -1,6 +1,8 @@
 package com.wildsregrown.registries;
 
-import com.sipke.registeries.Trees;
+import com.wildsregrown.blocks.crafting.PortableAnvil;
+import com.wildsregrown.blocks.fluids.LayeredFluidBlock;
+import com.wildsregrown.registries.world.Trees;
 import com.wildsregrown.WildsRegrown;
 import com.sipke.api.features.Colors;
 import com.wildsregrown.blocks.*;
@@ -22,6 +24,7 @@ import com.wildsregrown.blocks.wood.tree.TreeSource;
 import com.wildsregrown.registries.groups.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.*;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
@@ -40,9 +43,19 @@ import static com.wildsregrown.registries.ModItemGroups.*;
 public class ModBlocks {
 
     public static ArrayList<Block> CLIMBABLE = new ArrayList<>();
-    public static ArrayList<Block> CUTOUTS = new ArrayList<>();
 
     public static final Block structureBlock = register("structure_block", StructureBlock::new, AbstractBlock.Settings.create(), TOOL_GROUP_KEY);
+
+    /**
+     * Crafting
+     */
+    public static final Block portable_anvil = register("portable_anvil", PortableAnvil::new, AbstractBlock.Settings.create(), TOOL_GROUP_KEY);
+
+    /**
+     * Fluids
+     */
+    public static final Block sweet_water = registerWithoutItem("sweet_water", ctx -> new LayeredFluidBlock(ModFluids.SWEET_WATER, ctx), AbstractBlock.Settings.create().mapColor(MapColor.WATER_BLUE).replaceable().noCollision().strength(100.0F).pistonBehavior(PistonBehavior.DESTROY).dropsNothing().liquid().sounds(BlockSoundGroup.INTENTIONALLY_EMPTY));
+    public static final Block pitch = registerWithoutItem("pitch", ctx -> new FluidBlock(ModFluids.PITCH, ctx), AbstractBlock.Settings.create().mapColor(MapColor.WATER_BLUE).replaceable().noCollision().strength(100.0F).pistonBehavior(PistonBehavior.DESTROY).dropsNothing().liquid().sounds(BlockSoundGroup.INTENTIONALLY_EMPTY));
 
     /**
      * Sedimentary Stone groups
@@ -153,9 +166,7 @@ public class ModBlocks {
 
     //FLORA
     private static Block registerFlora(String id, Function<AbstractBlock.Settings, Block> factory) {
-        Block block = register(id, factory, AbstractBlock.Settings.copy(Blocks.SHORT_GRASS).ticksRandomly().sounds(BlockSoundGroup.CHERRY_SAPLING), FLORA_GROUP_KEY);
-        CUTOUTS.add(block);
-        return block;
+        return register(id, factory, AbstractBlock.Settings.copy(Blocks.SHORT_GRASS).ticksRandomly().sounds(BlockSoundGroup.CHERRY_SAPLING), FLORA_GROUP_KEY);
     }
 
     //Shrubs

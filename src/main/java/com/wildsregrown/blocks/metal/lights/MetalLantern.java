@@ -3,6 +3,7 @@ package com.wildsregrown.blocks.metal.lights;
 import com.wildsregrown.blocks.Dice;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.sipke.math.MathUtil;
+import com.wildsregrown.blocks.render.IRenderType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -24,7 +25,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class MetalLantern extends Block {
+public class MetalLantern extends Block implements IRenderType {
 
     private static final VoxelShape SHAPE;
     private static final IntProperty OXIDATION = ModProperties.OXIDATION;

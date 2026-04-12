@@ -2,8 +2,8 @@ package com.wildsregrown.data.blockstates.libraries;
 
 import com.sipke.api.features.Colors;
 import com.wildsregrown.WildsRegrown;
-import com.wildsregrown.blocks.flora.Flora;
 import com.wildsregrown.blocks.properties.*;
+import com.wildsregrown.blocks.properties.flora.FloraStage;
 import net.minecraft.block.Block;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.BlockStateVariantMap;

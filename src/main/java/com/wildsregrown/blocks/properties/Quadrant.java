@@ -1,6 +1,5 @@
 package com.wildsregrown.blocks.properties;
 
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 
 public enum Quadrant implements StringIdentifiable {
@@ -10,7 +9,6 @@ public enum Quadrant implements StringIdentifiable {
     PN("pn");
 
     private final String name;
-    public static final EnumProperty<Quadrant> QUADRANT = EnumProperty.of("quadrant", Quadrant.class);
 
     Quadrant(String name) {
         this.name = name;

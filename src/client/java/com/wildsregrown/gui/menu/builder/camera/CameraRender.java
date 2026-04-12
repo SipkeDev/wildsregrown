@@ -2,10 +2,11 @@ package com.wildsregrown.gui.menu.builder.camera;
 
 public enum CameraRender {
 
-    region(),
+    climate(),
     height(),
     elevation(),
     temperature(),
+    rainfall(),
     moisture(),
 
     landform(),

@@ -1,13 +1,19 @@
 package com.wildsregrown.world.decorator;
 
+import com.sipke.api.chunk.tile.Aquifer;
+import com.sipke.registeries.WorldRegistries;
 import com.wildsregrown.WildsRegrown;
 import com.sipke.api.chunk.Chunk;
 import com.sipke.api.geology.Stratum;
 import com.sipke.generator.WorldGenerator;
 import com.sipke.math.MathUtil;
-import com.sipke.registeries.GeoRegistry;
+import com.wildsregrown.blocks.fluids.SetAbleFluidState;
+import com.wildsregrown.blocks.properties.ModProperties;
+import com.wildsregrown.registries.ModFluids;
 import com.wildsregrown.world.WRGChunkGenerator;
 import net.minecraft.block.*;
+import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -61,7 +67,7 @@ public class BaseDecorator implements Decorator {
                 for (int i = 0; i < strata.size(); i++) {
                     Stratum stratum = strata.get(i);
 
-                    String key = GeoRegistry.get(stratum.getKey()).name;
+                    String key = stratum.getRegistry().name;
                     Block block = Registries.BLOCK.get(Identifier.of(WildsRegrown.modid, key));
                     boolean air = Objects.equals(key, "air");
                     if (air){
@@ -76,13 +82,13 @@ public class BaseDecorator implements Decorator {
                     }
 
                     if (air){
-                        if (!GeoRegistry.isSoil(strata.get(i-1).getKey())) {
-                            Block floor = Registries.BLOCK.get(Identifier.of(WildsRegrown.modid, GeoRegistry.get(strata.get(i - 1).getKey()).name));
+                        if (!WorldRegistries.MATERIALS.isSoil(strata.get(MathUtil.max(i-1, 0)).getKey())) {
+                            Block floor = Registries.BLOCK.get(Identifier.of(WildsRegrown.modid, WorldRegistries.MATERIALS.get(strata.get(MathUtil.max(i-1, 0)).getKey()).name));
                             setLayer(stratum.floor, chunk, blockPos, floor.getDefaultState(), false, waterLevel);
                         }
                         if(i != strata.size()-1) {
-                            if (!GeoRegistry.isSoil(strata.get(i + 1).getKey())) {
-                                Block ceil = Registries.BLOCK.get(Identifier.of(WildsRegrown.modid, GeoRegistry.get(strata.get(i + 1).getKey()).name));
+                            if (!WorldRegistries.MATERIALS.isSoil(strata.get(i + 1).getKey())) {
+                                Block ceil = Registries.BLOCK.get(Identifier.of(WildsRegrown.modid, WorldRegistries.MATERIALS.get(strata.get(i + 1).getKey()).name));
                                 setLayer(stratum.ceil(), chunk, blockPos, ceil.getDefaultState(), true, waterLevel);
                             }
                         }
@@ -94,10 +100,49 @@ public class BaseDecorator implements Decorator {
 
                 //layered Map
                 Stratum stratum = strata.getLast();
-                BlockState state = Registries.BLOCK.get(Identifier.of(WildsRegrown.modid, GeoRegistry.get(stratum.geoKey).name)).getDefaultState();
+                BlockState state = Registries.BLOCK.get(Identifier.of(WildsRegrown.modid, WorldRegistries.MATERIALS.get(stratum.geoKey).name)).getDefaultState();
                 blockPos.setY(y);
                 int layers = setLayer(stratum.ceil(), chunk, blockPos, state,false, waterLevel);
                 drawTopLayer(noiseChunk, chunk, layers == 0 ? blockPos.down() : blockPos, idx);
+
+                /// Aquifers
+                for (Aquifer aquifer : noiseChunk.getColumn(idx).getAquifers()) {
+
+                    FluidState fluidState = ModFluids.SWEET_WATER.getDefaultState()
+                            .with(Properties.FALLING, false)
+                            .with(FlowableFluid.LEVEL, 8)
+                            .with(ModProperties.vecX, aquifer.getX())
+                            .with(ModProperties.vecZ, aquifer.getZ());
+
+                    for (int i = aquifer.from(); i <= aquifer.too(); i++) {
+
+                        blockPos.setY(i);
+                        BlockState currentState = chunk.getBlockState(blockPos);
+
+                        if (currentState.isAir()){
+                            chunk.setBlockState(blockPos, fluidState.getBlockState());
+                        }else if (currentState.contains(WATERLOGGED)){
+                            ((SetAbleFluidState)state).wrg$setFluidState(fluidState);
+                            //chunk.setBlockState(blockPos, currentState.with(WATERLOGGED, true));
+                        }
+
+                    }
+
+                    blockPos.setY((int)aquifer.too()+1);
+                    fluidState = fluidState
+                            .with(FlowableFluid.LEVEL, aquifer.getLevel())
+                            .with(ModProperties.vecX, aquifer.getX())
+                            .with(ModProperties.vecZ, aquifer.getZ());
+                    state = chunk.getBlockState(blockPos);
+                    if (state.isAir()) {
+                        WildsRegrown.LOGGER.info(fluidState.toString());
+                        chunk.setBlockState(blockPos, fluidState.getBlockState());
+                    }else if (state.contains(WATERLOGGED)){
+                        //((SetAbleFluidState)state).wrg$setFluidState(fluidState);
+                        //chunk.setBlockState(blockPos, state.with(WATERLOGGED, true));
+                    }
+
+                }
 
                 //drawOverlay(chunk, blockPos.setY(y+2), noiseChunk.getTile(idx).erosionMask);
 

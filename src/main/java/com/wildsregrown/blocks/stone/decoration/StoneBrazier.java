@@ -1,10 +1,11 @@
 package com.wildsregrown.blocks.stone.decoration;
 
 import com.wildsregrown.WildsRegrown;
-import com.wildsregrown.blocks.properties.FueledLight;
+import com.wildsregrown.blocks.properties.fuel.FueledLight;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.sipke.math.CellType;
 import com.sipke.math.HashUtil;
+import com.wildsregrown.blocks.render.IRenderType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -30,7 +31,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class StoneBrazier extends Block {
+public class StoneBrazier extends Block implements IRenderType {
 
     private static final VoxelShape SHAPE;
     private static final EnumProperty<FueledLight> FUELED_LIGHT;

@@ -21,7 +21,9 @@ import static com.wildsregrown.registries.ModItemGroups.TOOL_GROUP_KEY;
 
 public class ModItems {
 
-    public static final Torch torch               = (Torch)       registerItem("torch", Torch::new, new Item.Settings().component(ModComponents.FUEL, 15).component(ModComponents.LIT, true), TOOL_GROUP_KEY);
+    public static final Torch torch             = (Torch)   registerItem("torch", Torch::new, new Item.Settings().component(ModComponents.FUEL, 15).component(ModComponents.LIT, true), TOOL_GROUP_KEY);
+
+    public static final Item sweet_water_bucket =           registerItem("sweet_water_bucket", ctx -> new BucketItem(ModFluids.SWEET_WATER, ctx), new Item.Settings(), TOOL_GROUP_KEY);
 
     /**
      * Tools

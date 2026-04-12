@@ -1,32 +1,26 @@
 package com.wildsregrown.data.blockstates.libraries;
 
 import com.google.gson.JsonObject;
-import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.blocks.decoration.Candles;
 import com.wildsregrown.blocks.properties.*;
 import com.wildsregrown.blocks.properties.connecting.CornerConnecting;
 import com.wildsregrown.blocks.properties.connecting.VerticalConnected;
+import com.wildsregrown.blocks.properties.fuel.FueledLight;
+import com.wildsregrown.blocks.properties.framing.HalfStair;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CandleBlock;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.item.tint.ConstantTintSource;
-import net.minecraft.client.render.item.tint.GrassTintSource;
 import net.minecraft.client.render.model.json.ModelVariant;
 import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.tuple.Triple;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static com.wildsregrown.WildsRegrown.modid;

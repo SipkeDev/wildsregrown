@@ -1,6 +1,6 @@
 package com.wildsregrown.gui;
 
-import com.wildsregrown.gui.map.WorldMapScreen;
+import com.wildsregrown.gui.player.PlayerScreen;
 import com.wildsregrown.gui.radial.RadialScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -14,18 +14,23 @@ public class KeyBindings {
 
     public static int TAB = GLFW.GLFW_KEY_TAB;
     public static int M = GLFW.GLFW_KEY_M;
+    public static int I = GLFW.GLFW_KEY_I;
 
     public static KeyBinding MENU_OPEN = new KeyBinding("key.open_menu", TAB, KeyBinding.Category.MISC);
     public static KeyBinding MAP_OPEN = new KeyBinding("key.open_map", M, KeyBinding.Category.MISC);
+    public static KeyBinding INVENTORY_OPEN = new KeyBinding("key.open_inventory", I, KeyBinding.Category.MISC);
 
     public static void register() {
 
         //Keybinds Registery
         KeyBindingHelper.registerKeyBinding(MENU_OPEN);
         KeyBindingHelper.registerKeyBinding(MAP_OPEN);
+        KeyBindingHelper.registerKeyBinding(INVENTORY_OPEN);
+
+        handleKeybindings();
     }
 
-    public static void handleKeybinds(){
+    private static void handleKeybindings(){
         //Handle Keybinds
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
 
@@ -40,11 +45,22 @@ public class KeyBindings {
             }
 
             if (MAP_OPEN.wasPressed()) {
-                if (WorldMapScreen.active){
-                    WorldMapScreen.hide();
+                if (PlayerScreen.active){
+                    PlayerScreen.hide();
                 }
-                if (!WorldMapScreen.active) {
-                    WorldMapScreen.show();
+                if (!PlayerScreen.active) {
+                    PlayerScreen.INSTANCE.getTabNavigation().selectTab(1, true);
+                    PlayerScreen.show();
+                }
+            }
+
+            if (INVENTORY_OPEN.wasPressed()) {
+                if (PlayerScreen.active){
+                    PlayerScreen.hide();
+                }
+                if (!PlayerScreen.active) {
+                    PlayerScreen.INSTANCE.getTabNavigation().selectTab(0, true);
+                    PlayerScreen.show();
                 }
             }
 

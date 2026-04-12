@@ -6,11 +6,14 @@ import com.wildsregrown.blocks.flora.Flora;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import com.sipke.math.MathUtil;
+import com.wildsregrown.registries.ModFluids;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -40,6 +43,12 @@ import static com.wildsregrown.blocks.render.TintUtil.buildBlendMap;
  * MOISTURE represents the remaining moisture left in the soil block. It's defined with a 0-16 integer, or inaccurate 0-1 float.
  */
 public class SoilBlock extends FallingBlock implements Waterloggable, ITintedBlock {
+
+    public static final MapCodec<SoilBlock> CODEC = createCodec(SoilBlock::new);
+    @Override
+    public MapCodec<SoilBlock> getCodec() {
+        return CODEC;
+    }
 
     public static final IntProperty LAYERS = ModProperties.LAYERS;
     public static final IntProperty OVERGROWN = ModProperties.OVERGROWN;
@@ -97,11 +106,6 @@ public class SoilBlock extends FallingBlock implements Waterloggable, ITintedBlo
         }
 
         super.onLandedUpon(world, state, pos, entity, fallDistance);
-    }
-
-    @Override
-    protected MapCodec<? extends FallingBlock> getCodec() {
-        return null;
     }
 
     @Override
@@ -197,7 +201,7 @@ public class SoilBlock extends FallingBlock implements Waterloggable, ITintedBlo
     }
 
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.get(WATERLOGGED) ? ModFluids.SWEET_WATER.getStill(false).with(FlowableFluid.LEVEL, state.get(LAYERS)) : super.getFluidState(state);
     }
 
     static {
@@ -215,15 +219,19 @@ public class SoilBlock extends FallingBlock implements Waterloggable, ITintedBlo
         int dry = Color.decode("#c8b478").getRGB();
         int temperate = Color.decode("#748937").getRGB();
         int wet = Color.decode("#93ad46").getRGB();
-
         rgb = buildBlendMap(temperate, dry, wet, MOISTURE.getValues().size());
     }
 
     @Override
-    public int getTint(BlockState state, int tintIndex) {
-        if (tintIndex == 0){
-            return rgb[MathUtil.clamp(state.get(MOISTURE)-1, 0, rgb.length)];
-        }
-        return -1;
+    public MapColor getDefaultMapColor() {
+        return MapColor.BROWN;
     }
+
+
+    @Override
+    public int getTint(BlockState state, int tintIndex) {
+        boolean bl = state.get(OVERGROWN) != 0 && tintIndex == 0;
+        return bl ? rgb[MathUtil.clamp(state.get(MOISTURE) - 1, 0, rgb.length)] : -1;
+    }
+
 }

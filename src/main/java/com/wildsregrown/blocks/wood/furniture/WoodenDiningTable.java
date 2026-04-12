@@ -47,11 +47,8 @@ public class WoodenDiningTable extends HorizontalConnectingBlock implements ITin
     }
 
     @Override
-    public boolean isConnectingBlock(BlockState state) {
-        if (state.getBlock() instanceof WoodenDiningTable){
-            return true;
-        }
-        return false;
+    public boolean isConnectingBlock(BlockState state, BlockState current) {
+        return state.getBlock() instanceof WoodenDiningTable;
     }
 
     @Override

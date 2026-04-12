@@ -4,31 +4,19 @@ import com.wildsregrown.blocks.VoxelTransform;
 import com.wildsregrown.blocks.abstracts.HorizontalConnectingBlock;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
-import com.wildsregrown.entities.block.SitEntity;
-import com.wildsregrown.registries.ModEntities;
+import com.wildsregrown.blocks.wood.furniture.sitable.WoodenBenchBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StoneDiningTable extends HorizontalConnectingBlock {
 
@@ -45,11 +33,8 @@ public class StoneDiningTable extends HorizontalConnectingBlock {
     }
 
     @Override
-    public boolean isConnectingBlock(BlockState state) {
-        if (state.getBlock() instanceof StoneDiningTable){
-            return true;
-        }
-        return false;
+    public boolean isConnectingBlock(BlockState neighbour, BlockState state) {
+        return neighbour.getBlock() instanceof WoodenBenchBlock;
     }
 
     @Override

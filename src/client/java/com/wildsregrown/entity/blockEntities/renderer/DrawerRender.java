@@ -1,6 +1,6 @@
 package com.wildsregrown.entity.blockEntities.renderer;
 
-import com.wildsregrown.blocks.properties.DrawerState;
+import com.wildsregrown.blocks.properties.framing.DrawerState;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.entities.block.DrawerEntity;
 import com.wildsregrown.entity.blockEntities.renderstates.DrawerRenderState;

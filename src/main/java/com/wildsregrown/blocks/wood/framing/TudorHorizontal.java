@@ -5,7 +5,7 @@ import com.wildsregrown.blocks.VoxelTransform;
 import com.wildsregrown.blocks.abstracts.HorizontalConnectingBlock;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
-import com.wildsregrown.blocks.properties.Tudor;
+import com.wildsregrown.blocks.properties.framing.Tudor;
 import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import net.minecraft.block.Block;

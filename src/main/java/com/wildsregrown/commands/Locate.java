@@ -5,16 +5,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.sipke.registeries.Biomes;
-import com.sipke.registeries.Ecosystems;
-import com.sipke.registeries.Landforms;
-import com.sipke.registeries.Structures;
+import com.sipke.registeries.*;
 import com.wildsregrown.WildsRegrown;
 import com.sipke.World;
 import com.sipke.api.PosTranslator;
 import com.sipke.api.categorization.Moisture;
 import com.sipke.api.categorization.Temperature;
-import com.sipke.api.cell.BiomeCell;
+import com.sipke.api.grid.mesh.cell.BiomeCell;
 import com.sipke.api.features.caves.CaveLayer;
 import com.sipke.api.features.caves.CaveNode;
 import com.sipke.api.features.structures.Structure;
@@ -25,8 +22,8 @@ import com.sipke.api.rivers.RiverConstants;
 import com.sipke.api.terrain.Biome;
 import com.sipke.api.terrain.Ecosystem;
 import com.sipke.api.terrain.Landform;
-import com.sipke.api.cell.EcoSystemCell;
-import com.sipke.api.cell.LandFormCell;
+import com.sipke.api.grid.mesh.cell.EcoSystemCell;
+import com.sipke.api.grid.mesh.cell.LandFormCell;
 import com.sipke.api.rivers.River;
 import com.sipke.api.rivers.RiverBasin;
 import com.sipke.api.rivers.RiverNode;
@@ -34,7 +31,6 @@ import com.sipke.math.Distance;
 import com.sipke.math.MathUtil;
 import com.wildsregrown.world.WRGChunkGenerator;
 import net.minecraft.command.CommandSource;
-import net.minecraft.command.permission.PermissionPredicate;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -58,13 +54,13 @@ public class Locate {
     private static final DynamicCommandExceptionType STRUCTURE_INVALID_EXCEPTION = new DynamicCommandExceptionType((id) ->
             Text.of("No structure of " + id + "found, try generating another world"));
     public static final SuggestionProvider<ServerCommandSource> ALL_LANDFORMS = SuggestionProviders.register(Identifier.of("landforms"), (context, builder) ->
-            CommandSource.suggestMatching(Landforms.getEntries().stream().map(Landform::toString), builder));
+            CommandSource.suggestMatching(WorldRegistries.LANDFORMS.getEntries().stream().map(Landform::toString), builder));
     public static final SuggestionProvider<ServerCommandSource> ALL_ECOSYSTEMS = SuggestionProviders.register(Identifier.of("ecosystems"), (context, builder) ->
-            CommandSource.suggestMatching(Ecosystems.getEntries().stream().map(Ecosystem::toString), builder));
+            CommandSource.suggestMatching(WorldRegistries.ECOSYSTEMS.getEntries().stream().map(Ecosystem::toString), builder));
     public static final SuggestionProvider<ServerCommandSource> ALL_BIOMES = SuggestionProviders.register(Identifier.of("biomes"), (context, builder) ->
-            CommandSource.suggestMatching(Biomes.getEntries().stream().map(Biome::toString), builder));
+            CommandSource.suggestMatching(WorldRegistries.BIOMES.getEntries().stream().map(Biome::toString), builder));
     public static final SuggestionProvider<ServerCommandSource> ALL_STRUCTURES = SuggestionProviders.register(Identifier.of("structures"), (context, builder) ->
-            CommandSource.suggestMatching(Structures.getEntries().stream().map(Structure::toString), builder));
+            CommandSource.suggestMatching(WorldRegistries.STRUCTURES.getEntries().stream().map(Structure::toString), builder));
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(((CommandManager.literal("wrg").requires(ServerCommandSource::isExecutedByPlayer))
@@ -107,13 +103,14 @@ public class Locate {
         World world = ((WRGChunkGenerator) source.getWorld().getChunkManager().getChunkGenerator()).getWorld();
         int playerX = source.getPlayer().getBlockX(), playerZ = source.getPlayer().getBlockZ();
         int size = world.getGrid().getSize();
+        float scale = world.getConfig().scaleMultiplier();
 
-        RiverNode closestNode = closestRiverNode(lowerBound, upperBound, world, playerX, playerZ, size, lake);
+        RiverNode closestNode = closestRiverNode(lowerBound, upperBound, world, playerX, playerZ, size, scale, lake);
 
         if (closestNode == null){
             source.sendFeedback(() -> Text.of("Not found"), false);
         }
-        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(closestNode.x, size),0,PosTranslator.gridToGlobal(closestNode.z, size));
+        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(closestNode.x, size,scale),0,PosTranslator.gridToGlobal(closestNode.z, size,scale));
 
         if (source.getWorld().getChunkManager().getChunkGenerator() == null || (playerX + playerZ) == 0) {
             throw KEY_NOT_FOUND.create("Error");
@@ -129,7 +126,7 @@ public class Locate {
         }
     }
 
-    private static RiverNode closestRiverNode(float lowerBound, float upperBound, World world, int x, int z, int size, boolean lake){
+    private static RiverNode closestRiverNode(float lowerBound, float upperBound, World world, int x, int z, int size, float scale, boolean lake){
 
         float dist = Float.MAX_VALUE;
         RiverNode closestNode = null;
@@ -141,8 +138,8 @@ public class Locate {
                     float velocity = RiverConstants.convertVelocity(node);
                     if (velocity > upperBound || velocity < lowerBound){continue;}
 
-                    float dx = MathUtil.abs(node.x - PosTranslator.globalToGrid(x, size));
-                    float dz = MathUtil.abs(node.z - PosTranslator.globalToGrid(z, size));
+                    float dx = MathUtil.abs(node.x - PosTranslator.globalToGrid(x, size,scale));
+                    float dz = MathUtil.abs(node.z - PosTranslator.globalToGrid(z, size,scale));
                     float newDist = Distance.euclidean.apply(dx, dz);
 
                     if (dist > newDist) {
@@ -168,11 +165,11 @@ public class Locate {
         int playerX = source.getPlayer().getBlockX(), playerZ = source.getPlayer().getBlockZ();
         HeightMapPos pos = world.generator.getHeightMapPos(playerX, playerZ);
 
-        Ecosystem ecosystem = Ecosystems.get(pos.getEcosystem());
+        Ecosystem ecosystem = WorldRegistries.ECOSYSTEMS.get(pos.getEcosystem());
         Text text = Text.of("\n" +
-                "Landform: " + Landforms.get(pos.getLandform()) + "\n" +
+                "Landform: " + WorldRegistries.LANDFORMS.get(pos.getLandform()) + "\n" +
                 "Ecosystem: " + ecosystem + "\n" +
-                "Biome: " + Biomes.get(pos.getBiome()).toString() + "\n" +
+                "Biome: " + WorldRegistries.BIOMES.get(pos.getBiome()).toString() + "\n" +
                 pos.getHeight()   + " [Height]" + "\n" +
                 pos.getTemperature() + " |Temperature [" + Temperature.get(pos.getTemperature()) + "]" + "\n" +
                 pos.getMoisture()    + " |Moisture [" + Moisture.get(pos.getMoisture()) + "]" + "\n" +
@@ -195,14 +192,15 @@ public class Locate {
         WorldGrid grid = chunkGenerator.getWorld().getGrid();
 
         int size = grid.getSize();
+        float scale = grid.getConfig().scaleMultiplier();
         int playerX = source.getPlayer().getBlockX(), playerZ = source.getPlayer().getBlockZ();
         float dist = Float.MAX_VALUE;
         LandFormCell idx = grid.getLandforms().get(0);
 
         for (LandFormCell cell : grid.getLandforms()){
             if (cell.hasCavern()){
-                int dx = PosTranslator.gridToGlobal(cell.getX(), size) - playerX;
-                int dz = PosTranslator.gridToGlobal(cell.getZ(), size) - playerZ;
+                int dx = PosTranslator.gridToGlobal(cell.getX(), size,scale) - playerX;
+                int dz = PosTranslator.gridToGlobal(cell.getZ(), size,scale) - playerZ;
                 float newDist = Distance.euclidean.apply(dx, dz);
                 if (dist > newDist){
                     dist = newDist;
@@ -210,7 +208,7 @@ public class Locate {
                 }
             }
         }
-        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(idx.getX(), size),0,PosTranslator.gridToGlobal(idx.getZ(), size));
+        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(idx.getX(), size, scale),0,PosTranslator.gridToGlobal(idx.getZ(), size, scale));
 
 
         if (chunkGenerator == null || (targetPos.getX() + targetPos.getZ()) == 0) {
@@ -227,14 +225,15 @@ public class Locate {
         WorldGrid grid = chunkGenerator.getWorld().getGrid();
 
         int size = grid.getSize();
+        float scale = grid.getConfig().scaleMultiplier();
         int playerX = source.getPlayer().getBlockX(), playerZ = source.getPlayer().getBlockZ();
         float dist = Float.MAX_VALUE;
         LandFormCell idx = grid.getLandforms().get(0);
 
         for (LandFormCell cell : grid.getLandforms()){
             if (cell.hasCavern()){
-                int dx = PosTranslator.gridToGlobal(cell.getX(), size) - playerX;
-                int dz = PosTranslator.gridToGlobal(cell.getZ(), size) - playerZ;
+                int dx = PosTranslator.gridToGlobal(cell.getX(), size, scale) - playerX;
+                int dz = PosTranslator.gridToGlobal(cell.getZ(), size, scale) - playerZ;
                 float newDist = Distance.euclidean.apply(dx, dz);
                 if (dist > newDist){
                     dist = newDist;
@@ -242,7 +241,7 @@ public class Locate {
                 }
             }
         }
-        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(idx.getX(), size),0,PosTranslator.gridToGlobal(idx.getZ(), size));
+        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(idx.getX(), size, scale),0,PosTranslator.gridToGlobal(idx.getZ(), size, scale));
 
         CaveNode closestNode = null;
         dist = Float.MAX_VALUE;
@@ -272,7 +271,7 @@ public class Locate {
     }
 
     private static int nearest(ServerCommandSource source, String l) throws CommandSyntaxException {
-        Landform landform = Landforms.get(l);
+        Landform landform = WorldRegistries.LANDFORMS.get(l);
         if (landform == null) {
             throw KEY_NOT_FOUND.create(l);
         }
@@ -282,6 +281,7 @@ public class Locate {
         WorldGrid grid = chunkGenerator.getWorld().getGrid();
 
         int size = grid.getSize();
+        float scale = grid.getConfig().scaleMultiplier();
         int playerX = source.getPlayer().getBlockX(), playerZ = source.getPlayer().getBlockZ();
         float dist = Float.MAX_VALUE;
         LandFormCell idx = grid.getLandforms().get(0);
@@ -289,9 +289,9 @@ public class Locate {
         for (LandFormCell cell : grid.getLandforms()){
 
 
-            if (landform == Landforms.get(cell.getConfig())){
-                int dx = PosTranslator.gridToGlobal(cell.getX(), size) - playerX;
-                int dz = PosTranslator.gridToGlobal(cell.getZ(), size) - playerZ;
+            if (landform == WorldRegistries.LANDFORMS.get(cell.getConfig())){
+                int dx = PosTranslator.gridToGlobal(cell.getX(), size, scale) - playerX;
+                int dz = PosTranslator.gridToGlobal(cell.getZ(), size, scale) - playerZ;
                 float newDist = Distance.euclidean.apply(dx, dz);
                 if (dist > newDist){
                     dist = newDist;
@@ -299,7 +299,7 @@ public class Locate {
                 }
             }
         }
-        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(idx.getX(), size),0,PosTranslator.gridToGlobal(idx.getZ(), size));
+        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(idx.getX(), size, scale),0,PosTranslator.gridToGlobal(idx.getZ(), size, scale));
 
 
         if (chunkGenerator == null || (targetPos.getX() + targetPos.getZ()) == 0) {
@@ -310,7 +310,7 @@ public class Locate {
     }
 
     private static int ecosystem(ServerCommandSource source, String l) throws CommandSyntaxException {
-        Ecosystem ecosystem = Ecosystems.get(l);
+        Ecosystem ecosystem = WorldRegistries.ECOSYSTEMS.get(l);
         if (ecosystem == null) {
             throw KEY_NOT_FOUND.create(l);
         }
@@ -320,14 +320,15 @@ public class Locate {
         WorldGrid grid = chunkGenerator.getWorld().getGrid();
 
         int size = grid.getSize();
+        float scale = grid.getConfig().scaleMultiplier();
         int playerX = source.getPlayer().getBlockX(), playerZ = source.getPlayer().getBlockZ();
         float dist = Float.MAX_VALUE;
         EcoSystemCell idx = grid.getEcosystems().get(0);
 
         for (EcoSystemCell cell : grid.getEcosystems()){
-            if (ecosystem == Ecosystems.get(cell.getConfig())){
-                int dx = PosTranslator.gridToGlobal(cell.getX(), size) - playerX;
-                int dz = PosTranslator.gridToGlobal(cell.getZ(), size) - playerZ;
+            if (ecosystem == WorldRegistries.ECOSYSTEMS.get(cell.getConfig())){
+                int dx = PosTranslator.gridToGlobal(cell.getX(), size, scale) - playerX;
+                int dz = PosTranslator.gridToGlobal(cell.getZ(), size, scale) - playerZ;
                 float newDist = Distance.euclidean.apply(dx, dz);
                 if (dist > newDist){
                     dist = newDist;
@@ -335,7 +336,7 @@ public class Locate {
                 }
             }
         }
-        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(idx.getX(), size),0,PosTranslator.gridToGlobal(idx.getZ(), size));
+        BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(idx.getX(), size, scale),0,PosTranslator.gridToGlobal(idx.getZ(), size, scale));
 
 
         if (chunkGenerator == null || (targetPos.getX() + targetPos.getZ()) == 0) {
@@ -346,7 +347,7 @@ public class Locate {
     }
 
     private static int biome(ServerCommandSource source, String searchEntry) throws CommandSyntaxException {
-        if (Biomes.get(searchEntry) == null) {
+        if (WorldRegistries.BIOMES.get(searchEntry) == null) {
             throw new DynamicCommandExceptionType((id) -> Text.translatable("commands.locate.biomes.invalid", id)).create(null);
         }
 
@@ -355,14 +356,15 @@ public class Locate {
         WorldGrid grid = chunkGenerator.getWorld().getGrid();
 
         int size = grid.getSize();
+        float scale = grid.getConfig().scaleMultiplier();
         int playerX = source.getPlayer().getBlockX(), playerZ = source.getPlayer().getBlockZ();
 
         float dist = Float.MAX_VALUE;
         EcoSystemCell closestEcosystem = grid.getEcosystems().getFirst();
 
         for (EcoSystemCell cell : grid.getEcosystems()) {
-            int dx = PosTranslator.gridToGlobal(cell.getX(), size) - playerX;
-            int dz = PosTranslator.gridToGlobal(cell.getZ(), size) - playerZ;
+            int dx = PosTranslator.gridToGlobal(cell.getX(), size, scale) - playerX;
+            int dz = PosTranslator.gridToGlobal(cell.getZ(), size, scale) - playerZ;
             float newDist = Distance.euclidean.apply(dx, dz);
             if (dist > newDist) {
                 dist = newDist;
@@ -374,8 +376,8 @@ public class Locate {
         BiomeCell closestBiome = null;
         for (BiomeCell cell : closestEcosystem.getBiomes()){
             if (Objects.equals(cell.getBiome().toString(), searchEntry)) {
-                int dx = PosTranslator.gridToGlobal(cell.getX(), size) - playerX;
-                int dz = PosTranslator.gridToGlobal(cell.getZ(), size) - playerZ;
+                int dx = PosTranslator.gridToGlobal(cell.getX(), size, scale) - playerX;
+                int dz = PosTranslator.gridToGlobal(cell.getZ(), size, scale) - playerZ;
                 float newDist = Distance.euclidean.apply(dx, dz);
                 if (dist > newDist) {
                     dist = newDist;
@@ -387,31 +389,35 @@ public class Locate {
         if (closestBiome == null) {
             throw KEY_NOT_FOUND.create(searchEntry);
         } else {
-            BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(closestBiome.getX(), size),0,PosTranslator.gridToGlobal(closestBiome.getZ(), size));
+            BlockPos targetPos = new BlockPos(PosTranslator.gridToGlobal(closestBiome.getX(), size, scale),0,PosTranslator.gridToGlobal(closestBiome.getZ(), size, scale));
             return sendCoordinates(source, blockPos, targetPos, searchEntry);
         }
     }
 
-    private static int structure(ServerCommandSource source, String l) throws CommandSyntaxException {
+    private static int structure(ServerCommandSource source, String name) throws CommandSyntaxException {
 
-        Structure structure = Structures.get(l);
-        if (structure == null) {throw STRUCTURE_INVALID_EXCEPTION.create(l);}
+        Structure structure = WorldRegistries.STRUCTURES.get(name);
+        if (structure == null) {throw STRUCTURE_INVALID_EXCEPTION.create("not found in registery!!! " + name + " | ");}
 
         BlockPos blockPos = BlockPos.ofFloored(source.getPosition());
         WRGChunkGenerator chunkGenerator = (WRGChunkGenerator) source.getWorld().getChunkManager().getChunkGenerator();
         WorldGrid grid = chunkGenerator.getWorld().getGrid();
+        int size = grid.getSize();
+        float scale = grid.getConfig().scaleMultiplier();
 
-        int playerX = source.getPlayer().getBlockX(), playerZ = source.getPlayer().getBlockZ();
         float dist = Float.MAX_VALUE;
         StructureSpawn pos = null;
+
+        float gx = PosTranslator.globalToGrid(blockPos.getX(), size, scale);
+        float gz = PosTranslator.globalToGrid(blockPos.getZ(), size, scale);
 
         for (EcoSystemCell ecoSystemCell : grid.getEcosystems()){
             for (BiomeCell cell : ecoSystemCell.getBiomes()){
                 for (StructureSpawn newPos : cell.getStructures()) {
 
-                    if (structure.getKey() == newPos.getStructure().getKey()) {
-                        int dx = newPos.getX() - playerX;
-                        int dz = newPos.getZ() - playerZ;
+                    if (Objects.equals(structure.getName(), newPos.getStructure().getName())) {
+                        float dx = newPos.getX() - gx;
+                        float dz = newPos.getZ() - gz;
                         float newDist = Distance.euclidean.apply(dx, dz);
                         if (dist > newDist) {
                             dist = newDist;
@@ -426,7 +432,11 @@ public class Locate {
         if (pos == null) {
             throw STRUCTURE_INVALID_EXCEPTION.create(structure.name);
         } else {
-            BlockPos targetPos = new BlockPos(pos.getX(),0, pos.getZ());
+            BlockPos targetPos = new BlockPos(
+                    pos.getTranslatedX(size, scale),
+                    0,
+                    pos.getTranslatedZ(size, scale)
+            );
             return sendCoordinates(source, blockPos, targetPos, structure.name);
         }
     }

@@ -2,6 +2,7 @@ package com.wildsregrown.data.blockstates;
 
 import com.sipke.api.features.Colors;
 import com.wildsregrown.blocks.properties.*;
+import com.wildsregrown.blocks.properties.old_branch.Verticality;
 import com.wildsregrown.blocks.wood.tree.FruitingLeaves;
 import com.wildsregrown.blocks.wood.tree.HalfLog;
 import com.wildsregrown.data.blockstates.libraries.FramingLibrary;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 
 import static com.wildsregrown.WildsRegrown.modid;
+import static com.wildsregrown.data.DataGeneratorProvider.idFromBlock;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.*;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.CreateVariants;
 import static com.wildsregrown.data.blockstates.libraries.CastleLibrary.*;
@@ -72,6 +74,9 @@ public class WoodGroupBlockStates {
 
         beam(generator, group.get(WoodGroup.Common.beam), name, "_bark");
         beam(generator, group.get(WoodGroup.Common.stripped_beam), name, "_wood");
+        beam(generator, group.get(WoodGroup.Common.rough_plank), name, "_wood", "plank");
+        beam(generator, group.get(WoodGroup.Common.stick), name, "_bark", "stick");
+        beam(generator, group.get(WoodGroup.Common.stripped_stick), name, "_wood", "stick");
 
         planks(generator, group.get(WoodGroup.Common.planks), name, "planks");
         stairs(generator, name, group.get(WoodGroup.Common.planks_stairs), "planks");
@@ -218,21 +223,21 @@ public class WoodGroupBlockStates {
         boolean pines = name.contains("larch") || name.contains("spruce");
         boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
 
-        applyTextureToModel(generator, "inner_stairs_" + loc0, "block/inner_stairs", plank_path + name + "_" + type);
-        applyTextureToModel(generator, "outer_stairs_" + loc0, "block/outer_stairs", plank_path + name + "_" + type);
-        applyTextureToModel(generator, "straight_stairs_" + loc0, "block/vanilla_stairs", plank_path + name + "_" + type);
+        applyTextureToModel(generator, "inner_stairs_" + loc0, "block/framing/paintable_stairs_inner", plank_path + name + "_" + type);
+        applyTextureToModel(generator, "outer_stairs_" + loc0, "block/framing/paintable_stairs_outer", plank_path + name + "_" + type);
+        applyTextureToModel(generator, "straight_stairs_" + loc0, "block/framing/paintable_stairs", plank_path + name + "_" + type);
         if (pines) {
-            applyTextureToModel(generator, "inner_stairs_" + loc1, "block/inner_stairs", plank_path + "pine_paintable_" + type);
-            applyTextureToModel(generator, "outer_stairs_" + loc1, "block/outer_stairs", plank_path + "pine_paintable_" + type);
-            applyTextureToModel(generator, "straight_stairs_" + loc1, "block/vanilla_stairs", plank_path + "pine_paintable_" + type);
+            applyTextureToModel(generator, "inner_stairs_" + loc1, "block/framing/paintable_stairs_inner", plank_path + "pine_paintable_" + type);
+            applyTextureToModel(generator, "outer_stairs_" + loc1, "block/framing/paintable_stairs_outer", plank_path + "pine_paintable_" + type);
+            applyTextureToModel(generator, "straight_stairs_" + loc1, "block/framing/paintable_stairs", plank_path + "pine_paintable_" + type);
         }else if(fruit){
-            applyTextureToModel(generator, "inner_stairs_" + loc1, "block/inner_stairs", plank_path + "fruit_paintable_" + type);
-            applyTextureToModel(generator, "outer_stairs_" + loc1, "block/outer_stairs", plank_path + "fruit_paintable_" + type);
-            applyTextureToModel(generator, "straight_stairs_" + loc1, "block/vanilla_stairs", plank_path + "fruit_paintable_" + type);
+            applyTextureToModel(generator, "inner_stairs_" + loc1, "block/framing/paintable_stairs_inner", plank_path + "fruit_paintable_" + type);
+            applyTextureToModel(generator, "outer_stairs_" + loc1, "block/framing/paintable_stairs_outer", plank_path + "fruit_paintable_" + type);
+            applyTextureToModel(generator, "straight_stairs_" + loc1, "block/framing/paintable_stairs", plank_path + "fruit_paintable_" + type);
         }else {
-            applyTextureToModel(generator, "inner_stairs_" + loc1, "block/inner_stairs", plank_path + name + "_paintable_" + type);
-            applyTextureToModel(generator, "outer_stairs_" + loc1, "block/outer_stairs", plank_path + name + "_paintable_" + type);
-            applyTextureToModel(generator, "straight_stairs_" + loc1, "block/vanilla_stairs", plank_path + name + "_paintable_" + type);
+            applyTextureToModel(generator, "inner_stairs_" + loc1, "block/framing/paintable_stairs_inner", plank_path + name + "_paintable_" + type);
+            applyTextureToModel(generator, "outer_stairs_" + loc1, "block/framing/paintable_stairs_outer", plank_path + name + "_paintable_" + type);
+            applyTextureToModel(generator, "straight_stairs_" + loc1, "block/framing/paintable_stairs", plank_path + name + "_paintable_" + type);
         }
         generator.registerParentedItemModel(block, Identifier.of(modid, root+"straight_stairs_" + loc0));
 
@@ -366,7 +371,7 @@ public class WoodGroupBlockStates {
 
         generator.registerParentedItemModel(block, Identifier.of(modid, root+id + "_diagonal"));
 
-        CreateVariants(generator, block, BlockStateVariantMap.models(OrdinalDirection.DIRECTIONS, Verticality.VERTICALITY)
+        CreateVariants(generator, block, BlockStateVariantMap.models(ModProperties.DIRECTIONS, Verticality.VERTICALITY)
                 .register(OrdinalDirection.N , Verticality.LEVEL, modelOf(id + "_face"    , false, 0  , 0))
                 .register(OrdinalDirection.E , Verticality.LEVEL, modelOf(id + "_face"    , false, 90 , 0))
                 .register(OrdinalDirection.S , Verticality.LEVEL, modelOf(id + "_face"    , false, 180, 0))
@@ -501,12 +506,12 @@ public class WoodGroupBlockStates {
             .register(false, Direction.SOUTH, paint, modelOf(finalLoc, false, 180, 90))
             .register(false, Direction.EAST , paint, modelOf(finalLoc, false, 90, 90))
             .register(false, Direction.WEST , paint, modelOf(finalLoc, false, 270, 90))
-            .register(true , Direction.UP   , paint, modelOf(finalLoc, false, 0, 0))
-            .register(true , Direction.DOWN , paint, modelOf(finalLoc, false, 0, 180))
-            .register(true , Direction.NORTH, paint, modelOf(finalLoc, false, 0, 90))
-            .register(true , Direction.SOUTH, paint, modelOf(finalLoc, false, 180, 90))
-            .register(true , Direction.EAST , paint, modelOf(finalLoc, false, 90, 90))
-            .register(true , Direction.WEST , paint, modelOf(finalLoc, false, 270, 90));
+            .register(true , Direction.UP   , paint, modelOf(finalLoc, false, 90, 0))
+            .register(true , Direction.DOWN , paint, modelOf(finalLoc, false, 90, 180))
+            .register(true , Direction.NORTH, paint, modelOf(finalLoc+r, false, 0, 90))
+            .register(true , Direction.SOUTH, paint, modelOf(finalLoc+r, false, 180, 90))
+            .register(true , Direction.EAST , paint, modelOf(finalLoc+r, false, 90, 90))
+            .register(true , Direction.WEST , paint, modelOf(finalLoc+r, false, 270, 90));
 
         }
         CreateVariants(generator, block, map);
@@ -539,7 +544,50 @@ public class WoodGroupBlockStates {
         }
         generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction.Axis, LinSeedPaintable, Quadrant> map = BlockStateVariantMap.models(Properties.AXIS, ModProperties.LINSEED_PAINT, Quadrant.QUADRANT);
+        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction.Axis, LinSeedPaintable, Quadrant> map = BlockStateVariantMap.models(Properties.AXIS, ModProperties.LINSEED_PAINT, ModProperties.QUADRANT);
+
+        for (LinSeedPaintable paint : LinSeedPaintable.values()) {
+            String finalLoc;
+            if (paint == LinSeedPaintable.NONE){
+                finalLoc = loc0;
+            }else {
+                finalLoc = loc2;
+            }
+            map
+                    .register(Direction.Axis.X, paint, Quadrant.PP , modelOf(finalLoc, true, 90  , 180))
+                    .register(Direction.Axis.X, paint, Quadrant.NP , modelOf(finalLoc, true, 270 , 180))
+                    .register(Direction.Axis.X, paint, Quadrant.NN , modelOf(finalLoc, true, 270 , 0))
+                    .register(Direction.Axis.X, paint, Quadrant.PN , modelOf(finalLoc, true, 90  , 0))
+                    .register(Direction.Axis.Z, paint, Quadrant.PP , modelOf(finalLoc, true, 0  , 180))
+                    .register(Direction.Axis.Z, paint, Quadrant.NP , modelOf(finalLoc, true, 180 , 180))
+                    .register(Direction.Axis.Z, paint, Quadrant.NN , modelOf(finalLoc, true, 180 , 0))
+                    .register(Direction.Axis.Z, paint, Quadrant.PN , modelOf(finalLoc, true, 0  , 0))
+                    .register(Direction.Axis.Y, paint, Quadrant.PP , modelOf(finalLoc, true, 0  , 90))
+                    .register(Direction.Axis.Y, paint, Quadrant.NP , modelOf(finalLoc, true, 270  , 90))
+                    .register(Direction.Axis.Y, paint, Quadrant.NN , modelOf(finalLoc, true, 180  , 90))
+                    .register(Direction.Axis.Y, paint, Quadrant.PN , modelOf(finalLoc, true, 90  , 90));
+        }
+        CreateVariants(generator, block, map);
+    }
+
+    public static void beam(BlockStateModelGenerator generator, Block block, String name, String type, String parent) {
+        String id = idFromBlock(block);
+        String loc0 = "log/" + id;
+        String loc2 = "log/" + id + "_paintable";
+        boolean pines = name.contains("larch") || name.contains("spruce");
+        boolean fruit = name.contains("apple") || name.contains("pear") || name.contains("plum");
+
+        applyTextureToModel(generator, loc0, "block/trees/" + parent, log_path + name + type, log_path + name + "_wood_end");
+        if (pines) {
+            applyTextureToModel(generator, loc2, "block/trees" + parent, log_path + type, log_path + "pine_paintable_wood_end");
+        } else if (fruit) {
+            applyTextureToModel(generator, loc2, "block/trees" + parent, log_path + type, log_path + "fruit_paintable_wood_end");
+        }else{
+            applyTextureToModel(generator, loc2, "block/trees" + parent, log_path + name + type, log_path + name + "_paintable_wood_end");
+        }
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
+
+        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction.Axis, LinSeedPaintable, Quadrant> map = BlockStateVariantMap.models(Properties.AXIS, ModProperties.LINSEED_PAINT, ModProperties.QUADRANT);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc;

@@ -1,6 +1,5 @@
 package com.wildsregrown.blocks.properties;
 
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -19,7 +18,6 @@ public enum OrdinalDirection implements StringIdentifiable  {
     private final int x;
     private final int y;
     private final int z;
-    public static final EnumProperty<OrdinalDirection> DIRECTIONS = EnumProperty.of("ordinal", OrdinalDirection.class);
 
     OrdinalDirection(String name, int x, int y, int z) {
         this.name = name;

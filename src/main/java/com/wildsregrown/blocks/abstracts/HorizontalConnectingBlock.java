@@ -28,18 +28,16 @@ public abstract class HorizontalConnectingBlock extends Block implements Waterlo
         setDefaultState(getDefaultState().with(SHAPE, HorizontalConnected.SINGLE).with(FACING, Direction.NORTH).with(Properties.WATERLOGGED, Boolean.FALSE));
     }
 
-    public boolean isConnectingBlock(BlockState state) {
+    public boolean isConnectingBlock(BlockState state, BlockState current) {
         return state.getBlock() == this;
     }
 
-    public boolean isValidFacing(BlockState currentState, BlockState validState) {
-
-        if(isConnectingBlock(currentState)) {
-            if (isConnectingBlock(validState) && currentState.get(FACING) == validState.get(FACING)) {
-                return true;
-            }
+    private static boolean isValidFacing(BlockState currentState, BlockState validState) {
+        if (currentState.contains(FACING) && validState.contains(FACING)) {
+            return currentState.get(FACING) == validState.get(FACING);
+        }else {
+            return false;
         }
-        return false;
     }
 
     /**
@@ -51,8 +49,8 @@ public abstract class HorizontalConnectingBlock extends Block implements Waterlo
         BlockState stateLeft = worldIn.getBlockState(blockpos.offset(direction.rotateYClockwise()));
         BlockState stateRight = worldIn.getBlockState(blockpos.offset(direction.rotateYCounterclockwise()));
 
-        boolean left = isConnectingBlock(stateLeft) && isValidFacing(state, stateLeft);
-        boolean right = isConnectingBlock(stateRight) && isValidFacing(state, stateRight);
+        boolean left = isConnectingBlock(stateLeft, state) && isValidFacing(stateLeft, state);
+        boolean right = isConnectingBlock(stateRight, state) && isValidFacing(stateRight, state);
 
         if(left && right)
         {
@@ -89,8 +87,7 @@ public abstract class HorizontalConnectingBlock extends Block implements Waterlo
         return state.with(SHAPE, getPartProperty(world, pos, state.get(FACING)));
     }
 
-    public FluidState getFluidState(BlockState state)
-    {
+    public FluidState getFluidState(BlockState state){
         return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 

@@ -1,8 +1,8 @@
 package com.wildsregrown.data.blockstates;
 
-import com.wildsregrown.blocks.properties.FueledLight;
-import com.wildsregrown.blocks.properties.ModProperties;
-import com.wildsregrown.blocks.properties.TorchHolderState;
+import com.wildsregrown.blocks.properties.*;
+import com.wildsregrown.blocks.properties.fuel.FueledLight;
+import com.wildsregrown.blocks.properties.framing.DoorState;
 import com.wildsregrown.data.blockstates.libraries.BlockStateLibrary;
 import com.wildsregrown.registries.groups.MetalGroup;
 import net.minecraft.block.Block;
@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import static com.wildsregrown.WildsRegrown.modid;
+import static com.wildsregrown.data.DataGeneratorProvider.idFromBlock;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.*;
 import static com.wildsregrown.registries.ModItemGroups.id;
 
@@ -31,16 +32,23 @@ public class MetalGroupBlockStates {
         BlockStateLibrary.layered(generator, "layered/" + id(block), "block/metals/" + id(block), block, group.isOxidation());
 
         if (group.decoExist()) {
-
+            //Framing
             block = group.get(MetalGroup.Deco.bars);
             MetalGroupBlockStates.metalBars(generator, id(block), block, texture);
-
             block = group.get(MetalGroup.Deco.wall_anchor);
             MetalGroupBlockStates.horizontalFacing(generator, id(block), block, texture, "decoration/metal_wall_anchor", group.isOxidation());
-
             block = group.get(MetalGroup.Deco.bracket);
             MetalGroupBlockStates.horizontalFacing(generator, id(block), block, texture, "decoration/metal_bracket", group.isOxidation());
+            block = group.get(MetalGroup.Deco.door);
+            door(generator, block, texture, false);
+            block = group.get(MetalGroup.Deco.door_window);
+            door(generator, block, texture, true);
 
+            //Decoration
+            block = group.get(MetalGroup.Deco.fireplace_tool_stand);
+            MetalGroupBlockStates.fireplaceToolStand(generator, id(block), block, texture);
+
+            //Utensils
             block = group.get(MetalGroup.Deco.pan);
             MetalGroupBlockStates.horizontalFacing(generator, id(block), block, texture, "utensils/iron_pan", group.isOxidation());
 
@@ -52,8 +60,8 @@ public class MetalGroupBlockStates {
             block = group.get(MetalGroup.Lights.brazier);
             MetalGroupBlockStates.brazier(generator, id(block), block, texture);
 
-            block = group.get(MetalGroup.Lights.and_irons);
-            MetalGroupBlockStates.lightFacing(generator, id(block), block, texture, "lights/andirons", "lights/andirons_filled", "lights/andirons_lit");
+            //block = group.get(MetalGroup.Lights.and_irons);
+            //MetalGroupBlockStates.lightFacing(generator, id(block), block, texture, "lights/andirons", "lights/andirons_filled", "lights/andirons_lit");
 
             block = group.get(MetalGroup.Lights.lantern);
             MetalGroupBlockStates.lantern(generator, id(block), block, texture, "lights/iron_lantern_off", "lights/iron_lantern_on");
@@ -396,6 +404,19 @@ public class MetalGroupBlockStates {
 
     }
 
+    public static void fireplaceToolStand(BlockStateModelGenerator generator, String id, Block block, String texture) {
+
+        for (int i = 0; i < 4; i++) {
+            applyTextureToModel(generator, id + "_" + i, root + "decoration/metals/metal_fireplace_tool_stand", texture + "_" + i);
+        }
+        generator.registerParentedItemModel(block, Identifier.of(modid, root + id + "_0"));
+        CreateVariants(generator, block, BlockStateVariantMap.models(ModProperties.OXIDATION).register(0, modelOf(id + "_0", false, 0, 0))
+                .register(1, modelOf(id + "_1", false, 0, 0))
+                .register(2, modelOf(id + "_2", false, 0, 0))
+                .register(3, modelOf(id + "_3", false, 0, 0)));
+
+    }
+
     public static void oilLantern(BlockStateModelGenerator generator, String id, Block block, String texture) {
 
         applyTextureToModel(generator, id + "_0", root + "decoration/metals/metal_oil_lantern", texture + "_0");
@@ -414,5 +435,50 @@ public class MetalGroupBlockStates {
         CreateVariants(generator, block, map);
 
     }
+
+    public static void door(BlockStateModelGenerator generator, Block block, String texture, boolean window) {
+
+        String modelPath = "framing/";
+        String id = idFromBlock(block);
+        String loc = modelPath + id;
+
+        String open = "_open";
+        String closed = "_closed";
+        String top = "_top";
+        String bottom = "_bottom";
+        String left = "_left";
+        String right = "_right";
+        String w = window ? "_window" : "";
+
+        int i = 0;
+        applyTextureToModel(generator, loc + bottom + left + closed, root+modelPath + "door/metal_door" + bottom + left + closed, texture + "_" + i);
+        applyTextureToModel(generator, loc + bottom + left + open, root+modelPath + "door/metal_door" + bottom + left + open, texture + "_" + i);
+        applyTextureToModel(generator, loc + top + left + closed, root+modelPath + "door/metal_door" + w + top + left + closed, texture + "_" + i);
+        applyTextureToModel(generator, loc + top + left + open, root+modelPath + "door/metal_door" + w + top + left + open, texture + "_" + i);
+        applyTextureToModel(generator, loc + bottom + right + closed, root+modelPath + "door/metal_door" + bottom + right + closed, texture + "_" + i);
+        applyTextureToModel(generator, loc + bottom + right + open, root+modelPath + "door/metal_door" + bottom + right + open, texture + "_" + i);
+        applyTextureToModel(generator, loc + top + right + closed, root+modelPath + "door/metal_door" + w + top + right + closed, texture + "_" + i);
+        applyTextureToModel(generator, loc + top + right + open, root+modelPath + "door/metal_door" + w + top + right + open, texture + "_" + i);
+
+        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc + top + left + closed));
+
+        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction, Boolean, DoorState> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, Properties.OPEN, ModProperties.DOOR);
+
+        for (Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+            int dir = direction.getHorizontalQuarterTurns() * 90;
+            map.register(direction, true, DoorState.left_bottom, modelOf(loc + bottom + left + open, false, dir, 0));
+            map.register(direction, false, DoorState.left_bottom, modelOf(loc + bottom + left + closed, false, dir, 0));
+            map.register(direction, true, DoorState.left_top, modelOf(loc + top + left + open, false, dir, 0));
+            map.register(direction, false, DoorState.left_top, modelOf(loc + top + left + closed, false, dir, 0));
+            map.register(direction, true, DoorState.right_bottom, modelOf(loc + bottom + right + open, false, dir, 0));
+            map.register(direction, false, DoorState.right_bottom, modelOf(loc + bottom + right + closed, false, dir, 0));
+            map.register(direction, true, DoorState.right_top, modelOf(loc + top + right + open, false, dir, 0));
+            map.register(direction, false, DoorState.right_top, modelOf(loc + top + right + closed, false, dir, 0));
+        }
+
+        CreateVariants(generator, block, map);
+
+    }
+
 
 }

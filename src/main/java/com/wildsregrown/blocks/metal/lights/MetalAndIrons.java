@@ -2,7 +2,7 @@ package com.wildsregrown.blocks.metal.lights;
 
 import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.blocks.VoxelTransform;
-import com.wildsregrown.blocks.properties.FueledLight;
+import com.wildsregrown.blocks.properties.fuel.FueledLight;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.sipke.math.CellType;
 import com.sipke.math.HashUtil;
@@ -17,8 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;

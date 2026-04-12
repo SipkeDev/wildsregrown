@@ -1,10 +1,17 @@
 package com.wildsregrown.registries.groups;
 
-import com.wildsregrown.blocks.wood.PortableWorkBench;
+import com.wildsregrown.blocks.crafting.PortableWorkBench;
 import com.wildsregrown.blocks.wood.framing.WoodenArchBlock;
 import com.wildsregrown.blocks.wood.framing.WoodenArrowSlit;
 import com.wildsregrown.blocks.wood.framing.WoodenHalfArchBlock;
 import com.wildsregrown.blocks.wood.framing.SodRoof;
+import com.wildsregrown.blocks.wood.furniture.kitchen.counter.CounterBlock;
+import com.wildsregrown.blocks.wood.furniture.kitchen.counter.CounterChestBlock;
+import com.wildsregrown.blocks.wood.furniture.kitchen.counter.CounterShelvesBlock;
+import com.wildsregrown.blocks.wood.furniture.kitchen.cabinet.CabinetShelvesBlock;
+import com.wildsregrown.blocks.wood.furniture.kitchen.cabinet.Cabinetblock;
+import com.wildsregrown.blocks.wood.furniture.sitable.*;
+import com.wildsregrown.blocks.wood.furniture.storage.*;
 import com.wildsregrown.blocks.wood.tree.HalfLog;
 import com.wildsregrown.blocks.wood.tree.Leaves;
 import com.wildsregrown.blocks.wood.tree.Log;
@@ -15,7 +22,6 @@ import com.wildsregrown.blocks.wood.framing.LadderBlock;
 import com.wildsregrown.blocks.wood.furniture.*;
 import com.wildsregrown.blocks.wood.framing.Crate;
 import com.wildsregrown.blocks.wood.framing.CrateLid;
-import com.wildsregrown.blocks.wood.furniture.TableChest;
 import com.wildsregrown.registries.ModBlocks;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.NoteBlockInstrument;
@@ -45,12 +51,15 @@ public class WoodGroup {
 
         this.common[Common.leaves.ordinal()]              = ModBlocks.register(id + "_leaves",                    Leaves::new, settings, WOOD_GROUP_KEY);
         //this.common[Common.branch.ordinal()]              = ModBlocks.register(id + "_branch",                    TreeBranch::new, settings, WOOD_GROUP_KEY);
-        this.common[Common.log.ordinal()]                 = ModBlocks.register(id + "_log",                       Log::new, settings, WOOD_GROUP_KEY);      ModBlocks.CUTOUTS.add(this.common[Common.log.ordinal()]);
-        this.common[Common.stripped_log.ordinal()]        = ModBlocks.register("stripped_"+ id + "_log",          Log::new, settings, WOOD_GROUP_KEY);      ModBlocks.CUTOUTS.add(this.common[Common.stripped_log.ordinal()]);
-        this.common[Common.slab.ordinal()]                = ModBlocks.register(id + "_slab",                  HalfLog::new, settings, WOOD_GROUP_KEY);  ModBlocks.CUTOUTS.add(this.common[Common.slab.ordinal()]);
-        this.common[Common.stripped_slab.ordinal()]       = ModBlocks.register("stripped_"+ id + "_slab",     HalfLog::new, settings, WOOD_GROUP_KEY);  ModBlocks.CUTOUTS.add(this.common[Common.stripped_slab.ordinal()]);
-        this.common[Common.beam.ordinal()]                = ModBlocks.register(id + "_beam",                      Beam::new, settings, WOOD_GROUP_KEY);     ModBlocks.CUTOUTS.add(this.common[Common.beam.ordinal()]);
-        this.common[Common.stripped_beam.ordinal()]       = ModBlocks.register("stripped_"+ id + "_beam",         Beam::new, settings, WOOD_GROUP_KEY);     ModBlocks.CUTOUTS.add(this.common[Common.stripped_beam.ordinal()]);
+        this.common[Common.log.ordinal()]                 = ModBlocks.register(id + "_log",                       Log::new, settings, WOOD_GROUP_KEY);
+        this.common[Common.stripped_log.ordinal()]        = ModBlocks.register("stripped_"+ id + "_log",          Log::new, settings, WOOD_GROUP_KEY);
+        this.common[Common.slab.ordinal()]                = ModBlocks.register(id + "_slab",                  HalfLog::new, settings, WOOD_GROUP_KEY);
+        this.common[Common.stripped_slab.ordinal()]       = ModBlocks.register("stripped_"+ id + "_slab",     HalfLog::new, settings, WOOD_GROUP_KEY);
+        this.common[Common.beam.ordinal()]                = ModBlocks.register(id + "_beam",                      Beam::new, settings, WOOD_GROUP_KEY);
+        this.common[Common.stripped_beam.ordinal()]       = ModBlocks.register("stripped_"+ id + "_beam",         Beam::new, settings, WOOD_GROUP_KEY);
+        this.common[Common.rough_plank.ordinal()]               = ModBlocks.register(id + "_rough_plank",         Beam::new, settings, WOOD_GROUP_KEY);
+        this.common[Common.stick.ordinal()]               = ModBlocks.register(id + "_stick",                     Beam::new, settings, WOOD_GROUP_KEY);
+        this.common[Common.stripped_stick.ordinal()]      = ModBlocks.register("stripped_"+ id + "_stick",        Beam::new, settings, WOOD_GROUP_KEY);
         this.common[Common.planks.ordinal()]              = ModBlocks.register(id + "_planks",                    Planks::new, settings, WOOD_GROUP_KEY);
         this.common[Common.planks_stairs.ordinal()]       = ModBlocks.register(id + "_planks_stairs", s -> new PaintedStairs(common[Common.planks.ordinal()].getDefaultState(), s), settings,  WOOD_GROUP_KEY);
         this.common[Common.portable_workbench.ordinal()]  = ModBlocks.register(id + "_portable_workbench", PortableWorkBench::new, settings, WOOD_GROUP_KEY);
@@ -65,14 +74,14 @@ public class WoodGroup {
             this.framing[Framing.arch.ordinal()]              = ModBlocks.register(id + "_arch",          WoodenArchBlock::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.half_arch.ordinal()]         = ModBlocks.register(id + "_half_arch",     (s) -> new WoodenHalfArchBlock(common[Common.log.ordinal()].getDefaultState(),s), settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.roof.ordinal()]              = ModBlocks.register(id + "_roof",          ColoredRoof::new, settings, WOOD_FRAMING_GROUP_KEY);
-            this.framing[Framing.sod_roof.ordinal()]          = ModBlocks.register(id + "_sod_roof",      SodRoof::new, settings, WOOD_FRAMING_GROUP_KEY); ModBlocks.CUTOUTS.add(this.framing[Framing.sod_roof.ordinal()]);
+            this.framing[Framing.sod_roof.ordinal()]          = ModBlocks.register(id + "_sod_roof",      SodRoof::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.arrow_slit.ordinal()]        = ModBlocks.register(id + "_arrow_slit",    WoodenArrowSlit::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.ladder.ordinal()]            = ModBlocks.register(id + "_ladder",        LadderBlock::new, settings, WOOD_FRAMING_GROUP_KEY); ModBlocks.CLIMBABLE.add(this.framing[Framing.ladder.ordinal()]);
             this.framing[Framing.window_cover.ordinal()]      = ModBlocks.register(id + "_window_cover",  WindowCover::new, settings, WOOD_GROUP_KEY);
-            this.framing[Framing.door.ordinal()]              = ModBlocks.register(id + "_door",          Door::new, settings, WOOD_FRAMING_GROUP_KEY);
-            this.framing[Framing.door_window.ordinal()]       = ModBlocks.register(id + "_door_window",   Door::new, settings, WOOD_FRAMING_GROUP_KEY);
-            this.framing[Framing.enforced_door.ordinal()]     = ModBlocks.register(id + "_enforced_door",       Door::new, settings, WOOD_FRAMING_GROUP_KEY);
-            this.framing[Framing.enforced_door_window.ordinal()]= ModBlocks.register(id + "_enforced_door_window",Door::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.door.ordinal()]              = ModBlocks.register(id + "_door",          WoodenDoor::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.door_window.ordinal()]       = ModBlocks.register(id + "_door_window",   WoodenDoor::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.enforced_door.ordinal()]     = ModBlocks.register(id + "_enforced_door",       WoodenDoor::new, settings, WOOD_FRAMING_GROUP_KEY);
+            this.framing[Framing.enforced_door_window.ordinal()]= ModBlocks.register(id + "_enforced_door_window", WoodenDoor::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.trapdoor.ordinal()]          = ModBlocks.register(id + "_trapdoor",      Trapdoor::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.crate_lid.ordinal()]         = ModBlocks.register(id + "_crate_lid",     CrateLid::new, settings, WOOD_FRAMING_GROUP_KEY);
             this.framing[Framing.crate.ordinal()]             = ModBlocks.register(id + "_crate",         (ctx -> new Crate(get(Framing.crate_lid).asItem(), ctx)), settings, WOOD_FRAMING_GROUP_KEY);
@@ -90,7 +99,7 @@ public class WoodGroup {
             this.furniture[Furniture.drawer.ordinal()]          = ModBlocks.register(id + "_drawer", DrawerBlock::new, settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.storage_table.ordinal()]   = ModBlocks.register(id + "_storage_table", StorageTableBlock::new, settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.stool.ordinal()]           = ModBlocks.register(id + "_stool", (ctx) -> new Stool(ctx, 0.5f), settings, WOOD_FURNITURE_GROUP_KEY);
-            this.furniture[Furniture.chair.ordinal()]           = ModBlocks.register(id + "_chair", (ctx) -> new Chair(ctx, 0.5f), settings, WOOD_FURNITURE_GROUP_KEY);
+            this.furniture[Furniture.chair.ordinal()]           = ModBlocks.register(id + "_chair", (ctx) -> new WoodenChair(ctx, 0.5f), settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.bench.ordinal()]           = ModBlocks.register(id + "_bench", WoodenBenchBlock::new, settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.bench_with_backrest.ordinal()]= ModBlocks.register(id + "_bench_with_backrest", WoodenBenchWithBackrestBlock::new, settings, WOOD_FURNITURE_GROUP_KEY);
             this.furniture[Furniture.dining_table.ordinal()]     = ModBlocks.register(id + "_dining_table", WoodenDiningTable::new, settings, WOOD_FURNITURE_GROUP_KEY);
@@ -123,6 +132,9 @@ public class WoodGroup {
         stripped_slab,
         beam,
         stripped_beam,
+        rough_plank,
+        stick,
+        stripped_stick,
         planks,
         planks_stairs,
         portable_workbench

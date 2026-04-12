@@ -3,7 +3,7 @@ package com.wildsregrown.blocks.wood.framing;
 import com.wildsregrown.blocks.VoxelTransform;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
-import com.wildsregrown.blocks.properties.Tudor;
+import com.wildsregrown.blocks.properties.framing.Tudor;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

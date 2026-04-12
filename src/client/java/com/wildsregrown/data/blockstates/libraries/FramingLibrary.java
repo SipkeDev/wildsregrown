@@ -1,20 +1,17 @@
 package com.wildsregrown.data.blockstates.libraries;
 
-import com.wildsregrown.blocks.properties.DoorState;
+import com.wildsregrown.blocks.properties.framing.DoorState;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.connecting.SupportConnected;
 import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
 import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.block.enums.DoorHinge;
-import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.client.data.*;
 import net.minecraft.client.render.model.json.WeightedVariant;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -45,14 +42,14 @@ public class FramingLibrary {
         }
 
         type = "_" + type;
-        applyTextureToModel(generator, modelPath + id + type + "_1", "block/layered_4", texture0);
-        applyTextureToModel(generator, modelPath + id + type + "_2", "block/layered_8", texture0);
-        applyTextureToModel(generator, modelPath + id + type + "_3", "block/layered_12", texture0);
-        applyTextureToModel(generator, modelPath + id + type + "_4", "block/layered_full", texture0);
-        applyTextureToModel(generator, modelPath + id + type + "_paintable_1", "block/layered_4", texture2);
-        applyTextureToModel(generator, modelPath + id + type + "_paintable_2", "block/layered_8", texture2);
-        applyTextureToModel(generator, modelPath + id + type + "_paintable_3", "block/layered_12", texture2);
-        applyTextureToModel(generator, modelPath + id + type + "_paintable_4", "block/layered_full", texture2);
+        applyTextureToModel(generator, modelPath + id + type + "_1", "block/framing/layered_0_paintable", texture0);
+        applyTextureToModel(generator, modelPath + id + type + "_2", "block/framing/layered_1_paintable", texture0);
+        applyTextureToModel(generator, modelPath + id + type + "_3", "block/framing/layered_2_paintable", texture0);
+        applyTextureToModel(generator, modelPath + id + type + "_4", "block/framing/layered_3_paintable", texture0);
+        applyTextureToModel(generator, modelPath + id + type + "_paintable_1", "block/framing/layered_0_paintable", texture2);
+        applyTextureToModel(generator, modelPath + id + type + "_paintable_2", "block/framing/layered_1_paintable", texture2);
+        applyTextureToModel(generator, modelPath + id + type + "_paintable_3", "block/framing/layered_2_paintable", texture2);
+        applyTextureToModel(generator, modelPath + id + type + "_paintable_4", "block/framing/layered_3_paintable", texture2);
 
         generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id + type + "_2"));
 

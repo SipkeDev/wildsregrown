@@ -52,6 +52,7 @@ public class ModEntities {
             Identifier.of(modid, "structure_block"),
             FabricBlockEntityTypeBuilder.create(StructureEntity::new, ModBlocks.structureBlock).build(Util.getChoiceType(TypeReferences.BLOCK_ENTITY, "structure_block"))
     );
+
     public static final BlockEntityType<TreeEntity> tree = Registry.register(
             Registries.BLOCK_ENTITY_TYPE,
             Identifier.of(modid, "tree"),

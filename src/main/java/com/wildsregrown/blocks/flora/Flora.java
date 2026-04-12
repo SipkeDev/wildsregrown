@@ -1,7 +1,7 @@
 package com.wildsregrown.blocks.flora;
 
 import com.wildsregrown.blocks.SoilBlock;
-import com.wildsregrown.blocks.properties.FloraStage;
+import com.wildsregrown.blocks.properties.flora.FloraStage;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import com.wildsregrown.mixin.OffsetAccessor;

@@ -80,6 +80,7 @@ public class Networking {
 
     public static void initialize() {
 
+        //Connect handler
         PayloadTypeRegistry.playC2S().register(ConnectMessage.PACKET_ID, ConnectMessage.codec);
         PayloadTypeRegistry.playS2C().register(DisconnectMessage.PACKET_ID, DisconnectMessage.codec);
 

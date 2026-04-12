@@ -1,5 +1,6 @@
 package com.wildsregrown.registries.groups;
 
+import com.wildsregrown.blocks.Door;
 import com.wildsregrown.blocks.Layered;
 import com.wildsregrown.blocks.metal.*;
 import com.wildsregrown.blocks.metal.lights.*;
@@ -8,7 +9,6 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 
-import static com.wildsregrown.registries.ModBlocks.CUTOUTS;
 import static com.wildsregrown.registries.ModItemGroups.METALS_GROUP_KEY;
 
 public class MetalGroup {
@@ -26,21 +26,24 @@ public class MetalGroup {
         this.block = ModBlocks.register(id, Layered::new, settings, METALS_GROUP_KEY);
 
         if (deco) {
-            this.deco[Deco.bars.ordinal()]        = ModBlocks.register(id + "_bars"       , MetalBars::new      , settings, METALS_GROUP_KEY);
-            this.deco[Deco.wall_anchor.ordinal()] = ModBlocks.register(id + "_wall_anchor", MetalWallAnchor::new, settings, METALS_GROUP_KEY);
-            this.deco[Deco.bracket.ordinal()]     = ModBlocks.register(id + "_bracket"    , MetalBracket::new   , settings, METALS_GROUP_KEY);
-            this.deco[Deco.pan.ordinal()]     = ModBlocks.register(id + "_pan"    , MetalPan::new   , settings, METALS_GROUP_KEY);
+            //framing
+            this.deco[Deco.bars.ordinal()]        = ModBlocks.register(id + "_bars",            MetalBars::new, settings, METALS_GROUP_KEY);
+            this.deco[Deco.wall_anchor.ordinal()] = ModBlocks.register(id + "_wall_anchor",     MetalWallAnchor::new, settings, METALS_GROUP_KEY);
+            this.deco[Deco.bracket.ordinal()]     = ModBlocks.register(id + "_bracket",         MetalBracket::new, settings, METALS_GROUP_KEY);
+            this.deco[Deco.door.ordinal()]     = ModBlocks.register(id + "_door",               Door::new, settings, METALS_GROUP_KEY);
+            this.deco[Deco.door_window.ordinal()]     = ModBlocks.register(id + "_door_window", Door::new, settings, METALS_GROUP_KEY);
+            //Decoration
+            this.deco[Deco.fireplace_tool_stand.ordinal()]     = ModBlocks.register(id + "_fireplace_tool_stand", MetalFirePlaceStand::new, settings, METALS_GROUP_KEY);
+            //Utensils
+            this.deco[Deco.pan.ordinal()]     = ModBlocks.register(id + "_pan", MetalPan::new, settings, METALS_GROUP_KEY);
         }
         if (lights){
-            this.lights[Lights.torch_holder.ordinal()]   = ModBlocks.register(id + "_torch_holder"  , MetalTorchHolder::new , settings, METALS_GROUP_KEY);
-            this.lights[Lights.brazier.ordinal()]   = ModBlocks.register(id + "_brazier"  , MetalBrazier::new , settings, METALS_GROUP_KEY);
-            this.lights[Lights.and_irons.ordinal()] = ModBlocks.register(id + "_and_irons", MetalAndIrons::new, settings, METALS_GROUP_KEY);
-            this.lights[Lights.lantern.ordinal()]   = ModBlocks.register(id + "_lantern"  , MetalLantern::new , settings, METALS_GROUP_KEY);
-            this.lights[Lights.candle_lantern.ordinal()]   = ModBlocks.register(id + "_candle_lantern"  , MetalCandleLantern::new , settings, METALS_GROUP_KEY);
-            this.lights[Lights.oil_lantern.ordinal()]   = ModBlocks.register(id + "_oil_lantern"  , MetalOilLantern::new , settings, METALS_GROUP_KEY);
-            CUTOUTS.add(this.lights[Lights.brazier.ordinal()]);
-            CUTOUTS.add(this.lights[Lights.and_irons.ordinal()]);
-            CUTOUTS.add(this.lights[Lights.lantern.ordinal()]);
+            this.lights[Lights.torch_holder.ordinal()]   = ModBlocks.register(id + "_torch_holder", MetalTorchHolder::new , settings, METALS_GROUP_KEY);
+            this.lights[Lights.brazier.ordinal()]   = ModBlocks.register(id + "_brazier"  , MetalBrazier::new, settings, METALS_GROUP_KEY);
+            //this.lights[Lights.and_irons.ordinal()] = ModBlocks.register(id + "_and_irons", MetalAndIrons::new, settings, METALS_GROUP_KEY);
+            this.lights[Lights.lantern.ordinal()]   = ModBlocks.register(id + "_lantern"  , MetalLantern::new, settings, METALS_GROUP_KEY);
+            this.lights[Lights.candle_lantern.ordinal()]   = ModBlocks.register(id + "_candle_lantern", MetalCandleLantern::new , settings, METALS_GROUP_KEY);
+            this.lights[Lights.oil_lantern.ordinal()]   = ModBlocks.register(id + "_oil_lantern", MetalOilLantern::new , settings, METALS_GROUP_KEY);
         }
     }
 
@@ -52,6 +55,9 @@ public class MetalGroup {
         bars,
         wall_anchor,
         bracket,
+        door,
+        door_window,
+        fireplace_tool_stand,
         pan
     }
 

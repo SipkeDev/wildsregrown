@@ -1,9 +1,10 @@
 package com.wildsregrown.blocks.decoration;
 
+import com.wildsregrown.blocks.render.IRenderType;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import net.minecraft.block.BlockState;
 
-public class ColoredGlassPane extends GlassPane implements ITintedBlock{
+public class ColoredGlassPane extends GlassPane implements ITintedBlock, IRenderType {
 
     private final int rgb;
 
@@ -16,5 +17,10 @@ public class ColoredGlassPane extends GlassPane implements ITintedBlock{
     public int getTint(BlockState state, int tintIndex) {
         return rgb;
     };
+
+    @Override
+    public int getRenderType(){
+        return 2;
+    }
 
 }

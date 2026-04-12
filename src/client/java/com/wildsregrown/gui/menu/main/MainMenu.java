@@ -31,7 +31,7 @@ public class MainMenu extends Screen {
         this.addDrawableChild(MainButtonWidget.builder(Text.literal("Load World"), (button) -> this.client.setScreen(new SelectWorld(this))).dimensions(this.width  + dx, y+=m, 100, 20).build());
         this.addDrawableChild(MainButtonWidget.builder(Text.literal("Multiplayer"), (button) -> this.client.setScreen(new MultiplayerScreen(this))).dimensions(this.width  + dx, y+=m, 100, 20).build());
         this.addDrawableChild(MainButtonWidget.builder(Text.literal("Options"), (button) -> this.client.setScreen(new OptionsScreen(this, this.client.options))).dimensions(this.width  + dx, y+=m, 100, 20).build());
-        this.addDrawableChild(MainButtonWidget.builder(Text.literal("inDev"), (button) -> this.client.setScreen(new SkunkWorksScreen(this))).dimensions(this.width  + dx, y+=m, 100, 20).build());
+        //this.addDrawableChild(MainButtonWidget.builder(Text.literal("inDev"), (button) -> this.client.setScreen(new SkunkWorksScreen(this))).dimensions(this.width  + dx, y+=m, 100, 20).build());
         this.addDrawableChild(MainButtonWidget.builder(Text.literal("Quit Game"), (button) -> this.client.scheduleStop()).dimensions(this.width + dx, y+=m, 100, 20).build());
 
     }

@@ -2,21 +2,17 @@ package com.wildsregrown.blocks.flora.grass;
 
 import com.sipke.api.features.Colors;
 import com.sipke.math.MathUtil;
-import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.blocks.Dice;
 import com.wildsregrown.blocks.flora.Flora;
-import com.wildsregrown.blocks.properties.FloraStage;
+import com.wildsregrown.blocks.properties.flora.FloraStage;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.render.TintUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-
-import java.awt.*;
 
 /**
  * Has a typical european grassfield color palette

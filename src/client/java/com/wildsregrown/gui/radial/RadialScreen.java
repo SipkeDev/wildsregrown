@@ -1,7 +1,7 @@
 package com.wildsregrown.gui.radial;
 
 import com.wildsregrown.gui.radial.stack.ScreenStack;
-import com.wildsregrown.gui.radial.stack.StackBuilder;
+import com.wildsregrown.gui.radial.stack.ScreenStackBuilder;
 import com.wildsregrown.gui.radial.stack.stacks.BlockScreenStack;
 import com.wildsregrown.items.IRadialItem;
 import com.sipke.math.MathUtil;
@@ -42,9 +42,7 @@ public class RadialScreen extends Screen {
 
     public static boolean canShow() {
         if (client.world != null && client.currentScreen == null) {
-            if (!active && !client.inGameHud.getChatHud().isChatFocused()) {
-                return true;
-            }
+            return !active && !client.inGameHud.getChatHud().isChatFocused();
         }
         return false;
     }
@@ -56,10 +54,10 @@ public class RadialScreen extends Screen {
             Item item = client.player.getMainHandStack().getItem();
 
             if (item instanceof IRadialItem) {
-                stack = StackBuilder.buildItem(item);
+                stack = ScreenStackBuilder.buildItem(item);
             } else {
                 Block block = Block.getBlockFromItem(item);
-                stack = StackBuilder.buildBlockState(block, client.player.isCreative());
+                stack = ScreenStackBuilder.buildBlockState(block, client.player.isCreative());
                 if (stack.children.isEmpty()) {return;}
             }
 

@@ -5,6 +5,7 @@ import com.wildsregrown.blocks.VoxelTransform;
 import com.wildsregrown.blocks.properties.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
+import com.wildsregrown.blocks.render.IRenderType;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,7 +30,7 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.tick.OrderedTick;
 import net.minecraft.world.tick.ScheduledTickView;
 
-public class SodRoof extends Block implements Waterloggable, ITintedBlock {
+public class SodRoof extends Block implements Waterloggable, ITintedBlock, IRenderType {
 
     private static final VoxelShape SOUTH;
     private static final VoxelShape EAST;

@@ -1,6 +1,13 @@
 package com.wildsregrown.blocks.properties;
 
 import com.wildsregrown.blocks.properties.connecting.*;
+import com.wildsregrown.blocks.properties.flora.FloraStage;
+import com.wildsregrown.blocks.properties.framing.Tudor;
+import com.wildsregrown.blocks.properties.fuel.FuelBurn;
+import com.wildsregrown.blocks.properties.fuel.FueledLight;
+import com.wildsregrown.blocks.properties.framing.DoorState;
+import com.wildsregrown.blocks.properties.framing.DrawerState;
+import com.wildsregrown.blocks.properties.framing.HalfStair;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 
@@ -10,6 +17,11 @@ public class ModProperties {
     public static final IntProperty LAYERS = IntProperty.of("layers", 1, 8);
     public static final IntProperty QUARTER_LAYERS = IntProperty.of("layers", 1, 4);
     public static final IntProperty OXIDATION = IntProperty.of("oxidation", 0, 3);
+
+    ///fluids
+    //Movement vectors, -1/1 float too 0-10 Integer
+    public static final IntProperty vecX = IntProperty.of("vector_x", 0, 16);
+    public static final IntProperty vecZ = IntProperty.of("vector_z", 0, 16);
 
     //Paintables
     public static final EnumProperty<LinSeedPaintable> LINSEED_PAINT = EnumProperty.of("paint", LinSeedPaintable.class);
@@ -45,7 +57,9 @@ public class ModProperties {
     //Light sources
     //todo remove FueledLight
     public static final EnumProperty<FueledLight> FUELED_LIGHT = EnumProperty.of("fueled_light", FueledLight.class);
+    public static final EnumProperty<FuelBurn> FUEL_BURN = EnumProperty.of("burning", FuelBurn.class);
     public static final IntProperty TORCH_FUEL = IntProperty.of("fuel", 0, 15);
+    public static final IntProperty FUEL_6 = IntProperty.of("fuel", 0, 6);
     public static final IntProperty FUEL_16 = IntProperty.of("fuel", 0, 16);
     public static final IntProperty FUEL_32 = IntProperty.of("fuel", 0, 32);
     public static final IntProperty FUEL_64 = IntProperty.of("fuel", 0, 64);
@@ -55,4 +69,8 @@ public class ModProperties {
     public static final EnumProperty<Tudor> TUDOR = EnumProperty.of("shape", Tudor.class);
     public static final EnumProperty<Orientation> ORIENTATION = EnumProperty.of("orientation", Orientation.class);
     public static final EnumProperty<HalfStair> HALF = EnumProperty.of("half", HalfStair.class);
+
+    public static final EnumProperty<Quadrant> QUADRANT = EnumProperty.of("quadrant", Quadrant.class);
+    public static final EnumProperty<OrdinalDirection> DIRECTIONS = EnumProperty.of("ordinal", OrdinalDirection.class);
+
 }

@@ -2,8 +2,9 @@ package com.wildsregrown.blocks.wood.tree;
 
 import com.sipke.api.features.trees.type.ITreeType;
 import com.sipke.api.features.trees.type.TreeType;
+import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.properties.OrdinalDirection;
-import com.wildsregrown.blocks.properties.Verticality;
+import com.wildsregrown.blocks.properties.old_branch.Verticality;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -19,22 +20,21 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
 public class TreeBranch extends Block implements ITreeType {
 
     public TreeBranch(Settings settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(OrdinalDirection.DIRECTIONS, OrdinalDirection.N).with(Verticality.VERTICALITY, Verticality.LEVEL));
+        setDefaultState(getDefaultState().with(ModProperties.DIRECTIONS, OrdinalDirection.N).with(Verticality.VERTICALITY, Verticality.LEVEL));
     }
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         switch (rotation) {
             default -> {return state;}
-            case COUNTERCLOCKWISE_90 -> {return state.with(OrdinalDirection.DIRECTIONS, state.get(OrdinalDirection.DIRECTIONS).cClockwise().cClockwise());}
-            case CLOCKWISE_90        -> {return state.with(OrdinalDirection.DIRECTIONS, state.get(OrdinalDirection.DIRECTIONS).clockwise().clockwise());}
-            case CLOCKWISE_180       -> {return state.with(OrdinalDirection.DIRECTIONS, state.get(OrdinalDirection.DIRECTIONS).flip());}
+            case COUNTERCLOCKWISE_90 -> {return state.with(ModProperties.DIRECTIONS, state.get(ModProperties.DIRECTIONS).cClockwise().cClockwise());}
+            case CLOCKWISE_90        -> {return state.with(ModProperties.DIRECTIONS, state.get(ModProperties.DIRECTIONS).clockwise().clockwise());}
+            case CLOCKWISE_180       -> {return state.with(ModProperties.DIRECTIONS, state.get(ModProperties.DIRECTIONS).flip());}
         }
     }
 
@@ -42,14 +42,14 @@ public class TreeBranch extends Block implements ITreeType {
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         switch (mirror) {
         default -> {return state;}
-        case FRONT_BACK -> {return state.with(OrdinalDirection.DIRECTIONS, state.get(OrdinalDirection.DIRECTIONS).mirrorZ());}
-        case LEFT_RIGHT -> {return state.with(OrdinalDirection.DIRECTIONS, state.get(OrdinalDirection.DIRECTIONS).mirrorX());}
+        case FRONT_BACK -> {return state.with(ModProperties.DIRECTIONS, state.get(ModProperties.DIRECTIONS).mirrorZ());}
+        case LEFT_RIGHT -> {return state.with(ModProperties.DIRECTIONS, state.get(ModProperties.DIRECTIONS).mirrorX());}
         }
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(OrdinalDirection.DIRECTIONS, Verticality.VERTICALITY);
+        builder.add(ModProperties.DIRECTIONS, Verticality.VERTICALITY);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class TreeBranch extends Block implements ITreeType {
     @Override
     protected void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
         super.onStateReplaced(state, world, pos, moved);
-        OrdinalDirection d = state.get(OrdinalDirection.DIRECTIONS);
+        OrdinalDirection d = state.get(ModProperties.DIRECTIONS);
         BlockPos.Mutable loc;
 
         for (Vec3i v : new Vec3i[]{
@@ -86,7 +86,7 @@ public class TreeBranch extends Block implements ITreeType {
     }
 
     public static boolean toBreak(BlockState state, BlockPos pos, BlockPos parent) {
-        Vec3i vec = state.get(OrdinalDirection.DIRECTIONS).getVector().multiply(-1);
+        Vec3i vec = state.get(ModProperties.DIRECTIONS).getVector().multiply(-1);
 
         switch (state.get(Verticality.VERTICALITY)) {
             case DOWN -> vec = vec.up();
@@ -104,18 +104,18 @@ public class TreeBranch extends Block implements ITreeType {
         boolean sneak = player.isSneaking();
 
         if (d.getAxis().isHorizontal() && !sneak) {
-            return state.with(Verticality.VERTICALITY, Verticality.LEVEL).with(OrdinalDirection.DIRECTIONS, OrdinalDirection.getOrdinal(d));
+            return state.with(Verticality.VERTICALITY, Verticality.LEVEL).with(ModProperties.DIRECTIONS, OrdinalDirection.getOrdinal(d));
         }
 
         switch(Math.round(player.getYaw()/45)) {
-            default -> state = state.with(OrdinalDirection.DIRECTIONS, OrdinalDirection.S);
-            case -3 -> state = state.with(OrdinalDirection.DIRECTIONS, OrdinalDirection.SW);
-            case -2 -> state = state.with(OrdinalDirection.DIRECTIONS, OrdinalDirection.W);
-            case -1 -> state = state.with(OrdinalDirection.DIRECTIONS, OrdinalDirection.NW);
+            default -> state = state.with(ModProperties.DIRECTIONS, OrdinalDirection.S);
+            case -3 -> state = state.with(ModProperties.DIRECTIONS, OrdinalDirection.SW);
+            case -2 -> state = state.with(ModProperties.DIRECTIONS, OrdinalDirection.W);
+            case -1 -> state = state.with(ModProperties.DIRECTIONS, OrdinalDirection.NW);
             case  0 -> {}
-            case  1 -> state = state.with(OrdinalDirection.DIRECTIONS, OrdinalDirection.NE);
-            case  2 -> state = state.with(OrdinalDirection.DIRECTIONS, OrdinalDirection.E);
-            case  3 -> state = state.with(OrdinalDirection.DIRECTIONS, OrdinalDirection.SE);
+            case  1 -> state = state.with(ModProperties.DIRECTIONS, OrdinalDirection.NE);
+            case  2 -> state = state.with(ModProperties.DIRECTIONS, OrdinalDirection.E);
+            case  3 -> state = state.with(ModProperties.DIRECTIONS, OrdinalDirection.SE);
         }
 
         return state.with(Verticality.VERTICALITY, sneak ? Verticality.LEVEL : d == Direction.UP ? Verticality.UP : Verticality.DOWN);

@@ -32,7 +32,7 @@ public class TogglePreGen {
         }
 
 
-        int startX = PosTranslator.gridToGlobal(0, grid.getSize());
+        int startX = PosTranslator.gridToGlobal(0, grid.getSize(), 1f);
         int startZ = startX;
 
         Chunk chunk = serverWorld.getChunk(startX, startZ);

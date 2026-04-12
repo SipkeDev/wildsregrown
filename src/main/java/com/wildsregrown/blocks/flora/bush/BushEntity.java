@@ -1,12 +1,10 @@
 package com.wildsregrown.blocks.flora.bush;
 
 import com.sipke.api.features.trees.config.TreeConfig;
-import com.sipke.registeries.Trees;
+import com.sipke.registeries.WorldRegistries;
+import com.wildsregrown.registries.world.Trees;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
@@ -33,7 +31,7 @@ public class BushEntity extends BlockEntity {
     }
 
     public TreeConfig config(){
-        return Trees.get(species);
+        return WorldRegistries.TREES.get(species);
     }
 
     public void update(BlockState state, ServerWorld world, BlockPos pos, Random random) {

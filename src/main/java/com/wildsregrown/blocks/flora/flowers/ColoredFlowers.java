@@ -2,7 +2,7 @@ package com.wildsregrown.blocks.flora.flowers;
 
 import com.sipke.api.features.Colors;
 import com.sipke.math.MathUtil;
-import com.wildsregrown.blocks.properties.FloraStage;
+import com.wildsregrown.blocks.properties.flora.FloraStage;
 import com.wildsregrown.blocks.render.TintUtil;
 import net.minecraft.block.BlockState;
 

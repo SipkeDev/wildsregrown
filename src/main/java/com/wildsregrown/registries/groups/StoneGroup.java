@@ -74,7 +74,6 @@ public class StoneGroup {
             this.luxury[Luxury.smooth_balustrade.ordinal()]     = register(id + "_smooth_balustrade", Balustrade::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.brazier.ordinal()]               = register(id + "_brazier", StoneBrazier::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.smooth_brazier.ordinal()]        = register(id + "_smooth_brazier", StoneBrazier::new, settings, STONE_DECO_GROUP_KEY);
-            CUTOUTS.add(this.luxury[Luxury.brazier.ordinal()]);CUTOUTS.add(this.luxury[Luxury.smooth_brazier.ordinal()]);
             this.luxury[Luxury.dungeonItemPedestal.ordinal()]   = register(id + "_dungeon_item_pedestal", DungeonItemLootPedestal::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.smooth_half_arch.ordinal()]      = register(id + "_smooth_half_arch", (s) -> new HalfArchBlock(common[Common.layered.ordinal()].getDefaultState(),s), settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.smooth_arch.ordinal()]           = register(id + "_smooth_arch", ArchBlock::new, settings, STONE_DECO_GROUP_KEY);

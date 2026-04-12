@@ -18,7 +18,7 @@ public enum SpawnPicker implements StringIdentifiable {
     //Cold
     coniferousForest(3, "coniferious forest", Climate.coniferousForest),
     coolDesert      (4, "cool desert", Climate.coolDesert),
-    coolScrubland   (5, "cool shrubland", Climate.coolScrubland),
+    coolScrubland   (5, "cool shrubland", Climate.coolShrubland),
     mixedForest     (6, "mixed forest", Climate.mixedForest),
     steppe          (7, "steppe", Climate.steppe),
 

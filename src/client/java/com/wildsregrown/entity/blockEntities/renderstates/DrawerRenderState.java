@@ -1,6 +1,6 @@
 package com.wildsregrown.entity.blockEntities.renderstates;
 
-import com.wildsregrown.blocks.properties.DrawerState;
+import com.wildsregrown.blocks.properties.framing.DrawerState;
 import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
 import net.minecraft.client.render.item.ItemRenderState;
 import net.minecraft.util.math.Direction;

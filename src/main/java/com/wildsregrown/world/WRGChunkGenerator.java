@@ -3,19 +3,29 @@ package com.wildsregrown.world;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.sipke.World;
-import com.sipke.WorldConstants;
-import com.wildsregrown.world.biomes.WRGBiomeProvider;
+import com.wildsregrown.world.biomes.BiomePopulator;
 import com.wildsregrown.world.decorator.*;
 import com.wildsregrown.world.decorator.FloraDecorator;
 import com.wildsregrown.world.decorator.StructureDecorator;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.random.CheckedRandom;
+import net.minecraft.util.math.random.ChunkRandom;
+import net.minecraft.util.math.random.RandomSeed;
 import net.minecraft.world.*;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.*;
+import net.minecraft.world.gen.chunk.placement.StructurePlacementCalculator;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.List;
@@ -33,7 +43,6 @@ public class WRGChunkGenerator extends ChunkGenerator {
                             .forGetter((generator) -> generator.settings)
             ).apply(instance, instance.stable(WRGChunkGenerator::new)));
 
-    private final World world;
     private final RegistryEntry<ChunkGeneratorSettings> settings;
     private final BaseDecorator decorator;
     private final BedrockDecorator bedrockDecorator;
@@ -41,20 +50,18 @@ public class WRGChunkGenerator extends ChunkGenerator {
     private final FloraDecorator floraDecorator;
     private final StructureDecorator structureDecorator;
     private final FeatureDecorator featureDecorator;
+    private final BiomePopulator biomePopulator;
 
     public WRGChunkGenerator(BiomeSource source, RegistryEntry<ChunkGeneratorSettings> settings) {
         super(source);
         this.settings = settings;
-        this.world = new World();
-        if (source instanceof WRGBiomeProvider provider){
-            provider.setWorld(world);
-        }
         this.decorator = new BaseDecorator(this);
         this.bedrockDecorator = new BedrockDecorator();
         this.floraDecorator = new FloraDecorator(this);
         this.treeDecorator = new TreeDecorator(this);
         this.structureDecorator = new StructureDecorator(this);
         this.featureDecorator = new FeatureDecorator(this);
+        this.biomePopulator = new BiomePopulator(this);
         LOGGER.info("Chunk generator init");
     }
 
@@ -70,17 +77,32 @@ public class WRGChunkGenerator extends ChunkGenerator {
     public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {}
 
     @Override
-    public void populateEntities(ChunkRegion region) {}
+    public void setStructureStarts(DynamicRegistryManager registryManager, StructurePlacementCalculator placementCalculator, StructureAccessor structureAccessor, Chunk chunk, StructureTemplateManager structureTemplateManager, RegistryKey<net.minecraft.world.World> dimension) {}
 
     @Override
-    public int getWorldHeight() {
-        return WorldConstants.worldHeight;
+    public void populateEntities(ChunkRegion region) {
+        if (!(this.settings.value()).mobGenerationDisabled()) {
+            ChunkPos chunkPos = region.getCenterPos();
+            RegistryEntry<Biome> registryEntry = null;//region.getBiome(chunkPos.getStartPos().withY(region.getTopYInclusive()));
+            if (registryEntry != null) {
+                ChunkRandom chunkRandom = new ChunkRandom(new CheckedRandom(RandomSeed.getSeed()));
+                chunkRandom.setPopulationSeed(region.getSeed(), chunkPos.getStartX(), chunkPos.getStartZ());
+                SpawnHelper.populateEntities(region, registryEntry, chunkPos, chunkRandom);
+            }
+        }
+    }
+
+    @Override
+    public CompletableFuture<Chunk> populateBiomes(NoiseConfig noiseConfig, Blender blender, StructureAccessor structureAccessor, Chunk chunk) {
+        //Moved to fill populate Noise
+        return CompletableFuture.completedFuture(chunk);
     }
 
     @Override
     public CompletableFuture<Chunk> populateNoise(Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
         decorator.apply(chunk);
         bedrockDecorator.apply(chunk);
+        biomePopulator.apply(chunk);
         return CompletableFuture.completedFuture(chunk);
     }
 
@@ -95,12 +117,17 @@ public class WRGChunkGenerator extends ChunkGenerator {
 
     @Override
     public int getSeaLevel() {
-        return WorldConstants.sea;
+        return (int) getWorld().getConfig().waterLevel();
     }
 
     @Override
     public int getMinimumY() {
         return 0;
+    }
+
+    @Override
+    public int getWorldHeight() {
+        return 64 + (int) (getWorld().getConfig().continentFactor() + getWorld().getConfig().landformFactor() + getWorld().getConfig().biomeFactor());
     }
 
     @Override
@@ -110,14 +137,14 @@ public class WRGChunkGenerator extends ChunkGenerator {
 
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
-        return null;
+        return new VerticalBlockSample(0, new BlockState[]{Blocks.STONE.getDefaultState()});
     }
 
     @Override
     public void appendDebugHudText(List<String> text, NoiseConfig noiseConfig, BlockPos pos) {}
 
     public World getWorld() {
-        return this.world;
+        return World.getInstance();
     }
 
 }

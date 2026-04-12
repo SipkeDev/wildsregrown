@@ -1,7 +1,13 @@
 package com.wildsregrown.mixin.client.sodium;
 
+import com.wildsregrown.blocks.SoilBlock;
+import com.wildsregrown.blocks.flora.Flora;
 import com.wildsregrown.blocks.render.ITintedBlock;
+import com.wildsregrown.blocks.render.TintUtil;
+import com.wildsregrown.blocks.wood.tree.Leaves;
 import net.caffeinemc.mods.sodium.api.util.ColorARGB;
+import net.caffeinemc.mods.sodium.client.model.color.ColorProvider;
+import net.caffeinemc.mods.sodium.client.model.color.ColorProviderRegistry;
 import net.caffeinemc.mods.sodium.client.model.quad.properties.ModelQuadFacing;
 import net.caffeinemc.mods.sodium.client.model.quad.properties.ModelQuadOrientation;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers;
@@ -18,7 +24,11 @@ import net.caffeinemc.mods.sodium.client.render.chunk.vertex.format.ChunkVertexE
 import net.caffeinemc.mods.sodium.client.render.model.AbstractBlockRenderContext;
 import net.caffeinemc.mods.sodium.client.render.model.MutableQuadViewImpl;
 import net.caffeinemc.mods.sodium.client.render.texture.SpriteFinderCache;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
@@ -31,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 
-@Mixin(targets = "net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer", remap = false)
+@Mixin(targets = "net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer")
 public abstract class BlockRendererMixin extends AbstractBlockRenderContext {
 
     @Shadow @Final private ChunkVertexEncoder.Vertex[] vertices;
@@ -47,8 +57,25 @@ public abstract class BlockRendererMixin extends AbstractBlockRenderContext {
     @Inject(method = "bufferQuad", at = @At("HEAD"), cancellable = true)
     public void overrideQuadBuffers(MutableQuadViewImpl quad, float[] brightnesses, Material material, CallbackInfo ci)
     {
-        if (this.state.getBlock() instanceof ITintedBlock tintedBlock) {
-            render(quad, brightnesses, material, tintedBlock.getTint(this.state, quad.getTintIndex()));
+        Block block = this.state.getBlock();
+        if (block instanceof ITintedBlock tintedBlock) {
+
+            if (block instanceof SoilBlock){
+                int grass = level.getColor(pos, Biome::getGrassColorAt);
+                int tint = tintedBlock.getTint(this.state, quad.getTintIndex());
+                render(quad, brightnesses, material, (quad.getTintIndex()) != -1 ? TintUtil.blend(grass, tint, 0.35f) : -1);
+            }else if (block instanceof Leaves && quad.getTintIndex() == 0){
+                int tint = tintedBlock.getTint(this.state, quad.getTintIndex());
+                int foliage = level.getColor(pos, (biome, x, z) -> biome.getFoliageColor());
+                render(quad, brightnesses, material, TintUtil.blend(foliage, tint, 0.35f));
+            }else if (block instanceof Flora && quad.getTintIndex() == 0){
+                int tint = tintedBlock.getTint(this.state, quad.getTintIndex());
+                int foliage = level.getColor(pos, (biome, x, z) -> biome.getFoliageColor());
+                render(quad, brightnesses, material, TintUtil.blend(foliage, tint, 0.35f));
+            }else {
+                render(quad, brightnesses, material, tintedBlock.getTint(this.state, quad.getTintIndex()));
+            }
+
             ci.cancel();
         }
     }

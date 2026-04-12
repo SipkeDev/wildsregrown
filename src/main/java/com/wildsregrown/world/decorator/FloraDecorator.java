@@ -3,9 +3,9 @@ package com.wildsregrown.world.decorator;
 import com.sipke.api.chunk.Chunk;
 import com.sipke.api.features.flora.FloraPos;
 import com.sipke.math.MathUtil;
-import com.sipke.registeries.Floras;
+import com.sipke.registeries.WorldRegistries;
 import com.wildsregrown.WildsRegrown;
-import com.wildsregrown.blocks.properties.FloraStage;
+import com.wildsregrown.blocks.properties.flora.FloraStage;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.registries.ModBlocks;
 import com.wildsregrown.world.WRGChunkGenerator;
@@ -16,9 +16,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
 
 import static com.sipke.WorldConstants.chunkSize;
 
@@ -58,7 +56,7 @@ public class FloraDecorator {
 
                     layers = layers == 0 ? 8 : layers;
 
-                    Identifier identifier = Identifier.of(WildsRegrown.modid, Floras.get(pos.key()).name());
+                    Identifier identifier = Identifier.of(WildsRegrown.modid, WorldRegistries.FLORA.get(pos.key()).getName());
                     Block block = Registries.BLOCK.get(identifier);
 
                     if (!Registries.BLOCK.containsId(identifier)) {
