@@ -3,10 +3,12 @@ package com.wildsregrown.blocks;
 import com.mojang.serialization.MapCodec;
 import com.sipke.api.features.Colors;
 import com.wildsregrown.blocks.properties.ModProperties;
+import com.wildsregrown.registries.ModFluids;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -139,8 +141,9 @@ public class GravelBlock extends FallingBlock implements Waterloggable {
         return Colors.ivory;
     }
 
+    @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.get(WATERLOGGED) ? ModFluids.SWEET_WATER.getStill(false).with(FlowableFluid.LEVEL, state.get(LAYERS)) : super.getFluidState(state);
     }
 
     static {

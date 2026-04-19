@@ -2,7 +2,7 @@ package com.wildsregrown.blocks.flora;
 
 import com.sipke.core.pos.INeighbours;
 import com.sipke.core.sampler.jitter.RoundJitter;
-import com.sipke.core.vector.Vec2;
+import com.sipke.core.vector.Vec2f;
 import com.sipke.math.MathUtil;
 import com.wildsregrown.blocks.Dice;
 import com.wildsregrown.blocks.SoilBlock;
@@ -24,7 +24,7 @@ public interface IFlora extends INeighbours {
             int soilWater = soil.get(ModProperties.MOISTURE);
             if (soilWater > 1) {
                 int floraWater = state.get(ModProperties.MOISTURE);
-                if (floraWater < 16) {
+                if (floraWater < ModProperties.MOISTURE.getValues().getLast()) {
                     world.setBlockState(pos, state.with(ModProperties.MOISTURE, floraWater + 1));
                     world.setBlockState(soilPos, soil.with(ModProperties.MOISTURE, soilWater - 1));
                 }
@@ -52,7 +52,7 @@ public interface IFlora extends INeighbours {
 
     default void spreadSeed(ServerWorld world, BlockPos pos, Random random, int range) {
 
-        Vec2 vec = new Vec2(pos.getX(), pos.getZ());
+        Vec2f vec = new Vec2f(pos.getX(), pos.getZ());
         RoundJitter.apply(vec, random.nextInt(), random.nextInt(range));
         int dx = MathUtil.round(vec.x);
         int dz = MathUtil.round(vec.y);

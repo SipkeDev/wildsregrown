@@ -1,4 +1,4 @@
-package com.wildsregrown.mixin;
+package com.wildsregrown.mixin.world;
 
 import com.wildsregrown.world.WRGChunkGenerator;
 import net.minecraft.registry.RegistryKey;

@@ -2,6 +2,7 @@ package com.wildsregrown.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.sipke.api.features.Colors;
+import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.blocks.flora.Flora;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.render.ITintedBlock;
@@ -78,7 +79,7 @@ public class SoilBlock extends FallingBlock implements Waterloggable, ITintedBlo
     private void grow(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         int overgrown = state.get(OVERGROWN);
         if (overgrown != 0 && overgrown < 5){
-            world.setBlockState(pos, state.with(OVERGROWN, MathUtil.min(5, overgrown+1)));
+            world.setBlockState(pos, state.with(OVERGROWN, MathUtil.min(5, overgrown+1)).with(WATERLOGGED, false));
         }
     }
 
@@ -190,7 +191,8 @@ public class SoilBlock extends FallingBlock implements Waterloggable, ITintedBlo
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
         if (direction == Direction.UP && !neighborState.getCollisionShape(world, neighborPos).isEmpty()) {
-                return state.with(ModProperties.LAYERS, 8);
+            //WildsRegrown.LOGGER.info("update:"+state.getFluidState());
+            return state.with(ModProperties.LAYERS, 8);
         }
         return super.getStateForNeighborUpdate(state, world, tickView, pos, direction,  neighborPos, neighborState, random);
     }
@@ -200,8 +202,9 @@ public class SoilBlock extends FallingBlock implements Waterloggable, ITintedBlo
         return Colors.darkLavender;
     }
 
+    @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? ModFluids.SWEET_WATER.getStill(false).with(FlowableFluid.LEVEL, state.get(LAYERS)) : super.getFluidState(state);
+        return state.get(WATERLOGGED) ? ModFluids.SWEET_WATER.getStill(false) : super.getFluidState(state);
     }
 
     static {

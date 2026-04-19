@@ -1,7 +1,7 @@
 package com.wildsregrown.registries;
 
 import com.wildsregrown.blocks.crafting.PortableAnvil;
-import com.wildsregrown.blocks.fluids.LayeredFluidBlock;
+import com.wildsregrown.blocks.fluids.SweetWaterFluidBlock;
 import com.wildsregrown.registries.world.Trees;
 import com.wildsregrown.WildsRegrown;
 import com.sipke.api.features.Colors;
@@ -54,7 +54,7 @@ public class ModBlocks {
     /**
      * Fluids
      */
-    public static final Block sweet_water = registerWithoutItem("sweet_water", ctx -> new LayeredFluidBlock(ModFluids.SWEET_WATER, ctx), AbstractBlock.Settings.create().mapColor(MapColor.WATER_BLUE).replaceable().noCollision().strength(100.0F).pistonBehavior(PistonBehavior.DESTROY).dropsNothing().liquid().sounds(BlockSoundGroup.INTENTIONALLY_EMPTY));
+    public static final Block sweet_water = registerWithoutItem("sweet_water", SweetWaterFluidBlock::new, AbstractBlock.Settings.create().mapColor(MapColor.WATER_BLUE).replaceable().noCollision().strength(100.0F).pistonBehavior(PistonBehavior.DESTROY).dropsNothing().liquid().sounds(BlockSoundGroup.INTENTIONALLY_EMPTY));
     public static final Block pitch = registerWithoutItem("pitch", ctx -> new FluidBlock(ModFluids.PITCH, ctx), AbstractBlock.Settings.create().mapColor(MapColor.WATER_BLUE).replaceable().noCollision().strength(100.0F).pistonBehavior(PistonBehavior.DESTROY).dropsNothing().liquid().sounds(BlockSoundGroup.INTENTIONALLY_EMPTY));
 
     /**

@@ -205,7 +205,7 @@ public class WRGBiomes {
 
     private static BiomeEffects createBiomeEffects(int grassColor, int foliageColor, BiomeEffects.GrassColorModifier grassColorModifier) {
         return new BiomeEffects.Builder()
-                .waterColor(4159204)
+                .waterColor(Colors.pack(255, 125, 125, 125))
                 .grassColor(grassColor)
                 .foliageColor(foliageColor)
                 .grassColorModifier(grassColorModifier)
@@ -216,9 +216,10 @@ public class WRGBiomes {
         return EnvironmentAttributeMap.builder()
                 .with(EnvironmentAttributes.SKY_COLOR_VISUAL, OverworldBiomeCreator.getSkyColor(temperature))
                 .with(EnvironmentAttributes.FOG_COLOR_VISUAL, 0xC0D8FF)
-                .with(EnvironmentAttributes.WATER_FOG_COLOR_VISUAL, 0x316451)
+                .with(EnvironmentAttributes.WATER_FOG_COLOR_VISUAL, Colors.pack(125, 125, 125, 125))
+                .with(EnvironmentAttributes.WATER_FOG_START_DISTANCE_VISUAL, 8f)
+                .with(EnvironmentAttributes.WATER_FOG_END_DISTANCE_VISUAL, 32f)
                 .with(EnvironmentAttributes.BACKGROUND_MUSIC_AUDIO, new BackgroundMusic(SoundEvents.MUSIC_OVERWORLD_MEADOW))
-                .with(EnvironmentAttributes.WATER_FOG_END_DISTANCE_VISUAL, 0.85f)
                 .build();
     }
 

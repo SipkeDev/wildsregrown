@@ -62,8 +62,6 @@ public class ScreenStackBuilder {
             ModProperties.VARIATIONS_2,
             ModProperties.VARIATIONS_3,
             ModProperties.VARIATIONS_4,
-            ModProperties.VARIATIONS_5,
-            ModProperties.VARIATIONS_8,
             Properties.BLOCK_FACE,
     });
 

@@ -1,4 +1,4 @@
-package com.wildsregrown.mixin;
+package com.wildsregrown.mixin.block;
 
 import net.minecraft.block.*;
 import org.spongepowered.asm.mixin.Mixin;

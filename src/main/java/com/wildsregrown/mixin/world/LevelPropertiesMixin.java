@@ -1,4 +1,4 @@
-package com.wildsregrown.mixin;
+package com.wildsregrown.mixin.world;
 
 import com.mojang.serialization.Lifecycle;
 import com.wildsregrown.WildsRegrown;

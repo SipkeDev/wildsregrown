@@ -9,6 +9,7 @@ import com.sipke.generator.WorldGenerator;
 import com.sipke.math.MathUtil;
 import com.wildsregrown.blocks.fluids.SetAbleFluidState;
 import com.wildsregrown.blocks.properties.ModProperties;
+import com.wildsregrown.registries.ModBlocks;
 import com.wildsregrown.registries.ModFluids;
 import com.wildsregrown.world.WRGChunkGenerator;
 import net.minecraft.block.*;
@@ -106,43 +107,7 @@ public class BaseDecorator implements Decorator {
                 drawTopLayer(noiseChunk, chunk, layers == 0 ? blockPos.down() : blockPos, idx);
 
                 /// Aquifers
-                for (Aquifer aquifer : noiseChunk.getColumn(idx).getAquifers()) {
-
-                    FluidState fluidState = ModFluids.SWEET_WATER.getDefaultState()
-                            .with(Properties.FALLING, false)
-                            .with(FlowableFluid.LEVEL, 8)
-                            .with(ModProperties.vecX, aquifer.getX())
-                            .with(ModProperties.vecZ, aquifer.getZ());
-
-                    for (int i = aquifer.from(); i <= aquifer.too(); i++) {
-
-                        blockPos.setY(i);
-                        BlockState currentState = chunk.getBlockState(blockPos);
-
-                        if (currentState.isAir()){
-                            chunk.setBlockState(blockPos, fluidState.getBlockState());
-                        }else if (currentState.contains(WATERLOGGED)){
-                            ((SetAbleFluidState)state).wrg$setFluidState(fluidState);
-                            //chunk.setBlockState(blockPos, currentState.with(WATERLOGGED, true));
-                        }
-
-                    }
-
-                    blockPos.setY((int)aquifer.too()+1);
-                    fluidState = fluidState
-                            .with(FlowableFluid.LEVEL, aquifer.getLevel())
-                            .with(ModProperties.vecX, aquifer.getX())
-                            .with(ModProperties.vecZ, aquifer.getZ());
-                    state = chunk.getBlockState(blockPos);
-                    if (state.isAir()) {
-                        WildsRegrown.LOGGER.info(fluidState.toString());
-                        chunk.setBlockState(blockPos, fluidState.getBlockState());
-                    }else if (state.contains(WATERLOGGED)){
-                        //((SetAbleFluidState)state).wrg$setFluidState(fluidState);
-                        //chunk.setBlockState(blockPos, state.with(WATERLOGGED, true));
-                    }
-
-                }
+                drawAquifer(noiseChunk, chunk, idx, blockPos);
 
                 //drawOverlay(chunk, blockPos.setY(y+2), noiseChunk.getTile(idx).erosionMask);
 
@@ -150,10 +115,58 @@ public class BaseDecorator implements Decorator {
         }//for z
     }
 
+    private void drawAquifer(Chunk noiseChunk, net.minecraft.world.chunk.Chunk chunk, int idx, BlockPos.Mutable blockPos){
+        for (Aquifer aquifer : noiseChunk.getColumn(idx).getAquifers()) {
+
+            FluidState fluidState = ModFluids.SWEET_WATER.getDefaultState()
+                    .with(Properties.FALLING, false)
+                    .with(FlowableFluid.LEVEL, 8)
+                    .with(ModProperties.vector, aquifer.vector())
+                    .with(ModProperties.velocity, aquifer.velocity());
+
+            for (int i = aquifer.from(); i < aquifer.too(); i++) {
+
+                blockPos.setY(i);
+                BlockState currentState = chunk.getBlockState(blockPos);
+
+                if (currentState.isAir()){
+                    chunk.setBlockState(blockPos, fluidState.getBlockState());
+                }else if (currentState.contains(WATERLOGGED)){
+                    currentState = currentState.with(WATERLOGGED, true);
+                    ((SetAbleFluidState)currentState).wrg$setFluidState(fluidState);
+                    chunk.setBlockState(blockPos, currentState);
+                }
+
+            }
+
+            blockPos.setY((int)aquifer.too());
+            BlockState state = chunk.getBlockState(blockPos);
+            if (state.isAir() || state.isOf(ModBlocks.sweet_water)) {
+                fluidState = ModFluids.SWEET_WATER.getDefaultState()
+                        .with(Properties.FALLING, false)
+                        .with(FlowableFluid.LEVEL, aquifer.getLevel())
+                        .with(ModProperties.vector, aquifer.vector())
+                        .with(ModProperties.velocity, aquifer.velocity());
+                chunk.setBlockState(blockPos, fluidState.getBlockState());
+                //WildsRegrown.LOGGER.info("Check: " + chunk.getFluidState(blockPos));
+            }else if (state.contains(WATERLOGGED)){
+                state = state.with(WATERLOGGED, true);
+                ((SetAbleFluidState)state).wrg$setFluidState(fluidState);
+                chunk.setBlockState(blockPos, state);
+            }
+
+        }
+    }
+
     private void drawTopLayer(Chunk noiseChunk, net.minecraft.world.chunk.Chunk chunk, BlockPos blockPos, int idx) {
         BlockState state = chunk.getBlockState(blockPos);
+        if (state.contains(WATERLOGGED)){
+            if (state.get(WATERLOGGED)){
+                return;
+            }
+        }
         if (state.contains(MOISTURE)){
-            state = state.with(MOISTURE, MathUtil.round(MathUtil.range(noiseChunk.getTile(idx).moisture,0, 16)));
+            state = state.with(MOISTURE, MathUtil.round(MathUtil.range(noiseChunk.getTile(idx).moisture,0, ModProperties.MOISTURE.getValues().getLast())));
         }
         if (state.contains(OVERGROWN)){
             state = state.with(OVERGROWN, noiseChunk.getColumn(idx).getOvergrown());

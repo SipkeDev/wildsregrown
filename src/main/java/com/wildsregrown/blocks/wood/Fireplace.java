@@ -2,7 +2,7 @@ package com.wildsregrown.blocks.wood;
 
 import com.wildsregrown.blocks.properties.fuel.FuelBurn;
 import com.wildsregrown.blocks.properties.ModProperties;
-import com.wildsregrown.mixin.OffsetAccessor;
+import com.wildsregrown.mixin.block.OffsetAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;

@@ -1,9 +1,11 @@
 package com.wildsregrown.blocks;
 
 import com.wildsregrown.blocks.properties.ModProperties;
+import com.wildsregrown.registries.ModFluids;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -141,8 +143,9 @@ public class Layered extends Block implements Waterloggable {
         builder.add(FACING, LAYERS, WATERLOGGED);
     }
 
+    @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.get(WATERLOGGED) ? ModFluids.SWEET_WATER.getStill(false).with(FlowableFluid.LEVEL, state.get(LAYERS)) : super.getFluidState(state);
     }
 
     static {

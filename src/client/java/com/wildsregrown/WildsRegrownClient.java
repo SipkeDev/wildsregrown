@@ -3,6 +3,8 @@ package com.wildsregrown;
 import com.sipke.api.features.Colors;
 import com.wildsregrown.blocks.SoilBlock;
 import com.wildsregrown.blocks.flora.Flora;
+import com.wildsregrown.blocks.fluids.SweetWaterFluid;
+import com.wildsregrown.blocks.fluids.SweetWaterFluidBlock;
 import com.wildsregrown.blocks.render.IRenderType;
 import com.wildsregrown.blocks.render.ITintedBlock;
 import com.wildsregrown.blocks.render.TintUtil;
@@ -21,10 +23,13 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRendering;
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.impl.client.rendering.fluid.FluidRenderHandlerRegistryImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.MinecraftClient;
@@ -39,6 +44,7 @@ public class WildsRegrownClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+
 		//ClientPlayNetworking.registerGlobalReceiver(InWorldResults.PACKET_ID, ((payload, context) -> RadialScreen.show(payload.results().split(","), payload.placed())));
 
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> sender.sendPacket(new ConnectMessage()));
@@ -83,11 +89,13 @@ public class WildsRegrownClient implements ClientModInitializer {
 
 	private void RegisterRenderSettings(){
 
-		//FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.SWEET_WATER, ModFluids.SWEET_WATER_FLOWING, SimpleFluidRenderHandler.coloredWater(Colors.vibrantBlue));
+		FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.SWEET_WATER, ModFluids.SWEET_WATER_FLOWING, SimpleFluidRenderHandler.coloredWater(Colors.riverBlue));
 		FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.PITCH, ModFluids.PITCH_FLOWING, SimpleFluidRenderHandler.coloredWater(Colors.black));
 		BlockRenderLayerMap.putFluid(ModFluids.SWEET_WATER, BlockRenderLayer.TRANSLUCENT);
 		BlockRenderLayerMap.putFluid(ModFluids.SWEET_WATER_FLOWING, BlockRenderLayer.TRANSLUCENT);
 		ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> BiomeColors.getWaterColor(view, pos), ModBlocks.sweet_water);
+
+		BlockRenderLayerMap.putBlock(ModBlocks.sweet_water, BlockRenderLayer.TRANSLUCENT);
 
 		float b = 0.32f;
 		Registries.BLOCK.forEach(ctx -> {

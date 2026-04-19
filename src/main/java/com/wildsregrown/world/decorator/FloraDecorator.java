@@ -54,6 +54,10 @@ public class FloraDecorator {
                     blockPos.setX(globalX + i);
                     blockPos.setZ(globalZ + j);
 
+                    if (!world.getBlockState(blockPos).getFluidState().isEmpty()){
+                        continue;
+                    }
+
                     layers = layers == 0 ? 8 : layers;
 
                     Identifier identifier = Identifier.of(WildsRegrown.modid, WorldRegistries.FLORA.get(pos.key()).getName());
@@ -83,7 +87,7 @@ public class FloraDecorator {
 
                     //Set Flora State
                     if (state.contains(ModProperties.MOISTURE)) {
-                        int m = MathUtil.round(MathUtil.range(noiseChunk.getTile(idx).moisture, 1, 16));
+                        int m = MathUtil.round(MathUtil.range(noiseChunk.getTile(idx).moisture, 1, ModProperties.MOISTURE.getValues().getLast()));
                         state = state.with(ModProperties.MOISTURE, m);
                     }
                     if (pos.flowering()){

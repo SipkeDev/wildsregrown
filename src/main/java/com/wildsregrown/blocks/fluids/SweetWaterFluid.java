@@ -1,8 +1,9 @@
 package com.wildsregrown.blocks.fluids;
 
+import com.sipke.api.rivers.RiverConstants;
 import com.sipke.core.pos.INeighbours;
-import com.sipke.math.MathUtil;
 import com.wildsregrown.WildsRegrown;
+import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.registries.ModBlocks;
 import com.wildsregrown.registries.ModFluids;
 import com.wildsregrown.registries.ModItems;
@@ -30,7 +31,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
-import net.minecraft.world.rule.GameRules;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -39,26 +39,18 @@ import static com.wildsregrown.blocks.properties.ModProperties.*;
 
 public abstract class SweetWaterFluid extends FlowableFluid implements INeighbours {
 
-    private static final double[] vector;
-    static {
-        vector = new double[vecX.getValues().size()];
-        for (int i : vecX.getValues()){
-            vector[i] = MathUtil.range(i, 0,16,-1f, 1f);
-        }
-    }
-
     public SweetWaterFluid(){
         this.setDefaultState(this.getDefaultState()
                 .with(FALLING, false)
                 .with(LEVEL, 1)
-                .with(vecX, 8)
-                .with(vecZ, 8)
+                .with(vector, 0)
+                .with(velocity, 0)
         );
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Fluid, FluidState> builder) {
-        builder.add(FALLING, LEVEL, vecX, vecZ);
+        builder.add(FALLING, LEVEL, vector, velocity);
     }
 
     public Fluid getFlowing() {
@@ -85,17 +77,17 @@ public abstract class SweetWaterFluid extends FlowableFluid implements INeighbou
             float y = pos.getY() + random.nextFloat();
             float z = pos.getZ() + random.nextFloat();
             int rand = random.nextInt(20);
-            int vx = state.get(vecX);
-            int vz = state.get(vecZ);
 
             if (rand == 0) {
                 world.addParticleClient(ParticleTypes.UNDERWATER, x, y, z, 0.0, 0.0, 0.0);
-            } else if (vx != 8 && vz != 8) {
-                if (rand > 10 && state.isStill() && world.getBlockState(pos.up()).isAir()) {
-                    world.addParticleClient(ParticleTypes.LARGE_SMOKE, x, y, z,
-                            0.25 * vector[vx],
-                            0.02 * Math.abs(vector[vx]*vector[vz]),
-                            0.25 * vector[vz]
+            } else if (rand > 17) {
+                if (world.isAir(pos.up())) {
+                    int vec = state.get(vector);
+                    double v = RiverConstants.velocity[state.get(velocity)];
+                    world.addParticleClient(ParticleTypes.WHITE_SMOKE, x, y, z,
+                            RiverConstants.vec2d[vec].x*v,
+                            0.05 + (0.15*v),
+                            RiverConstants.vec2d[vec].y*v
                     );
                 }
             }
@@ -110,7 +102,7 @@ public abstract class SweetWaterFluid extends FlowableFluid implements INeighbou
 
     @Override
     protected boolean isInfinite(ServerWorld world) {
-        return world.getGameRules().getValue(GameRules.WATER_SOURCE_CONVERSION);
+        return false;
     }
 
     @Override
@@ -125,30 +117,67 @@ public abstract class SweetWaterFluid extends FlowableFluid implements INeighbou
 
         FluidState state = world.getFluidState(pos);
         if (state.isEqualAndStill(this)) {
-            int vx = state.get(vecX);
-            int vz = state.get(vecZ);
+            int vec = state.get(vector);
+            double v = RiverConstants.velocity[state.get(velocity)];
             entity.move(MovementType.SELF, new Vec3d(
-                    0.05 * vector[vx],
-                    0.001,
-                    0.05 * vector[vz]
+                            0.12 * v * RiverConstants.vec2d[vec].x,
+                            0.003,
+                            0.12 * v * RiverConstants.vec2d[vec].y
                     )
             );
+            //WildsRegrown.LOGGER.info("vec mov: " + 0.05 * RiverConstants.vectors[vecX]);
         }
     }
 
     @Override
+    public Vec3d getVelocity(BlockView world, BlockPos pos, FluidState state) {
+
+        if (matchesType(state.getFluid())) {
+            int vec = state.get(vector);
+            double vx = RiverConstants.vec2d[vec].x;
+            double vz = RiverConstants.vec2d[vec].y;
+            double v = RiverConstants.velocity[state.get(velocity)];
+            Vec3d vec3d = new Vec3d(vx*v, 0, vz*v);
+            vec3d.multiply(6.0);
+            if (state.get(FALLING)) {
+                vec3d = vec3d.normalize().add(0, -6.0, 0);
+            }
+            return vec3d.normalize();
+        }
+
+        return new Vec3d(0,0,0).normalize();
+    }
+
+    @Override
     public void onScheduledTick(ServerWorld world, BlockPos pos, BlockState blockState, FluidState fluidState) {
+        super.onScheduledTick(world, pos, blockState, fluidState);
         WildsRegrown.LOGGER.info("Ticked: " + world.getFluidState(pos));
     }
 
     @Override
-    protected FluidState getUpdatedState(ServerWorld world, BlockPos pos, BlockState state) {
-        return world.getFluidState(pos);
-    }
+    protected boolean hasRandomTicks() {return false;}
 
     @Override
-    protected void flow(WorldAccess world, BlockPos pos, BlockState state, Direction direction, FluidState fluidState) {
-        WildsRegrown.LOGGER.info("Flow: " + world.getFluidState(pos));
+    protected void onRandomTick(ServerWorld world, BlockPos pos, FluidState state, Random random) {
+        WildsRegrown.LOGGER.info("Random fluid tick from block");
+    }
+
+    /**
+     * Update methodes
+     * @return
+     */
+    @Override
+    protected FluidState getUpdatedState(ServerWorld world, BlockPos pos, BlockState state) {
+        FluidState fluidState = super.getUpdatedState(world, pos, state);
+        if (state.isOf(ModBlocks.sweet_water)){
+            if (state.contains(vector)) {
+                fluidState = fluidState
+                        .with(LEVEL, state.get(LEVEL))
+                        .with(vector, state.get(vector))
+                        .with(velocity, state.get(velocity));
+            }
+        }
+        return fluidState;
     }
 
     public int getMaxFlowDistance(WorldView world) {
@@ -157,10 +186,13 @@ public abstract class SweetWaterFluid extends FlowableFluid implements INeighbou
 
     @Override
     public BlockState toBlockState(FluidState fluidState) {
-        BlockState blockState = ModBlocks.sweet_water.getDefaultState();
-        ((SetAbleFluidState)blockState).wrg$setFluidState(fluidState);
-        WildsRegrown.LOGGER.info("Set fluidState: " + fluidState);
-        return blockState.with(FluidBlock.LEVEL, fluidState.get(LEVEL));
+        BlockState blockState = ModBlocks.sweet_water.getDefaultState()
+                .with(LEVEL, fluidState.get(LEVEL))
+                .with(vector, fluidState.get(vector))
+                .with(velocity, fluidState.get(velocity))
+                ;
+        //((SetAbleFluidState)blockState).wrg$setFluidState(fluidState);
+        return blockState;
     }
 
     @Override
@@ -175,7 +207,7 @@ public abstract class SweetWaterFluid extends FlowableFluid implements INeighbou
 
     @Override
     public int getTickRate(WorldView world) {
-        return 8;
+        return 12;
     }
 
     public boolean canBeReplacedWith(FluidState state, BlockView world, BlockPos pos, Fluid fluid, Direction direction) {

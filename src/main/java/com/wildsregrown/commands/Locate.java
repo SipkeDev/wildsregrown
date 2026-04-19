@@ -24,9 +24,9 @@ import com.sipke.api.terrain.Ecosystem;
 import com.sipke.api.terrain.Landform;
 import com.sipke.api.grid.mesh.cell.EcoSystemCell;
 import com.sipke.api.grid.mesh.cell.LandFormCell;
-import com.sipke.api.rivers.River;
-import com.sipke.api.rivers.RiverBasin;
-import com.sipke.api.rivers.RiverNode;
+import com.sipke.api.rivers.grid.River;
+import com.sipke.api.rivers.grid.RiverBasin;
+import com.sipke.api.rivers.grid.RiverNode;
 import com.sipke.math.Distance;
 import com.sipke.math.MathUtil;
 import com.wildsregrown.world.WRGChunkGenerator;
@@ -135,7 +135,7 @@ public class Locate {
                 for (RiverNode node : river.path) {
 
                     //matches generator conversion
-                    float velocity = RiverConstants.convertVelocity(node);
+                    float velocity = RiverConstants.convertVelocity(node.getVelocity());
                     if (velocity > upperBound || velocity < lowerBound){continue;}
 
                     float dx = MathUtil.abs(node.x - PosTranslator.globalToGrid(x, size,scale));

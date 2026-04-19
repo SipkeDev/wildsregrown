@@ -1,5 +1,6 @@
 package com.wildsregrown;
 
+import com.sipke.api.rivers.RiverConstants;
 import com.wildsregrown.registries.world.*;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
@@ -33,6 +34,7 @@ public class PreWildsRegrown implements PreLaunchEntrypoint {
         Trees.init();
         Floras.init();
         Structures.init();
+        double test = RiverConstants.velocity[0];
     }
 
     private void initSplashscreen() throws IOException {

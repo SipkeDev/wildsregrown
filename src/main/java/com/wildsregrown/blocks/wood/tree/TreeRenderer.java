@@ -21,19 +21,23 @@ public class TreeRenderer {
     static int flags = 2;
     static Random random = new Random(flags);
 
+    static int randMoist(WorldAccess worldAccess){
+        return 4 + worldAccess.getRandom().nextInt(3);
+    }
+
     static void renderSmallLeafCluster(WorldAccess world, BlockPos pos, BlockState state){
         BlockPos.Mutable mutable = pos.mutableCopy();
 
         mutable.set(pos.getX()-1, pos.getY(), pos.getZ());
-        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, 6 + random.nextInt(8)), flags);}
+        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, randMoist(world)), flags);}
         mutable.set(pos.getX()+1, pos.getY(), pos.getZ());
-        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, 6 + random.nextInt(8)), flags);}
+        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, randMoist(world)), flags);}
         mutable.set(pos.getX(), pos.getY(), pos.getZ()-1);
-        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, 6 + random.nextInt(8)), flags);}
+        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, randMoist(world)), flags);}
         mutable.set(pos.getX(), pos.getY(), pos.getZ()+1);
-        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, 6 + random.nextInt(8)), flags);}
+        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, randMoist(world)), flags);}
         mutable.set(pos.getX(), pos.getY()+1, pos.getZ());
-        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, 6 + random.nextInt(8)), flags);}
+        if (world.getBlockState(mutable).isAir()) {world.setBlockState(mutable, state.with(ModProperties.MOISTURE, randMoist(world)), flags);}
     }
 
     static void renderDynamicLeafCluster(WorldAccess world, BlockPos pos, BlockState state, int radius){
@@ -51,7 +55,7 @@ public class TreeRenderer {
                     if (world.getBlockState(mutable).isAir()) {
                         if (i * i + j * j + k * k <= radius * radius) {
                             if (CellType.cellValue.apply(HashUtil.hash(0, mutable.getX()+hashX, mutable.getY()+hashY, mutable.getZ()+hashZ),0) > 0.125f) {
-                                world.setBlockState(mutable, state.with(ModProperties.MOISTURE, 6 + random.nextInt(8)), flags);
+                                world.setBlockState(mutable, state.with(ModProperties.MOISTURE, random.nextInt(8)), flags);
                                 hashX+=HashUtil.PrimeX;
                                 hashY+=HashUtil.PrimeY;
                                 hashZ+=HashUtil.PrimeZ;

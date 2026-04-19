@@ -1,4 +1,4 @@
-package com.wildsregrown.mixin;
+package com.wildsregrown.mixin.block;
 
 import com.wildsregrown.registries.ModFluids;
 import net.minecraft.block.BlockState;
@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Waterloggable.class)
 public interface WaterLogableMixin{
 
+    /*
     @Inject(method = "Lnet/minecraft/block/Waterloggable;canFillWithFluid(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/fluid/Fluid;)Z", at = @At("HEAD"), cancellable = true)
     private void canFillWithFluid(LivingEntity filler, BlockView world, BlockPos pos, BlockState state, Fluid fluid, CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(fluid == Fluids.WATER || fluid == ModFluids.SWEET_WATER);
@@ -37,5 +38,6 @@ public interface WaterLogableMixin{
             cir.setReturnValue(false);
         }
     }
+     */
 
 }

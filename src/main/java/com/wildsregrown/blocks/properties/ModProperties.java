@@ -19,9 +19,9 @@ public class ModProperties {
     public static final IntProperty OXIDATION = IntProperty.of("oxidation", 0, 3);
 
     ///fluids
-    //Movement vectors, -1/1 float too 0-10 Integer
-    public static final IntProperty vecX = IntProperty.of("vector_x", 0, 16);
-    public static final IntProperty vecZ = IntProperty.of("vector_z", 0, 16);
+    //Movement vectors, -1/1 float too 0-40 Integer
+    public static final IntProperty vector = IntProperty.of("vector", 0, 16);
+    public static final IntProperty velocity = IntProperty.of("velocity", 0, 6);
 
     //Paintables
     public static final EnumProperty<LinSeedPaintable> LINSEED_PAINT = EnumProperty.of("paint", LinSeedPaintable.class);
@@ -29,7 +29,7 @@ public class ModProperties {
     //Flora cycles
     public static final IntProperty FRUITING = IntProperty.of("fruiting", 0, 3);
     public static final IntProperty OVERGROWN = IntProperty.of("overgrown", 0, 5);
-    public static final IntProperty MOISTURE = IntProperty.of("moisture", 0, 16);//Inaccurate 0-1 float
+    public static final IntProperty MOISTURE = IntProperty.of("moisture", 0, 8);//Inaccurate 0-1 float
     public static final IntProperty AGE_4 = IntProperty.of("age", 0, 3);
     public static final IntProperty AGE_6 = IntProperty.of("age", 0, 5);
     public static final EnumProperty<FloraStage> FLORAL_STAGE = EnumProperty.of("floral_stage", FloraStage.class);
@@ -45,8 +45,6 @@ public class ModProperties {
     public static final IntProperty VARIATIONS_2 = IntProperty.of("variations", 1, 2);
     public static final IntProperty VARIATIONS_3 = IntProperty.of("variations", 1, 3);
     public static final IntProperty VARIATIONS_4 = IntProperty.of("variations", 1, 4);
-    public static final IntProperty VARIATIONS_5 = IntProperty.of("variations", 1, 5);
-    public static final IntProperty VARIATIONS_8 = IntProperty.of("variations", 1, 8);
 
     //Furniture states
     public static final EnumProperty<DrawerState> DRAWER_STATE = EnumProperty.of("drawers", DrawerState.class);
@@ -60,9 +58,7 @@ public class ModProperties {
     public static final EnumProperty<FuelBurn> FUEL_BURN = EnumProperty.of("burning", FuelBurn.class);
     public static final IntProperty TORCH_FUEL = IntProperty.of("fuel", 0, 15);
     public static final IntProperty FUEL_6 = IntProperty.of("fuel", 0, 6);
-    public static final IntProperty FUEL_16 = IntProperty.of("fuel", 0, 16);
     public static final IntProperty FUEL_32 = IntProperty.of("fuel", 0, 32);
-    public static final IntProperty FUEL_64 = IntProperty.of("fuel", 0, 64);
     public static final EnumProperty<TorchHolderState> TORCH_HOLDER_STATE = EnumProperty.of("torch_holder", TorchHolderState.class);
 
     public static final EnumProperty<DoorState> DOOR = EnumProperty.of("part", DoorState.class);

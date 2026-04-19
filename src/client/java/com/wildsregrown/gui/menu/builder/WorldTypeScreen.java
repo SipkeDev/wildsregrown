@@ -1,5 +1,6 @@
 package com.wildsregrown.gui.menu.builder;
 
+import com.sipke.api.grid.GridLoader;
 import com.sipke.math.MathUtil;
 import com.wildsregrown.gui.menu.builder.camera.CameraRender;
 import com.wildsregrown.gui.menu.builder.widgets.ButtonWidget;
@@ -36,6 +37,7 @@ public class WorldTypeScreen extends Screen {
     public WorldTypeScreen(WorldBuilder builder, Screen parent){
         super(Text.literal("world_type"));
         this.builder = builder;
+        this.builder.ctx.config = GridLoader.getConfig("Wilds Regrown");
         this.parent = parent;
         this.camera = new WorldTypeCamera(MathUtil.min(this.client.getWindow().getScaledWidth(),this.client.getWindow().getScaledHeight()));
         this.camera.setRender(CameraRender.climate);

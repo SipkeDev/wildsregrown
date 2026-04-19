@@ -5,12 +5,12 @@ import net.minecraft.util.StringIdentifiable;
 public enum FloraStage implements StringIdentifiable {
 
     HEALTHY  ("healthy"  ),
-    BUDS     ("buds"     ),
+    BUDS     ("buds"     ), //todo remove buds
     FLOWERING("flowering"),
     FRUITS   ("fruits"   ),
     FUNGUS   ("fungus"   ),
     BACTERIA ("bacteria" ),
-    INSECTS  ("insects"  ),
+    INSECTS  ("insects"  ), //todo remove insects
     DEATH    ("death"    );
 
     private final String name;

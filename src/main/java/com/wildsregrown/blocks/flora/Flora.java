@@ -4,7 +4,7 @@ import com.wildsregrown.blocks.SoilBlock;
 import com.wildsregrown.blocks.properties.flora.FloraStage;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.blocks.render.ITintedBlock;
-import com.wildsregrown.mixin.OffsetAccessor;
+import com.wildsregrown.mixin.block.OffsetAccessor;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.registry.tag.BlockTags;
