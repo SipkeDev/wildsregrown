@@ -1,9 +1,9 @@
 package com.wildsregrown.blocks.properties.framing;
 
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum Tudor implements StringIdentifiable {
+public enum Tudor implements StringRepresentable {
 
     hollow("hollow"),
     l_left("l_left"),
@@ -14,7 +14,7 @@ public enum Tudor implements StringIdentifiable {
 
     private final String name;
 
-    private Tudor(String name) {
+    Tudor(String name) {
         this.name = name;
     }
 
@@ -23,7 +23,7 @@ public enum Tudor implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

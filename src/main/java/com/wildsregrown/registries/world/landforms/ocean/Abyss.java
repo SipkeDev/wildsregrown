@@ -8,10 +8,12 @@ import com.sipke.math.MapType;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Abyss extends Landform {
 
     public Abyss() {
-        super(32, Placement.Elevation.ocean, Climate.coldOcean, Climate.temperateOcean, Climate.warmOcean);
+        super(modid, "abyss", 0.08f, Placement.Elevation.ocean, Climate.coldOcean, Climate.temperateOcean, Climate.warmOcean);
     }
 
     @Override

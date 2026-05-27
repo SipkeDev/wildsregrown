@@ -1,9 +1,9 @@
 package com.wildsregrown.blocks.properties.fuel;
 
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum FuelBurn implements StringIdentifiable {
+public enum FuelBurn implements StringRepresentable {
 
     off("off"),
     lit("lit"),
@@ -20,7 +20,7 @@ public enum FuelBurn implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

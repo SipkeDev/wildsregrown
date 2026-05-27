@@ -1,7 +1,6 @@
 package com.wildsregrown.data;
 
 import com.wildsregrown.blocks.decoration.TentRoof;
-import com.wildsregrown.blocks.flora.Flora;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.registries.ModBlocks;
 import com.wildsregrown.registries.groups.ClayGroup;
@@ -9,23 +8,25 @@ import com.wildsregrown.registries.groups.StoneGroup;
 import com.wildsregrown.registries.groups.WoodGroup;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.condition.BlockStatePropertyLootCondition;
-import net.minecraft.loot.condition.MatchToolLootCondition;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LeafEntry;
-import net.minecraft.loot.entry.LootPoolEntry;
-import net.minecraft.loot.function.SetCountLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.predicate.StatePredicate;
-import net.minecraft.predicate.item.ItemPredicate;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import wildsregrown.api.block.flora.Flora;
+import wildsregrown.api.block.properties.WRGProperties;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -33,7 +34,7 @@ import static com.wildsregrown.WildsRegrown.modid;
 
 class BlockDrops extends FabricBlockLootTableProvider {
 
-    public BlockDrops(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+    public BlockDrops(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, registryLookup);
     }
 
@@ -41,39 +42,39 @@ class BlockDrops extends FabricBlockLootTableProvider {
     public void generate() {
 
         //Gravel
-        addDrop(ModBlocks.gravel_beige, layered(ModBlocks.gravel_beige));
-        addDrop(ModBlocks.gravel_black, layered(ModBlocks.gravel_black));
-        addDrop(ModBlocks.gravel_blue, layered(ModBlocks.gravel_blue));
-        addDrop(ModBlocks.gravel_brown, layered(ModBlocks.gravel_brown));
-        addDrop(ModBlocks.gravel_grey, layered(ModBlocks.gravel_grey));
-        addDrop(ModBlocks.gravel_green, layered(ModBlocks.gravel_green));
-        addDrop(ModBlocks.gravel_pink, layered(ModBlocks.gravel_pink));
-        addDrop(ModBlocks.gravel_purple, layered(ModBlocks.gravel_purple));
-        addDrop(ModBlocks.gravel_red, layered(ModBlocks.gravel_red));
-        addDrop(ModBlocks.gravel_white, layered(ModBlocks.gravel_white));
-        addDrop(ModBlocks.gravel_yellow, layered(ModBlocks.gravel_yellow));
+        add(ModBlocks.gravel_beige, layered(ModBlocks.gravel_beige));
+        add(ModBlocks.gravel_black, layered(ModBlocks.gravel_black));
+        add(ModBlocks.gravel_blue, layered(ModBlocks.gravel_blue));
+        add(ModBlocks.gravel_brown, layered(ModBlocks.gravel_brown));
+        add(ModBlocks.gravel_grey, layered(ModBlocks.gravel_grey));
+        add(ModBlocks.gravel_green, layered(ModBlocks.gravel_green));
+        add(ModBlocks.gravel_pink, layered(ModBlocks.gravel_pink));
+        add(ModBlocks.gravel_purple, layered(ModBlocks.gravel_purple));
+        add(ModBlocks.gravel_red, layered(ModBlocks.gravel_red));
+        add(ModBlocks.gravel_white, layered(ModBlocks.gravel_white));
+        add(ModBlocks.gravel_yellow, layered(ModBlocks.gravel_yellow));
 
         /**
          * Soils
          */
         //Sand
-        addDrop(ModBlocks.sand_white, layered(ModBlocks.sand_white));
-        addDrop(ModBlocks.sand_black, layered(ModBlocks.sand_black));
-        addDrop(ModBlocks.sand_beige, layered(ModBlocks.sand_beige));
-        addDrop(ModBlocks.sand_brown, layered(ModBlocks.sand_brown));
-        addDrop(ModBlocks.sand_grey, layered(ModBlocks.sand_grey));
-        addDrop(ModBlocks.sand_pink, layered(ModBlocks.sand_pink));
-        addDrop(ModBlocks.sand_red, layered(ModBlocks.sand_red));
-        addDrop(ModBlocks.sand_yellow, layered(ModBlocks.sand_yellow));
+        add(ModBlocks.sand_white, layered(ModBlocks.sand_white));
+        add(ModBlocks.sand_black, layered(ModBlocks.sand_black));
+        add(ModBlocks.sand_beige, layered(ModBlocks.sand_beige));
+        add(ModBlocks.sand_brown, layered(ModBlocks.sand_brown));
+        add(ModBlocks.sand_grey, layered(ModBlocks.sand_grey));
+        add(ModBlocks.sand_pink, layered(ModBlocks.sand_pink));
+        add(ModBlocks.sand_red, layered(ModBlocks.sand_red));
+        add(ModBlocks.sand_yellow, layered(ModBlocks.sand_yellow));
         //Loams
-        addDrop(ModBlocks.loam_red, layered(ModBlocks.loam_red));
-        addDrop(ModBlocks.loam_yellow, layered(ModBlocks.loam_yellow));
-        addDrop(ModBlocks.loam_beige, layered(ModBlocks.loam_beige));
-        addDrop(ModBlocks.loam_brown, layered(ModBlocks.loam_brown));
-        addDrop(ModBlocks.loam_black, layered(ModBlocks.loam_black));
+        add(ModBlocks.loam_red, layered(ModBlocks.loam_red));
+        add(ModBlocks.loam_yellow, layered(ModBlocks.loam_yellow));
+        add(ModBlocks.loam_beige, layered(ModBlocks.loam_beige));
+        add(ModBlocks.loam_brown, layered(ModBlocks.loam_brown));
+        add(ModBlocks.loam_black, layered(ModBlocks.loam_black));
         //Peat
-        addDrop(ModBlocks.peat_brown, layered(ModBlocks.peat_brown));
-        addDrop(ModBlocks.peat_black, layered(ModBlocks.peat_black));
+        add(ModBlocks.peat_brown, layered(ModBlocks.peat_brown));
+        add(ModBlocks.peat_black, layered(ModBlocks.peat_black));
         //Clays
         buildClay(ModBlocks.clay_beige);
         buildClay(ModBlocks.clay_brown);
@@ -158,13 +159,13 @@ class BlockDrops extends FabricBlockLootTableProvider {
         /**
          * Filter registries
          */
-        Registries.BLOCK.forEach(block -> {
-            if (block.getTranslationKey().startsWith("block." + modid)) {
+        BuiltInRegistries.BLOCK.forEach(block -> {
+            if (block.getDescriptionId().startsWith("block." + modid)) {
                 if (block instanceof Flora) {
-                    dropsWithShears(block);
+                    createShearsOnlyDrop(block);
                 }
                 if (block instanceof TentRoof){
-                    addDrop(block, drops(block.asItem()));
+                    add(block, createSingleItemTable(block.asItem()));
                 }
             }});
     }
@@ -174,147 +175,145 @@ class BlockDrops extends FabricBlockLootTableProvider {
 
         Block cobble = group.get(StoneGroup.Common.cobble_layered);
 
-        addDrop(group.get(StoneGroup.Common.layered), layered(group.get(StoneGroup.Common.layered), cobble));
-        addDrop(group.get(StoneGroup.Common.stairs), drops(cobble));
-        addDrop(group.get(StoneGroup.Common.cobble_layered), layered(group.get(StoneGroup.Common.cobble_layered), gravel));
-        addDrop(group.get(StoneGroup.Common.cobble_stairs), drops(gravel));
+        add(group.get(StoneGroup.Common.layered), layered(group.get(StoneGroup.Common.layered), cobble));
+        add(group.get(StoneGroup.Common.stairs), createSingleItemTable(cobble));
+        add(group.get(StoneGroup.Common.cobble_layered), layered(group.get(StoneGroup.Common.cobble_layered), gravel));
+        add(group.get(StoneGroup.Common.cobble_stairs), createSingleItemTable(gravel));
 
         if (group.constructionExist()) {
-            addDrop(group.get(StoneGroup.Construction.bricks), layered(group.get(StoneGroup.Construction.bricks), cobble));
-            addDrop(group.get(StoneGroup.Construction.bricks_stairs), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.pavement), layered(group.get(StoneGroup.Construction.pavement), cobble));
-            addDrop(group.get(StoneGroup.Construction.pavement_stairs), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.cobble_bricks), layered(group.get(StoneGroup.Construction.cobble_bricks), gravel));
-            addDrop(group.get(StoneGroup.Construction.cobble_bricks_stairs), drops(gravel));
-            addDrop(group.get(StoneGroup.Construction.cobble_pavement), layered(group.get(StoneGroup.Construction.cobble_pavement), gravel));
-            addDrop(group.get(StoneGroup.Construction.cobble_pavement_stairs), drops(gravel));
-            addDrop(group.get(StoneGroup.Construction.pillar), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.thin_pillar), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.bricks_pillar), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.bricks_thin_pillar), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.bricks_wall_support), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.bricks_half_arch), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.bricks_arch), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.bricks_arrow_slit), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.bricks_machicolations), drops(cobble));
-            addDrop(group.get(StoneGroup.Construction.battlements), drops(cobble));
+            add(group.get(StoneGroup.Construction.bricks), layered(group.get(StoneGroup.Construction.bricks), cobble));
+            add(group.get(StoneGroup.Construction.bricks_stairs), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.pavement), layered(group.get(StoneGroup.Construction.pavement), cobble));
+            add(group.get(StoneGroup.Construction.pavement_stairs), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.cobble_bricks), layered(group.get(StoneGroup.Construction.cobble_bricks), gravel));
+            add(group.get(StoneGroup.Construction.cobble_bricks_stairs), createSingleItemTable(gravel));
+            add(group.get(StoneGroup.Construction.cobble_pavement), layered(group.get(StoneGroup.Construction.cobble_pavement), gravel));
+            add(group.get(StoneGroup.Construction.cobble_pavement_stairs), createSingleItemTable(gravel));
+            add(group.get(StoneGroup.Construction.pillar), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.thin_pillar), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.bricks_pillar), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.bricks_thin_pillar), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.bricks_wall_support), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.bricks_half_arch), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.bricks_arch), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.bricks_basic_arrow_slit), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.bricks_machicolations), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Construction.battlements), createSingleItemTable(cobble));
         }
 
         if (group.luxuryExist()) {
-            addDrop(group.get(StoneGroup.Luxury.smooth), layered(group.get(StoneGroup.Luxury.smooth), cobble));
-            addDrop(group.get(StoneGroup.Luxury.smooth_stairs), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.polished), layered(group.get(StoneGroup.Luxury.polished), cobble));
-            addDrop(group.get(StoneGroup.Luxury.polished_stairs), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.balustrade), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.smooth_balustrade), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.brazier), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.smooth_brazier), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.dungeonItemPedestal), drops(gravel));
-            addDrop(group.get(StoneGroup.Luxury.smooth_half_arch), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.smooth_arch), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.smooth_arrow_slit), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.polished_half_arch), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.polished_arch), drops(cobble));
-            addDrop(group.get(StoneGroup.Luxury.polished_arrow_slit), drops(cobble));
+            add(group.get(StoneGroup.Luxury.smooth), layered(group.get(StoneGroup.Luxury.smooth), cobble));
+            add(group.get(StoneGroup.Luxury.smooth_stairs), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.polished), layered(group.get(StoneGroup.Luxury.polished), cobble));
+            add(group.get(StoneGroup.Luxury.polished_stairs), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.balustrade), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.smooth_balustrade), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.brazier), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.smooth_brazier), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.dungeonItemPedestal), createSingleItemTable(gravel));
+            add(group.get(StoneGroup.Luxury.smooth_half_arch), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.smooth_arch), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.smooth_arrow_slit), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.polished_half_arch), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.polished_arch), createSingleItemTable(cobble));
+            add(group.get(StoneGroup.Luxury.polished_arrow_slit), createSingleItemTable(cobble));
         }
 
     }
 
     private void buildWood(WoodGroup group) {
 
-        addDrop(group.get(WoodGroup.Common.leaves), dropsWithShears(group.get(WoodGroup.Common.leaves)));
-        //addDrop(group.get(WoodGroup.Common.branch), drops(group.get(WoodGroup.Common.beam)));
-        addDrop(group.get(WoodGroup.Common.log));
-        addDrop(group.get(WoodGroup.Common.stripped_log));
-        addDrop(group.get(WoodGroup.Common.slab));
-        addDrop(group.get(WoodGroup.Common.stripped_slab));
-        addDrop(group.get(WoodGroup.Common.beam));
-        addDrop(group.get(WoodGroup.Common.stripped_beam));
-        addDrop(group.get(WoodGroup.Common.planks), quarter_layered(group.get(WoodGroup.Common.planks)));
-        addDrop(group.get(WoodGroup.Common.planks_stairs));
-        addDrop(group.get(WoodGroup.Common.portable_workbench));
+        add(group.get(WoodGroup.Common.leaves), createShearsOnlyDrop(group.get(WoodGroup.Common.leaves)));
+        //add(group.get(WoodGroup.Common.branch), dropSelf(group.get(WoodGroup.Common.beam)));
+        dropSelf(group.get(WoodGroup.Common.log));
+        dropSelf(group.get(WoodGroup.Common.stripped_log));
+        dropSelf(group.get(WoodGroup.Common.slab));
+        dropSelf(group.get(WoodGroup.Common.stripped_slab));
+        //dropSelf(group.get(WoodGroup.Common.beam));
+        //dropSelf(group.get(WoodGroup.Common.stripped_beam));
+        add(group.get(WoodGroup.Common.planks), quarter_layered(group.get(WoodGroup.Common.planks)));
+        dropSelf(group.get(WoodGroup.Common.planks_stairs));
+        dropSelf(group.get(WoodGroup.Common.portable_workbench));
 
         if (group.framingExist()){
-            addDrop(group.get(WoodGroup.Framing.parquet), quarter_layered(group.get(WoodGroup.Framing.parquet)));
-            addDrop(group.get(WoodGroup.Framing.parquet_stairs));
-            addDrop(group.get(WoodGroup.Framing.siding), quarter_layered(group.get(WoodGroup.Framing.parquet)));
-            addDrop(group.get(WoodGroup.Framing.siding_stairs));
-            addDrop(group.get(WoodGroup.Framing.support), drops(group.get(WoodGroup.Common.beam)));
-            addDrop(group.get(WoodGroup.Framing.half_arch));
-            addDrop(group.get(WoodGroup.Framing.arch));
-            addDrop(group.get(WoodGroup.Framing.roof));
-            addDrop(group.get(WoodGroup.Framing.sod_roof));
-            addDrop(group.get(WoodGroup.Framing.arrow_slit));
-            addDrop(group.get(WoodGroup.Framing.ladder));
-            addDrop(group.get(WoodGroup.Framing.window_cover));
-            //addDrop(group.get(WoodGroup.Framing.door));
-            addDrop(group.get(WoodGroup.Framing.crate_lid));
-            addDrop(group.get(WoodGroup.Framing.crate));
+            add(group.get(WoodGroup.Framing.parquet), quarter_layered(group.get(WoodGroup.Framing.parquet)));
+            dropSelf(group.get(WoodGroup.Framing.parquet_stairs));
+            add(group.get(WoodGroup.Framing.siding), quarter_layered(group.get(WoodGroup.Framing.parquet)));
+            dropSelf(group.get(WoodGroup.Framing.siding_stairs));
+            //add(group.get(WoodGroup.Framing.beam_support), createSingleItemTable(group.get(WoodGroup.Common.beam)));
+            dropSelf(group.get(WoodGroup.Framing.basic_half_arch));
+            dropSelf(group.get(WoodGroup.Framing.basic_arch));
+            dropSelf(group.get(WoodGroup.Framing.roof));
+            dropSelf(group.get(WoodGroup.Framing.sod_roof));
+            dropSelf(group.get(WoodGroup.Framing.basic_arrow_slit));
+            dropSelf(group.get(WoodGroup.Framing.basic_ladder));
+            dropSelf(group.get(WoodGroup.Framing.basic_window_cover));
+            dropSelf(group.get(WoodGroup.Framing.basic_door));
         }
 
         if (group.furnitureExist()){
-            addDrop(group.get(WoodGroup.Furniture.night_stand));
-            addDrop(group.get(WoodGroup.Furniture.drawer));
-            addDrop(group.get(WoodGroup.Furniture.storage_table));
-            addDrop(group.get(WoodGroup.Furniture.stool));
-            addDrop(group.get(WoodGroup.Furniture.chair));
-            addDrop(group.get(WoodGroup.Furniture.table));
-            addDrop(group.get(WoodGroup.Furniture.counter));
-            addDrop(group.get(WoodGroup.Furniture.counter_shelves));
-            addDrop(group.get(WoodGroup.Furniture.counter_chest));
-            addDrop(group.get(WoodGroup.Furniture.cabinet));
-            addDrop(group.get(WoodGroup.Furniture.cabinet_shelf));
-            addDrop(group.get(WoodGroup.Furniture.shelves));
-            addDrop(group.get(WoodGroup.Furniture.throne));
-            addDrop(group.get(WoodGroup.Furniture.mirror));
-            addDrop(group.get(WoodGroup.Furniture.table_chest));
+            dropSelf(group.get(WoodGroup.Furniture.stool));
+            dropSelf(group.get(WoodGroup.Furniture.basic_chair));
+            dropSelf(group.get(WoodGroup.Furniture.throne));
+            dropSelf(group.get(WoodGroup.Furniture.basic_night_stand));
+            dropSelf(group.get(WoodGroup.Furniture.basic_storage_table));
+            dropSelf(group.get(WoodGroup.Furniture.basic_table));
+            dropSelf(group.get(WoodGroup.Furniture.refined_table));
+            dropSelf(group.get(WoodGroup.Furniture.basic_mirror));
+            dropSelf(group.get(WoodGroup.Furniture.refined_mirror));
+            dropSelf(group.get(WoodGroup.Furniture.basic_table_chest));
         }
 
-        if (group.utensilsExists()){
-            addDrop(group.get(WoodGroup.Utensils.mug));
-            addDrop(group.get(WoodGroup.Utensils.bowl));
+        if (group.interiorExists()){
+            dropSelf(group.get(WoodGroup.Interior.counter));
+            dropSelf(group.get(WoodGroup.Interior.counter_shelves));
+            dropSelf(group.get(WoodGroup.Interior.counter_chest));
+            dropSelf(group.get(WoodGroup.Interior.cabinet));
+            dropSelf(group.get(WoodGroup.Interior.cabinet_shelf));
+            dropSelf(group.get(WoodGroup.Interior.shelves));
+            dropSelf(group.get(WoodGroup.Interior.crate_lid));
+            dropSelf(group.get(WoodGroup.Interior.crate));
+            dropSelf(group.get(WoodGroup.Interior.barrel));
         }
 
     }
 
     private void buildClay(ClayGroup group) {
-
-        addDrop(group.soil, layered(group.soil));
-
+        add(group.soil, layered(group.soil));
     }
 
 
     public LootTable.Builder quarter_layered(Block block){
-        LootPool.Builder lootTable = LootPool.builder()
-                .with(ItemEntry.builder(block).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.QUARTER_LAYERS, 1))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1f))))
-                .with(ItemEntry.builder(block).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.QUARTER_LAYERS, 2))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(2f))))
-                .with(ItemEntry.builder(block).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.QUARTER_LAYERS, 3))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(3f))))
-                .with(ItemEntry.builder(block).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.QUARTER_LAYERS, 4))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(4f))))
+        LootPool.Builder lootTable = LootPool.lootPool()
+                .add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.QUARTER_LAYERS, 1))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(1f))))
+                .add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.QUARTER_LAYERS, 2))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2f))))
+                .add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.QUARTER_LAYERS, 3))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(3f))))
+                .add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.QUARTER_LAYERS, 4))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(4f))))
                 ;
-        return LootTable.builder().pool(this.addSurvivesExplosionCondition(block, lootTable));
+        return LootTable.lootTable().withPool(this.applyExplosionCondition(block, lootTable));
     }
 
     public LootTable.Builder layered(Block block){
         return layered(block, block);
     }
     public LootTable.Builder layered(Block block, Block drops){
-        LootPool.Builder lootTable = LootPool.builder()
-                .with(ItemEntry.builder(drops).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.LAYERS, 1))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1f))))
-                .with(ItemEntry.builder(drops).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.LAYERS, 2))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(2f))))
-                .with(ItemEntry.builder(drops).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.LAYERS, 3))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(3f))))
-                .with(ItemEntry.builder(drops).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.LAYERS, 4))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(4f))))
-                .with(ItemEntry.builder(drops).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.LAYERS, 5))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(5f))))
-                .with(ItemEntry.builder(drops).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.LAYERS, 6))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(6f))))
-                .with(ItemEntry.builder(drops).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.LAYERS, 7))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(7f))))
-                .with(ItemEntry.builder(drops).conditionally(BlockStatePropertyLootCondition.builder(block).properties(StatePredicate.Builder.create().exactMatch(ModProperties.LAYERS, 8))).apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(8f))))
+        LootPool.Builder lootTable = LootPool.lootPool()
+                .add(LootItem.lootTableItem(drops).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.LAYERS, 1))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(1f))))
+                .add(LootItem.lootTableItem(drops).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.LAYERS, 2))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2f))))
+                .add(LootItem.lootTableItem(drops).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.LAYERS, 3))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(3f))))
+                .add(LootItem.lootTableItem(drops).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.LAYERS, 4))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(4f))))
+                .add(LootItem.lootTableItem(drops).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.LAYERS, 5))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(5f))))
+                .add(LootItem.lootTableItem(drops).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.LAYERS, 6))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(6f))))
+                .add(LootItem.lootTableItem(drops).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.LAYERS, 7))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(7f))))
+                .add(LootItem.lootTableItem(drops).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(WRGProperties.LAYERS, 8))).apply(SetItemCountFunction.setCount(ConstantValue.exactly(8f))))
                 ;
-        return LootTable.builder().pool(this.addSurvivesExplosionCondition(block, lootTable));
+        return LootTable.lootTable().withPool(this.applyExplosionCondition(block, lootTable));
     }
 
-    public LootTable.Builder withShovel(final Block withShovel, final ItemConvertible without) {
-        return drops(
+    public LootTable.Builder withShovel(final Block withShovel, final ItemLike without) {
+        return createSelfDropDispatchTable(
                 withShovel,
-                MatchToolLootCondition.builder(ItemPredicate.Builder.create().tag(this.registries.getOrThrow(RegistryKeys.ITEM), ItemTags.SHOVELS)),
-                (LootPoolEntry.Builder)this.applyExplosionDecay(withShovel, ((LeafEntry.Builder)ItemEntry.builder(without))));
+                MatchTool.toolMatches(ItemPredicate.Builder.item().of(this.registries.lookupOrThrow(Registries.ITEM), ItemTags.SHOVELS)),
+                (LootPoolEntryContainer.Builder)this.applyExplosionDecay(withShovel, ((LootPoolSingletonContainer.Builder)LootItem.lootTableItem(without))));
     }
 }

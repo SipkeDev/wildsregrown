@@ -1,28 +1,28 @@
 package com.wildsregrown.entity.blockEntities.renderer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.wildsregrown.entities.block.TableChestEntity;
 import com.wildsregrown.entity.blockEntities.renderstates.TableChestRenderState;
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.command.ModelCommandRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class TableChestRenderer implements BlockEntityRenderer<TableChestEntity, TableChestRenderState> {
 
-    private final BlockEntityRendererFactory.Context ctx;
+    private final BlockEntityRendererProvider.Context ctx;
 
-    public TableChestRenderer(BlockEntityRendererFactory.Context ctx) {
+    public TableChestRenderer(BlockEntityRendererProvider.Context ctx) {
         this.ctx = ctx;
     }
 
@@ -32,22 +32,23 @@ public class TableChestRenderer implements BlockEntityRenderer<TableChestEntity,
     }
 
     @Override
-    public void updateRenderState(TableChestEntity blockEntity, TableChestRenderState renderState, float tickProgress, Vec3d cameraPos, @Nullable ModelCommandRenderer.CrumblingOverlayCommand crumblingOverlay) {
-        World world = blockEntity.getWorld();
-        BlockEntityRenderer.super.updateRenderState(blockEntity, renderState, tickProgress, cameraPos, crumblingOverlay);
-        ctx.itemModelManager().clearAndUpdate(renderState.state[0], blockEntity.getStack(0), ItemDisplayContext.FIXED, world, null, 0);
-        ctx.itemModelManager().clearAndUpdate(renderState.state[1], blockEntity.getStack(1), ItemDisplayContext.FIXED, world, null, 0);
-        ctx.itemModelManager().clearAndUpdate(renderState.state[2], blockEntity.getStack(2), ItemDisplayContext.FIXED, world, null, 0);
-        BlockState state = world.getBlockState(blockEntity.getPos());
+    public void extractRenderState(TableChestEntity blockEntity, TableChestRenderState renderState, float tickProgress, Vec3 cameraPos, ModelFeatureRenderer.@org.jspecify.annotations.Nullable CrumblingOverlay crumblingOverlay) {
+        Level world = blockEntity.getLevel();
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, tickProgress, cameraPos, crumblingOverlay);
+        ctx.itemModelResolver().updateForTopItem(renderState.state[0], blockEntity.getItem(0), ItemDisplayContext.FIXED, world, null, 0);
+        ctx.itemModelResolver().updateForTopItem(renderState.state[1], blockEntity.getItem(1), ItemDisplayContext.FIXED, world, null, 0);
+        ctx.itemModelResolver().updateForTopItem(renderState.state[2], blockEntity.getItem(2), ItemDisplayContext.FIXED, world, null, 0);
+        BlockState state = world.getBlockState(blockEntity.getBlockPos());
         if (!(state.getBlock() instanceof AirBlock)) {
-            renderState.open = state.get(Properties.OPEN);
-            renderState.facing = state.get(Properties.HORIZONTAL_FACING);
-            renderState.light = world.getLightLevel(blockEntity.getPos());
+            renderState.open = state.getValue(BlockStateProperties.OPEN);
+            renderState.facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+            renderState.light = world.getMaxLocalRawBrightness(blockEntity.getBlockPos());
         }
     }
 
+
     @Override
-    public void render(TableChestRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+    public void submit(TableChestRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
         if (state.facing != null) {
             if (state.open) {
                 //Render contents
@@ -58,16 +59,16 @@ public class TableChestRenderer implements BlockEntityRenderer<TableChestEntity,
         }
     }
 
-    private void renderSlot(int slot, TableChestRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
-        matrices.push();
+    private void renderSlot(int slot, TableChestRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
+        matrices.pushPose();
         if (state.facing.getAxis() == Direction.Axis.Z) {
             matrices.translate(0.3f + slot * 0.2f, 0.2f, 0.5f);
         } else {
             matrices.translate(0.5f, 0.2f, 0.3f + slot * 0.2f);
         }
         matrices.scale(0.125f, 0.125f, 0.125f);
-        state.state[slot].render(matrices, queue, state.light * 17, OverlayTexture.DEFAULT_UV, 0);
-        matrices.pop();
+        state.state[slot].submit(matrices, queue, state.light * 17, OverlayTexture.NO_OVERLAY, 0);
+        matrices.popPose();
     }
 
 }

@@ -1,24 +1,22 @@
 package com.wildsregrown.items.weapons;
 
 import com.wildsregrown.items.ToolMaterials;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import java.util.List;
 import java.util.Random;
 
@@ -26,55 +24,55 @@ public class ScorpionSword extends TwoHandedSword {
 
     private static final int COOLDOWN_TICKS = 80;
 
-    public ScorpionSword(Settings settings) {
+    public ScorpionSword(Properties settings) {
         super(ToolMaterials.WOOTZ, 12f, -4f, settings);
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity player, Hand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
 
-        ItemStack stack = player.getStackInHand(hand);
+        ItemStack stack = player.getItemInHand(hand);
 
-        if (player.isSneaking()) {
-            if (player.getItemCooldownManager().isCoolingDown(stack)) {
-                player.sendMessage(Text.literal("Cooling down"), true);
-                return ActionResult.FAIL;
+        if (player.isShiftKeyDown()) {
+            if (player.getCooldowns().isOnCooldown(stack)) {
+                player.displayClientMessage(Component.literal("Cooling down"), true);
+                return InteractionResult.FAIL;
             }
 
-            player.getItemCooldownManager().set(stack, COOLDOWN_TICKS);
+            player.getCooldowns().addCooldown(stack, COOLDOWN_TICKS);
 
-            BlockPos pos = player.getBlockPos();
-            Direction direction = player.getHorizontalFacing();
-            BlockPos.Mutable newPos = pos.mutableCopy().move(direction);
+            BlockPos pos = player.blockPosition();
+            Direction direction = player.getDirection();
+            BlockPos.MutableBlockPos newPos = pos.mutable().move(direction);
 
             for (int i = 0; i < 8; i++) {
-                if (world.isAir(newPos)){
-                    world.setBlockState(newPos, Blocks.FIRE.getDefaultState());
-                }else if (world.isAir(newPos.down())){
-                    world.setBlockState(newPos.down(), Blocks.FIRE.getDefaultState());
-                }else if (world.isAir(newPos.up())){
-                    world.setBlockState(newPos.up(), Blocks.FIRE.getDefaultState());
+                if (world.isEmptyBlock(newPos)){
+                    world.setBlockAndUpdate(newPos, Blocks.FIRE.defaultBlockState());
+                }else if (world.isEmptyBlock(newPos.below())){
+                    world.setBlockAndUpdate(newPos.below(), Blocks.FIRE.defaultBlockState());
+                }else if (world.isEmptyBlock(newPos.above())){
+                    world.setBlockAndUpdate(newPos.above(), Blocks.FIRE.defaultBlockState());
                 }
                 newPos.move(direction);
                 spawnParticles(world, newPos, 5, 2, 1.5);
             }
             spawnParticles(world, newPos, 25, 3, 3);
             playSound(world, newPos);
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 
-        playSound(target.getEntityWorld(), target.getBlockPos());
-        if (attacker instanceof PlayerEntity entity) {
-            if (entity.isSneaking() && !entity.getItemCooldownManager().isCoolingDown(stack)) {
-                spawnParticles(target.getEntityWorld(), target.getBlockPos(), 20, target.getWidth() * 2.5, target.getHeight());
-                target.setOnFireForTicks(7 * 20);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 60, 5));
+        playSound(target.level(), target.blockPosition());
+        if (attacker instanceof Player entity) {
+            if (entity.isShiftKeyDown() && !entity.getCooldowns().isOnCooldown(stack)) {
+                spawnParticles(target.level(), target.blockPosition(), 20, target.getBbWidth() * 2.5, target.getBbHeight());
+                target.igniteForTicks(7 * 20);
+                target.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 60, 5));
             }
         }
 
@@ -92,7 +90,7 @@ public class ScorpionSword extends TwoHandedSword {
      * World interactions
      */
 
-    private void spawnParticles(World world, BlockPos pos, int particleCount, double width, double height) {
+    private void spawnParticles(Level world, BlockPos pos, int particleCount, double width, double height) {
         Random rand = new Random();
 
         for (int i = 0; i < particleCount; i++) {
@@ -104,17 +102,17 @@ public class ScorpionSword extends TwoHandedSword {
             double y = pos.getY() + offsetY;
             double z = pos.getZ() + offsetZ;
 
-            if (world instanceof ServerWorld server) {
-                server.spawnParticles(ParticleTypes.FLAME, x, y, z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+            if (world instanceof ServerLevel server) {
+                server.sendParticles(ParticleTypes.FLAME, x, y, z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
             } else {
-                world.addParticleClient(ParticleTypes.FLAME, x, y, z, 0.0D, 0.0D, 0.0D);
+                world.addParticle(ParticleTypes.FLAME, x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }
 
-    private void playSound(World world, BlockPos pos) {
-        if (world instanceof ServerWorld serverWorld){
-            serverWorld.playSound(null, pos, SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST, SoundCategory.PLAYERS);
+    private void playSound(Level world, BlockPos pos) {
+        if (world instanceof ServerLevel serverWorld){
+            serverWorld.playSound(null, pos, SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.PLAYERS);
         }
     }
 

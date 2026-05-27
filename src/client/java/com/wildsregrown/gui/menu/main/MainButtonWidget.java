@@ -3,55 +3,53 @@ package com.wildsregrown.gui.menu.main;
 import com.sipke.api.features.Colors;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ButtonTextures;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.PressableWidget;
-import net.minecraft.client.input.AbstractInput;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 
 import static com.wildsregrown.WildsRegrown.modid;
 
-public class MainButtonWidget extends PressableWidget {
+public class MainButtonWidget extends AbstractButton {
 
-    private static final ButtonTextures textures = new ButtonTextures(Identifier.of(modid, "widget/wood_button"), Identifier.of(modid, "widget/wood_button_disabled"), Identifier.of(modid, "widget/wood_button_highlighted"));
+    private static final WidgetSprites textures = new WidgetSprites(Identifier.fromNamespaceAndPath(modid, "widget/wood_button"), Identifier.fromNamespaceAndPath(modid, "widget/wood_button_disabled"), Identifier.fromNamespaceAndPath(modid, "widget/wood_button_highlighted"));
     protected final MainButtonWidget.PressAction onPress;
 
-    public static MainButtonWidget.Builder builder(Text message, PressAction onPress) {
+    public static MainButtonWidget.Builder builder(Component message, PressAction onPress) {
         return new MainButtonWidget.Builder(message, onPress);
     }
 
-    protected MainButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress) {
+    protected MainButtonWidget(int x, int y, int width, int height, Component message, PressAction onPress) {
         super(x, y, width, height, message);
         this.onPress = onPress;
     }
 
     @Override
-    public void onPress(AbstractInput input) {
+    public void onPress(InputWithModifiers input) {
         this.onPress.onPress(this);
     }
 
     @Override
-    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, textures.get(this.active, this.isSelected()), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ColorHelper.getWhite(this.alpha));
-        this.drawLabel(context.getHoverListener(this, DrawContext.HoverType.NONE));
+    protected void renderContents(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+        Minecraft minecraftClient = Minecraft.getInstance();
+        context.blitSprite(RenderPipelines.GUI_TEXTURED, textures.get(this.active, this.isHoveredOrFocused()), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
+        this.renderDefaultLabel(context.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
+    protected void updateWidgetNarration(NarrationElementOutput builder) {}
 
     @Environment(EnvType.CLIENT)
     public static class Builder {
-        private final Text message;
+        private final Component message;
         private final PressAction onPress;
         @Nullable
         private Tooltip tooltip;
@@ -60,7 +58,7 @@ public class MainButtonWidget extends PressableWidget {
         private int width = 150;
         private int height = 20;
 
-        public Builder(Text message, PressAction onPress) {
+        public Builder(Component message, PressAction onPress) {
             this.message = message;
             this.onPress = onPress;
         }

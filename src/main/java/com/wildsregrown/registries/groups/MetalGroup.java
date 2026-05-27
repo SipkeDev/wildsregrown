@@ -1,13 +1,13 @@
 package com.wildsregrown.registries.groups;
 
-import com.wildsregrown.blocks.Door;
-import com.wildsregrown.blocks.Layered;
-import com.wildsregrown.blocks.metal.*;
-import com.wildsregrown.blocks.metal.lights.*;
+import com.wildsregrown.blocks.shapes.Door;
+import com.wildsregrown.blocks.forging.*;
+import com.wildsregrown.blocks.forging.lights.*;
 import com.wildsregrown.registries.ModBlocks;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import wildsregrown.api.block.shapes.Layered;
 
 import static com.wildsregrown.registries.ModItemGroups.METALS_GROUP_KEY;
 
@@ -17,7 +17,7 @@ public class MetalGroup {
 
     public MetalGroup(String id, boolean oxidation, boolean deco, boolean lights) {
 
-        AbstractBlock.Settings settings = AbstractBlock.Settings.copy(Blocks.IRON_BLOCK);
+        BlockBehaviour.Properties settings = BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK);
 
         this.oxidation = oxidation;
         this.deco   = deco   ? new Block[Deco.values().length] : null;

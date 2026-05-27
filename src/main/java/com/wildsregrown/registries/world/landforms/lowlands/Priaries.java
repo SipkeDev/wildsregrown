@@ -2,16 +2,24 @@ package com.wildsregrown.registries.world.landforms.lowlands;
 
 import com.sipke.api.categorization.Placement;
 import com.sipke.api.categorization.Climate;
+import com.sipke.api.geology.StratumConfig;
 import com.sipke.api.terrain.Landform;
 import com.sipke.core.Seed;
 import com.sipke.math.MapType;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
+import com.wildsregrown.registries.world.MaterialRegistery;
+
+import static com.wildsregrown.WildsRegrown.modid;
 
 public class Priaries extends Landform {
 
     public Priaries() {
-        super(0.125f, Placement.Elevation.lowland, Climate.coolShrubland, Climate.coniferousForest, Climate.steppe, Climate.mixedForest, Climate.chaparral, Climate.mixedForest);
+        super(modid, "priaries", 0.125f, Placement.Elevation.lowland, Climate.coolShrubland, Climate.coniferousForest, Climate.steppe, Climate.mixedForest, Climate.chaparral, Climate.mixedForest);
+        register(MaterialRegistery.sandstone_grey, 8, 16, 2);
+        register(MaterialRegistery.sandstone_brown, 8, 16, 2);
+        register(MaterialRegistery.limestone_grey, 24, 42, 5);
+        register(MaterialRegistery.limestone_dark_grey, 32, 55, 3);
     }
 
     @Override

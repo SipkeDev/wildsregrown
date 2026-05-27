@@ -7,10 +7,12 @@ import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Shallows extends Landform {
 
     public Shallows() {
-        super(0.08f, Placement.Elevation.coast, Climate.tundra, Climate.coniferousForest, Climate.mixedForest, Climate.deciduousForest, Climate.steppe, Climate.polarDesert);
+        super(modid, "shallows", 0.08f, Placement.Elevation.coast, Climate.tundra, Climate.coniferousForest, Climate.mixedForest, Climate.deciduousForest, Climate.steppe, Climate.polarDesert);
     }
 
     @Override

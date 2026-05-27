@@ -42,23 +42,18 @@ fabricApi {
 		client = true
 	}
 }
-configurations {
-	depen
-	implementation.extendsFrom(depen)
-}
 
 dependencies {
-	depen project(':noiselib')
-	depen project(':worldengine')
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	//mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	//modImplementation("maven.modrinth:sodium:${project.sodium_version}") { transitive = false }
 
+	implementation project(":noiselib")
+	implementation project(":worldengine")
+	modImplementation project(":wrg_api")
 }
 
 processResources {
@@ -88,10 +83,6 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${inputs.properties.archivesName}"}
 	}
-	from {
-		configurations.depen.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 // configure the maven publication

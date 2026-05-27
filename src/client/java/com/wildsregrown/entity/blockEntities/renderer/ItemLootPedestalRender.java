@@ -1,30 +1,30 @@
 package com.wildsregrown.entity.blockEntities.renderer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.sipke.math.MathUtil;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.entities.block.ItemLootPedestalEntity;
 import com.wildsregrown.entity.blockEntities.renderstates.ItemLootPedestalRenderState;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.command.ModelCommandRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemLootPedestalRender implements BlockEntityRenderer<ItemLootPedestalEntity, ItemLootPedestalRenderState> {
 
-    private final BlockEntityRendererFactory.Context ctx;
+    private final BlockEntityRendererProvider.Context ctx;
 
-    public ItemLootPedestalRender(BlockEntityRendererFactory.Context ctx) {
+    public ItemLootPedestalRender(BlockEntityRendererProvider.Context ctx) {
         this.ctx = ctx;
     }
 
@@ -34,19 +34,19 @@ public class ItemLootPedestalRender implements BlockEntityRenderer<ItemLootPedes
     }
 
     @Override
-    public void updateRenderState(ItemLootPedestalEntity blockEntity, ItemLootPedestalRenderState renderState, float tickProgress, Vec3d cameraPos, @Nullable ModelCommandRenderer.CrumblingOverlayCommand crumblingOverlay) {
-        World world = blockEntity.getWorld();
-        BlockEntityRenderer.super.updateRenderState(blockEntity, renderState, tickProgress, cameraPos, crumblingOverlay);
-        ctx.itemModelManager().clearAndUpdate(renderState.renderState, blockEntity.getStack(), ItemDisplayContext.FIXED, world, null, (int)blockEntity.getPos().asLong());
-        BlockState state = world.getBlockState(blockEntity.getPos());
-        if (state != Blocks.AIR.getDefaultState()) {
-            renderState.var = state.get(ModProperties.VARIATIONS_2);
-            renderState.light = world.getLightLevel(blockEntity.getPos());
+    public void extractRenderState(ItemLootPedestalEntity blockEntity, ItemLootPedestalRenderState renderState, float tickProgress, Vec3 cameraPos, ModelFeatureRenderer.@org.jspecify.annotations.Nullable CrumblingOverlay crumblingOverlay) {
+        Level world = blockEntity.getLevel();
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, tickProgress, cameraPos, crumblingOverlay);
+        ctx.itemModelResolver().updateForTopItem(renderState.renderState, blockEntity.getStack(), ItemDisplayContext.FIXED, world, null, (int)blockEntity.getBlockPos().asLong());
+        BlockState state = world.getBlockState(blockEntity.getBlockPos());
+        if (state != Blocks.AIR.defaultBlockState()) {
+            renderState.var = state.getValue(ModProperties.VARIATIONS_2);
+            renderState.light = world.getMaxLocalRawBrightness(blockEntity.getBlockPos());
         }
     }
 
     @Override
-    public void render(ItemLootPedestalRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+    public void submit(ItemLootPedestalRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
         if (state.var == 1){
             renderVar1(state, matrices, queue, cameraState);
         }else {
@@ -54,41 +54,41 @@ public class ItemLootPedestalRender implements BlockEntityRenderer<ItemLootPedes
         }
     }
 
-    private void renderVar1(ItemLootPedestalRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState){
+    private void renderVar1(ItemLootPedestalRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState){
 
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0.5f, 0.75f, 0.5f);
         matrices.scale(0.5f, 0.5f, 0.5f);
-        float currentTime = Util.getMeasuringTimeMs() / 1000f;
+        float currentTime = Util.getMillis() / 1000f;
         float lerpedAmount = MathUtil.clampAngle(currentTime);
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(lerpedAmount));
-        state.renderState.render(matrices, queue, state.light*17, OverlayTexture.DEFAULT_UV, 0);
-        matrices.pop();
+        matrices.mulPose(Axis.YP.rotationDegrees(lerpedAmount));
+        state.renderState.submit(matrices, queue, state.light*17, OverlayTexture.NO_OVERLAY, 0);
+        matrices.popPose();
 
     }
 
-    private void renderVar2(ItemLootPedestalRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState){
+    private void renderVar2(ItemLootPedestalRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState){
 
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0.5f, 0.8f, 0.5f);
         matrices.scale(0.5f, 0.5f, 0.5f);
 
         if (state.facing != null) {
             switch (state.facing) {
-                case NORTH -> matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(67.5f));
-                case SOUTH -> matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(67.5f));
+                case NORTH -> matrices.mulPose(Axis.XN.rotationDegrees(67.5f));
+                case SOUTH -> matrices.mulPose(Axis.XP.rotationDegrees(67.5f));
                 case EAST -> {
-                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90f));
-                    matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(67.5f));
+                    matrices.mulPose(Axis.YP.rotationDegrees(90f));
+                    matrices.mulPose(Axis.XP.rotationDegrees(67.5f));
                 }
                 case WEST -> {
-                    matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90f));
-                    matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(67.5f));
+                    matrices.mulPose(Axis.YP.rotationDegrees(90f));
+                    matrices.mulPose(Axis.XN.rotationDegrees(67.5f));
                 }
             }
         }
-        state.renderState.render(matrices, queue, state.light*17, OverlayTexture.DEFAULT_UV, 0);
-        matrices.pop();
+        state.renderState.submit(matrices, queue, state.light*17, OverlayTexture.NO_OVERLAY, 0);
+        matrices.popPose();
 
     }
 

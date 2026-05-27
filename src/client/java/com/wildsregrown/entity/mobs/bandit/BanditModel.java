@@ -1,7 +1,7 @@
 package com.wildsregrown.entity.mobs.bandit;
 
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
 
 public class BanditModel extends EntityModel<BanditRenderState> {
 

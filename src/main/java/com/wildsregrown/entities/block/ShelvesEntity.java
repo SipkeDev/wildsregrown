@@ -1,22 +1,22 @@
 package com.wildsregrown.entities.block;
 
 import com.wildsregrown.registries.ModEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class ShelvesEntity extends BlockEntity {
 
@@ -33,33 +33,33 @@ public class ShelvesEntity extends BlockEntity {
         return flag == 0 ? stack0 : stack1;
     }
 
-    public void swapStack(int flag, PlayerEntity player){
+    public void swapStack(int flag, Player player){
         if (flag == 0){
-            ItemStack stack = player.getMainHandStack();
-            player.setStackInHand(Hand.MAIN_HAND, stack0);
+            ItemStack stack = player.getMainHandItem();
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack0);
             stack0 = stack;
         }
         if (flag == 1){
-            ItemStack stack = player.getMainHandStack();
-            player.setStackInHand(Hand.MAIN_HAND, stack1);
+            ItemStack stack = player.getMainHandItem();
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack1);
             stack1 = stack;
         }
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         if (stack0 != ItemStack.EMPTY) {
-            view.put("stack0", ItemStack.CODEC, stack0);
+            view.store("stack0", ItemStack.CODEC, stack0);
         }
         if (stack1 != ItemStack.EMPTY) {
-            view.put("stack1", ItemStack.CODEC, stack1);
+            view.store("stack1", ItemStack.CODEC, stack1);
         }
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
         Optional<ItemStack> s0 = view.read("stack0", ItemStack.CODEC);
         s0.ifPresent(stack -> this.stack0 = stack);
         Optional<ItemStack> s1 = view.read("stack1", ItemStack.CODEC);
@@ -68,13 +68,13 @@ public class ShelvesEntity extends BlockEntity {
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     public void clear(){

@@ -8,10 +8,12 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.sipke.Constant;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class MysticPlains extends Landform {
 
     public MysticPlains() {
-        super(0.14f, Placement.Elevation.lowland, Climate.spiritForest, Climate.ancientForest);
+        super(modid, "mystic_plains", 0.14f, Placement.Elevation.lowland, Climate.spiritForest, Climate.ancientForest);
     }
 
     @Override

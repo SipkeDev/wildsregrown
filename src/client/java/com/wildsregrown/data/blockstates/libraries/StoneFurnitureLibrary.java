@@ -1,14 +1,15 @@
 package com.wildsregrown.data.blockstates.libraries;
 
 import com.wildsregrown.blocks.properties.ModProperties;
-import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
-import net.minecraft.block.Block;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.BlockStateVariantMap;
-import net.minecraft.client.render.model.json.WeightedVariant;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import wildsregrown.api.block.properties.WRGProperties;
+import wildsregrown.api.block.properties.connecting.HorizontalConnected;
 
 import static com.wildsregrown.WildsRegrown.modid;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.*;
@@ -18,7 +19,7 @@ public class StoneFurnitureLibrary {
 
     public static final String modelPath = "furniture/";
 
-    public static void stoneDiningTable(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void stoneDiningTable(BlockModelGenerators generator, Block block, String id, String name) {
 
         String loc = modelPath + id;
 
@@ -28,11 +29,11 @@ public class StoneFurnitureLibrary {
         applyTextureToModel(generator, loc + "_right", root + modelPath + "stone_dining_table_right",name);
 
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc + "_single"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc + "_single"));
 
-        BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction, HorizontalConnected> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.HORIZONTAL_CONNECTED);
+        PropertyDispatch.C2<MultiVariant, Direction, HorizontalConnected> map = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, WRGProperties.HORIZONTAL_CONNECTED);
 
-        for (Direction dir : Properties.HORIZONTAL_FACING.getValues()) {
+        for (Direction dir : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
             for (HorizontalConnected shape : HorizontalConnected.values()) {
                 String part = "";
                 switch (shape) {
@@ -41,31 +42,31 @@ public class StoneFurnitureLibrary {
                     case LEFT -> part = "_left";
                     case RIGHT -> part = "_right";
                 }
-                map.register(dir, shape, modelOf(loc + part, false, dir.getHorizontalQuarterTurns()*90, 0));
+                map.select(dir, shape, modelOf(loc + part, false, dir.get2DDataValue()*90, 0));
             }
         }
         CreateVariants(generator, block, map);
     }
 
-    public static void stoneStool(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void stoneStool(BlockModelGenerators generator, Block block, String id, String name) {
 
         String loc = modelPath + id + "_stool";
 
         applyTextureToModel(generator, loc, root + modelPath + "stone_stool", name);
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc));
         CreateSingleton(generator, block, loc);
     }
 
-    public static void stoneTable(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void stoneTable(BlockModelGenerators generator, Block block, String id, String name) {
 
         String loc = modelPath + id + "_table";
 
         applyTextureToModel(generator, loc, root + modelPath + "stone_table", name);
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc));
         CreateSingleton(generator, block, loc);
     }
 
-    public static void stoneBench(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void stoneBench(BlockModelGenerators generator, Block block, String id, String name) {
 
         String loc = modelPath + id;
 
@@ -75,11 +76,11 @@ public class StoneFurnitureLibrary {
         applyTextureToModel(generator, loc + "_right", root + modelPath + "stone_bench_right",name);
 
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root + loc + "_single"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root + loc + "_single"));
 
-        BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction, HorizontalConnected> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.HORIZONTAL_CONNECTED);
+        PropertyDispatch.C2<MultiVariant, Direction, HorizontalConnected> map = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, WRGProperties.HORIZONTAL_CONNECTED);
 
-        for (Direction dir : Properties.HORIZONTAL_FACING.getValues()) {
+        for (Direction dir : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
             for (HorizontalConnected shape : HorizontalConnected.values()) {
                 String part = "";
                 switch (shape) {
@@ -88,7 +89,7 @@ public class StoneFurnitureLibrary {
                     case LEFT -> part = "_left";
                     case RIGHT -> part = "_right";
                 }
-                map.register(dir, shape, modelOf(loc + part, false, dir.getHorizontalQuarterTurns()*90, 0));
+                map.select(dir, shape, modelOf(loc + part, false, dir.get2DDataValue()*90, 0));
             }
         }
         CreateVariants(generator, block, map);

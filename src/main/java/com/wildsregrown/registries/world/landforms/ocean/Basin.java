@@ -8,10 +8,12 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.sipke.Constant;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Basin extends Landform {
 
     public Basin() {
-        super(1f, Placement.Elevation.ocean, Climate.coldOcean, Climate.temperateOcean, Climate.warmOcean);
+        super(modid, "basin", 0f, Placement.Elevation.ocean, Climate.coldOcean, Climate.temperateOcean, Climate.warmOcean);
     }
 
     @Override

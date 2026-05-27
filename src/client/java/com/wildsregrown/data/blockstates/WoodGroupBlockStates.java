@@ -3,24 +3,27 @@ package com.wildsregrown.data.blockstates;
 import com.sipke.api.features.Colors;
 import com.wildsregrown.blocks.properties.*;
 import com.wildsregrown.blocks.properties.old_branch.Verticality;
-import com.wildsregrown.blocks.wood.tree.FruitingLeaves;
-import com.wildsregrown.blocks.wood.tree.HalfLog;
+import com.wildsregrown.blocks.carpentry.tree.FruitingLeaves;
+import com.wildsregrown.blocks.carpentry.tree.HalfLog;
+import com.wildsregrown.blocks.properties.tree.LinSeedPaintable;
 import com.wildsregrown.data.blockstates.libraries.FramingLibrary;
 import com.wildsregrown.data.blockstates.libraries.TudorLibrary;
 import com.wildsregrown.registries.groups.WoodGroup;
-import net.minecraft.block.Block;
-import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.block.enums.StairShape;
-import net.minecraft.client.data.*;
-import net.minecraft.client.render.item.tint.ConstantTintSource;
-import net.minecraft.client.render.item.tint.GrassTintSource;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.client.render.model.json.WeightedVariant;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.AxisRotation;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.color.item.Constant;
+import net.minecraft.client.color.item.GrassColorSource;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.StairsShape;
 
+import static com.mojang.math.Quadrant.*;
 import static com.wildsregrown.WildsRegrown.modid;
 import static com.wildsregrown.data.DataGeneratorProvider.idFromBlock;
 import static com.wildsregrown.data.blockstates.libraries.BlockStateLibrary.*;
@@ -29,36 +32,28 @@ import static com.wildsregrown.data.blockstates.libraries.CastleLibrary.*;
 import static com.wildsregrown.data.blockstates.libraries.FramingLibrary.*;
 import static com.wildsregrown.data.blockstates.libraries.FurnitureLibrary.*;
 import static com.wildsregrown.data.blockstates.libraries.LuxuryLibrary.*;
-import static com.wildsregrown.data.blockstates.libraries.UtensilsLibrary.*;
 import static com.wildsregrown.data.blockstates.libraries.WoodInterior.*;
-import static com.wildsregrown.registries.ModItemGroups.id;
-import static net.minecraft.client.data.BlockStateModelGenerator.*;
+import static net.minecraft.client.data.models.BlockModelGenerators.*;
 
 public class WoodGroupBlockStates {
 
     public final static String log_path = "block/logs/";
     public final static String plank_path = "block/planks/";
 
-    private final BlockStateModelGenerator generator;
+    private final BlockModelGenerators generator;
 
-    public WoodGroupBlockStates(BlockStateModelGenerator generator) {
+    public WoodGroupBlockStates(BlockModelGenerators generator) {
         this.generator = generator;
     }
 
-    public static void source(BlockStateModelGenerator generator, String id, Block block, String family) {
-        final String modelPath = "tree/";
-        applyTextureToModel(generator, modelPath + id, "block/trees/tree_source", log_path + family + "_bark", log_path + family + "_wood_end");
-        generator.blockStateCollector.accept(createSingletonBlockState(block, createWeightedVariant(Identifier.of(modid, modelPath + id))));
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id));
-    }
-
     public void build(WoodGroup group) {
+
         Block block;
         String texture;
-        String name = id(group.get(WoodGroup.Common.log)).replace("_log", "");
+        String name = idFromBlock(group.get(WoodGroup.Common.log)).replace("_log", "");
 
         block = group.get(WoodGroup.Common.leaves);
-        texture = "block/leaves/" + id(block);
+        texture = "block/leaves/" + idFromBlock(block);
 
         if (block instanceof FruitingLeaves) {
             fruitingLeaves(generator, block, texture);
@@ -72,151 +67,190 @@ public class WoodGroupBlockStates {
         slab(generator, group.get(WoodGroup.Common.slab), name, "_bark");
         slab(generator, group.get(WoodGroup.Common.stripped_slab), name, "_wood");
 
-        beam(generator, group.get(WoodGroup.Common.beam), name, "_bark");
-        beam(generator, group.get(WoodGroup.Common.stripped_beam), name, "_wood");
-        beam(generator, group.get(WoodGroup.Common.rough_plank), name, "_wood", "plank");
-        beam(generator, group.get(WoodGroup.Common.stick), name, "_bark", "stick");
-        beam(generator, group.get(WoodGroup.Common.stripped_stick), name, "_wood", "stick");
+        //beam(generator, group.get(WoodGroup.Common.beam), name, "_bark");
+        //beam(generator, group.get(WoodGroup.Common.stripped_beam), name, "_wood");
+        //beam(generator, group.get(WoodGroup.Common.rough_plank), name, "_wood", "plank");
+        //beam(generator, group.get(WoodGroup.Common.stick), name, "_bark", "stick");
+        //beam(generator, group.get(WoodGroup.Common.stripped_stick), name, "_wood", "stick");
 
         planks(generator, group.get(WoodGroup.Common.planks), name, "planks");
         stairs(generator, name, group.get(WoodGroup.Common.planks_stairs), "planks");
 
         block = group.get(WoodGroup.Common.portable_workbench);
-        portableWorkbench(generator, block, id(block), name);
+        portableWorkbench(generator, block, idFromBlock(block), name);
 
         if (group.framingExist()) {
-
-            planks(generator, group.get(WoodGroup.Framing.parquet), name, "parquet");
-            stairs(generator, name, group.get(WoodGroup.Framing.parquet_stairs), "parquet");
-
-            planks(generator, group.get(WoodGroup.Framing.siding), name, "siding");
-            stairs(generator, name, group.get(WoodGroup.Framing.siding_stairs), "siding");
-
-            openStairs(generator, name, group.get(WoodGroup.Framing.open_stairs));
-
-            block = group.get(WoodGroup.Framing.support);
-            woodenSupport(generator, id(block), block, name);
-
-            block = group.get(WoodGroup.Framing.arch);
-            woodenArch(generator, block, id(block), name, "planks");
-
-            block = group.get(WoodGroup.Framing.half_arch);
-            woodenHalfArch(generator, name, block, "planks");
-
-            block = group.get(WoodGroup.Framing.roof);
-            FramingLibrary.roof(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Framing.sod_roof);
-            sodRoof(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Framing.arrow_slit);
-            woodenArrowSlit(generator, block, id(block), name, "planks");
-
-            block = group.get(WoodGroup.Framing.ladder);
-            ladder(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Framing.window_cover);
-            windowCover(generator, block, id(block), name, "planks");
-
-            block = group.get(WoodGroup.Framing.crate);
-            crate(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Framing.crate_lid);
-            crateLid(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Framing.barrel);
-            barrel(generator, block, name);
-            block = group.get(WoodGroup.Framing.door);
-            door(generator, block, name, false);
-            block = group.get(WoodGroup.Framing.door_window);
-            door(generator, block, name, true);
-            block = group.get(WoodGroup.Framing.enforced_door);
-            enforcedDoor(generator, block, name, false);
-            block = group.get(WoodGroup.Framing.enforced_door_window);
-            enforcedDoor(generator, block, name, true);
-            block = group.get(WoodGroup.Framing.trapdoor);
-            trapDoor(generator, block, name);
-
-            //Tudors
-            block = group.get(WoodGroup.Framing.tudor_square);
-            TudorLibrary.square(generator, block, name);
-            block = group.get(WoodGroup.Framing.tudor_horizontal);
-            TudorLibrary.horizontal(generator, block, name);
-            block = group.get(WoodGroup.Framing.tudor_vertical);
-            TudorLibrary.vertical(generator, block, name);
-
+            framing(group, name);
         }
 
         if (group.furnitureExist()) {
-            block = group.get(WoodGroup.Furniture.night_stand);
-            counterChest(generator, block, id(block), name, "night_stand_closed", "night_stand_open");
-
-            block = group.get(WoodGroup.Furniture.drawer);
-            drawer(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.storage_table);
-            storageTable(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.stool);
-            stool(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.chair);
-            chair(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.bench);
-            woodenBench(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.bench_with_backrest);
-            woodenBenchWithBackrest(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.dining_table);
-            woodenDiningTable(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.table);
-            table(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.counter);
-            counter(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.counter_shelves);
-            counterShelves(generator, block, id(block), name, "counter_shelves");
-
-            block = group.get(WoodGroup.Furniture.counter_chest);
-            counterChest(generator, block, id(block), name, "counter_chest_closed", "counter_chest_open");
-
-            block = group.get(WoodGroup.Furniture.cabinet);
-            counterChest(generator, block, id(block), name, "cabinets_closed", "cabinets_open");
-
-            block = group.get(WoodGroup.Furniture.cabinet_shelf);
-            counterShelves(generator, block, id(block), name, "cabinets_shelves");
-
-            block = group.get(WoodGroup.Furniture.shelves);
-            shelves(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.throne);
-            throne(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.mirror);
-            mirror(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Furniture.table_chest);
-            tableChest(generator, block, id(block), name);
+            furniture(group, name);
         }
 
-        if (group.utensilsExists()) {
-            block = group.get(WoodGroup.Utensils.mug);
-            mug(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Utensils.bowl);
-            bowl(generator, block, id(block), name);
-
-            block = group.get(WoodGroup.Utensils.cutting_board);
-            cuttingBoard(generator, block, id(block), name);
+        if (group.interiorExists()) {
+            interior(group, name);
         }
 
     }
 
-    public static void stairs(BlockStateModelGenerator generator, String name, Block block, String type) {
+    private void framing(WoodGroup group, String name) {
+        Block block;
+
+        planks(generator, group.get(WoodGroup.Framing.parquet), name, "parquet");
+        stairs(generator, name, group.get(WoodGroup.Framing.parquet_stairs), "parquet");
+
+        planks(generator, group.get(WoodGroup.Framing.siding), name, "siding");
+        stairs(generator, name, group.get(WoodGroup.Framing.siding_stairs), "siding");
+
+        openStairs(generator, name, group.get(WoodGroup.Framing.open_stairs));
+
+        ///Beam stack
+        block = group.get(WoodGroup.Framing.beam_support);
+        beam(generator, block, name, "_wood");
+        block = group.get(WoodGroup.Framing.beam_post);
+        supportPost(generator, idFromBlock(block), block, name);
+        block = group.get(WoodGroup.Framing.beam_ceiling);
+        supportCeiling(generator, idFromBlock(block), block, name);
+        block = group.get(WoodGroup.Framing.beam_diagonal);
+        supportDiagonal(generator, idFromBlock(block), block, name);
+        //Item
+        generator.registerSimpleItemModel(group.get(WoodGroup.FramingItem.beam_framing), Identifier.fromNamespaceAndPath(modid, root + "log/" + name + "_beam_wood"));
+
+        block = group.get(WoodGroup.Framing.basic_arch);
+        woodenArch(generator, block, idFromBlock(block), name, "planks");
+
+        block = group.get(WoodGroup.Framing.basic_half_arch);
+        woodenHalfArch(generator, name, block, "planks");
+
+        block = group.get(WoodGroup.Framing.roof);
+        FramingLibrary.roof(generator, block, idFromBlock(block), name);
+
+        block = group.get(WoodGroup.Framing.sod_roof);
+        sodRoof(generator, block, idFromBlock(block), name);
+
+        block = group.get(WoodGroup.Framing.basic_arrow_slit);
+        woodenArrowSlit(generator, block, idFromBlock(block), name, 0);
+
+        block = group.get(WoodGroup.Framing.refined_arrow_slit);
+        woodenArrowSlit(generator, block, idFromBlock(block), name, 1);
+
+        block = group.get(WoodGroup.Framing.cross_arrow_slit);
+        woodenArrowSlit(generator, block, idFromBlock(block), name, 2);
+
+        block = group.get(WoodGroup.Framing.basic_ladder);
+        ladder(generator, block, idFromBlock(block), name);
+
+        block = group.get(WoodGroup.Framing.basic_window_cover);
+        windowCover(generator, block, idFromBlock(block), name, "planks");
+
+        block = group.get(WoodGroup.Framing.basic_door);
+        door(generator, block, name, false);
+        block = group.get(WoodGroup.Framing.basic_door_window);
+        door(generator, block, name, true);
+        block = group.get(WoodGroup.Framing.refined_door);
+        enforcedDoor(generator, block, name, false);
+        block = group.get(WoodGroup.Framing.refined_door_window);
+        enforcedDoor(generator, block, name, true);
+
+        block = group.get(WoodGroup.Framing.basic_trapdoor);
+        trapDoor(generator, block, name);
+
+        //Tudors
+        block = group.get(WoodGroup.Framing.tudor_square);
+        TudorLibrary.square(generator, block, name);
+        generator.registerSimpleItemModel(group.get(WoodGroup.FramingItem.tudor), Identifier.fromNamespaceAndPath(modid, root + "framing/tudor/" + idFromBlock(block) + "_cross"));
+        block = group.get(WoodGroup.Framing.tudor_horizontal);
+        TudorLibrary.horizontal(generator, block, name);
+        block = group.get(WoodGroup.Framing.tudor_vertical);
+        TudorLibrary.vertical(generator, block, name);
+    }
+
+    private void furniture(WoodGroup group, String name) {
+        Block block;
+
+        block = group.get(WoodGroup.Furniture.basic_night_stand);
+        counterChest(generator, block, idFromBlock(block), name, true, "night_stand_closed", "night_stand_open");
+
+        block = group.get(WoodGroup.Furniture.basic_storage_table);
+        storageTable(generator, block, idFromBlock(block), name);
+
+        block = group.get(WoodGroup.Furniture.stool);
+        stool(generator, block, idFromBlock(block), name, 0);
+
+        block = group.get(WoodGroup.Furniture.refined_stool);
+        stool(generator, block, idFromBlock(block), name, 1);
+
+        block = group.get(WoodGroup.Furniture.basic_chair);
+        chair(generator, block, idFromBlock(block), name, 0);
+
+        block = group.get(WoodGroup.Furniture.refined_chair);
+        chair(generator, block, idFromBlock(block), name, 1);
+
+        block = group.get(WoodGroup.Furniture.throne);
+        chair(generator, block, idFromBlock(block), name, 2);
+
+        block = group.get(WoodGroup.Furniture.basic_bench);
+        woodenBench(generator, block, idFromBlock(block), name, 0);
+
+        block = group.get(WoodGroup.Furniture.refined_bench);
+        woodenBench(generator, block, idFromBlock(block), name, 1);
+
+        block = group.get(WoodGroup.Furniture.basic_bench_with_backrest);
+        woodenBenchBackrest(generator, block, idFromBlock(block), name, 0);
+
+        block = group.get(WoodGroup.Furniture.refined_bench_with_backrest);
+        woodenBenchBackrest(generator, block, idFromBlock(block), name, 1);
+
+        block = group.get(WoodGroup.Furniture.luxury_bench_with_backrest);
+        woodenBenchBackrest(generator, block, idFromBlock(block), name, 2);
+
+        block = group.get(WoodGroup.Furniture.basic_table);
+        woodenTable(generator, block, idFromBlock(block), name, 0);
+
+        block = group.get(WoodGroup.Furniture.refined_table);
+        woodenTable(generator, block, idFromBlock(block), name, 1);
+
+        block = group.get(WoodGroup.Furniture.basic_mirror);
+        mirror(generator, block, idFromBlock(block), name, 0);
+
+        block = group.get(WoodGroup.Furniture.refined_mirror);
+        mirror(generator, block, idFromBlock(block), name, 1);
+
+        block = group.get(WoodGroup.Furniture.basic_table_chest);
+        tableChest(generator, block, idFromBlock(block), name);
+
+    }
+
+    private void interior(WoodGroup group, String name) {
+        Block block;
+        block = group.get(WoodGroup.Interior.counter);
+        counter(generator, block, idFromBlock(block), name);
+        generator.registerSimpleItemModel(group.get(WoodGroup.InteriorItem.counter), Identifier.fromNamespaceAndPath(modid, root+"interior/"+idFromBlock(block)));
+        block = group.get(WoodGroup.Interior.counter_shelves);
+        counterShelves(generator, block, idFromBlock(block), name, "counter_shelves");
+        block = group.get(WoodGroup.Interior.counter_chest);
+        counterChest(generator, block, idFromBlock(block), name,false,"counter_chest_closed", "counter_chest_open");
+
+        block = group.get(WoodGroup.Interior.cabinet);
+        counterChest(generator, block, idFromBlock(block), name,false,"cabinets_closed", "cabinets_open");
+        generator.registerSimpleItemModel(group.get(WoodGroup.InteriorItem.cabinet), Identifier.fromNamespaceAndPath(modid, root+"interior/"+idFromBlock(block)+"_closed"));
+        block = group.get(WoodGroup.Interior.cabinet_shelf);
+        counterShelves(generator, block, idFromBlock(block), name, "cabinets_shelves");
+
+        block = group.get(WoodGroup.Interior.shelves);
+        shelves(generator, block, idFromBlock(block), name);
+
+        block = group.get(WoodGroup.Interior.crate);
+        crate(generator, block, idFromBlock(block), name);
+
+        block = group.get(WoodGroup.Interior.crate_lid);
+        crateLid(generator, block, idFromBlock(block), name);
+
+        block = group.get(WoodGroup.Interior.barrel);
+        barrel(generator, block, name);
+    }
+
+    public static void stairs(BlockModelGenerators generator, String name, Block block, String type) {
 
         String loc0 = "planks/" + name + "_" + type;
         String loc1 = "planks/" + name + "_paintable_" + type;
@@ -239,33 +273,33 @@ public class WoodGroupBlockStates {
             applyTextureToModel(generator, "outer_stairs_" + loc1, "block/framing/paintable_stairs_outer", plank_path + name + "_paintable_" + type);
             applyTextureToModel(generator, "straight_stairs_" + loc1, "block/framing/paintable_stairs", plank_path + name + "_paintable_" + type);
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+"straight_stairs_" + loc0));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+"straight_stairs_" + loc0));
 
-        BlockStateVariantMap.QuadrupleProperty<WeightedVariant, LinSeedPaintable, Direction, BlockHalf, StairShape> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.BLOCK_HALF, Properties.STAIR_SHAPE);
+        PropertyDispatch.C4<MultiVariant, LinSeedPaintable, Direction, Half, StairsShape> map = PropertyDispatch.initial(ModProperties.LINSEED_PAINT, BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.HALF, BlockStateProperties.STAIRS_SHAPE);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc = loc1;
             if (paint == LinSeedPaintable.NONE){
                 finalLoc = loc0;
             }
-            for(Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
-                int dir = 90 + (direction.getHorizontalQuarterTurns()*90);
-                map.register(paint, direction, BlockHalf.TOP, StairShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir, 180));
-                map.register(paint, direction, BlockHalf.TOP, StairShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir+90, 180));
-                map.register(paint, direction, BlockHalf.TOP, StairShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir, 180));
-                map.register(paint, direction, BlockHalf.TOP, StairShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir+90, 180));
-                map.register(paint, direction, BlockHalf.TOP, StairShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 180));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir-90, 0));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir, 0));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir-90, 0));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir, 0));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 0));
+            for(Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
+                int dir = 90 + (direction.get2DDataValue()*90);
+                map.select(paint, direction, Half.TOP, StairsShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir, 180));
+                map.select(paint, direction, Half.TOP, StairsShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir+90, 180));
+                map.select(paint, direction, Half.TOP, StairsShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir, 180));
+                map.select(paint, direction, Half.TOP, StairsShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir+90, 180));
+                map.select(paint, direction, Half.TOP, StairsShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 180));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir-90, 0));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir, 0));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir-90, 0));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir, 0));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 0));
             }
         }
         CreateVariants(generator, block, map);
     }
 
-    private static void windowCover(BlockStateModelGenerator generator, Block block, String id, String name, String type) {
+    private static void windowCover(BlockModelGenerators generator, Block block, String id, String name, String type) {
 
         String modelPath = "framing/";
         String loc0 = modelPath + id + "_" + type;
@@ -295,17 +329,17 @@ public class WoodGroupBlockStates {
             applyTextureToModel(generator, loc1 + "_4","block/framing/window_cover_3", plank_path + name + "_paintable_" + type, log_path + name + "_paintable_wood");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_1"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0 + "_1"));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, LinSeedPaintable, Direction, Integer> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, ModProperties.VARIATIONS_4);
+        PropertyDispatch.C3<MultiVariant, LinSeedPaintable, Direction, Integer> map = PropertyDispatch.initial(ModProperties.LINSEED_PAINT, BlockStateProperties.HORIZONTAL_FACING, ModProperties.VARIATIONS_4);
 
-        for(LinSeedPaintable paintable : ModProperties.LINSEED_PAINT.getValues()){
+        for(LinSeedPaintable paintable : ModProperties.LINSEED_PAINT.getPossibleValues()){
             String finalLoc = paintable == LinSeedPaintable.NONE ? loc0 : loc1;
 
-            for (int i : ModProperties.VARIATIONS_4.getValues()) {
-                for (Direction direction : Properties.HORIZONTAL_FACING.getValues()){
-                    int dir = direction.getHorizontalQuarterTurns()*90;
-                    map.register(paintable, direction, i, modelOf(finalLoc + "_" + i, false, dir, 0));
+            for (int i : ModProperties.VARIATIONS_4.getPossibleValues()) {
+                for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()){
+                    int dir = direction.get2DDataValue()*90;
+                    map.select(paintable, direction, i, modelOf(finalLoc + "_" + i, false, dir, 0));
                 }
             }
 
@@ -319,7 +353,7 @@ public class WoodGroupBlockStates {
     /**
      * Common wood states
      */
-    public static void leaves(BlockStateModelGenerator generator, Block block, String id) {
+    public static void leaves(BlockModelGenerators generator, Block block, String id) {
         int vars = 4;
         String suffix = "";
         if (id.contains("larch") || id.contains("spruce")){
@@ -328,24 +362,24 @@ public class WoodGroupBlockStates {
         for (int i = 0; i < vars; i++) {
             applyTextureToModel(generator, id + "_" + i, root+"leaves" + suffix + "_" + i, id);
         }
-        ModelVariant[] map = new ModelVariant[vars * 4];
+        Variant[] map = new Variant[vars * 4];
         for (int i = 0; i < vars; i++) {
             int k = i * 4;
-            map[k] = createModelVariant(Identifier.of(modid,    root+id + "_" + i));
-            map[k + 1] = createModelVariant(Identifier.of(modid,root+id + "_" + i)).withRotationY(AxisRotation.R90);
-            map[k + 2] = createModelVariant(Identifier.of(modid,root+id + "_" + i)).withRotationY(AxisRotation.R180);
-            map[k + 3] = createModelVariant(Identifier.of(modid,root+id + "_" + i)).withRotationY(AxisRotation.R270);
+            map[k] = plainModel(Identifier.fromNamespaceAndPath(modid,    root+id + "_" + i));
+            map[k + 1] = plainModel(Identifier.fromNamespaceAndPath(modid,root+id + "_" + i)).withYRot(R90);
+            map[k + 2] = plainModel(Identifier.fromNamespaceAndPath(modid,root+id + "_" + i)).withYRot(R180);
+            map[k + 3] = plainModel(Identifier.fromNamespaceAndPath(modid,root+id + "_" + i)).withYRot(R270);
         }
-        generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block, createWeightedVariant(map)));
+        generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, variants(map)));
 
         if (id.contains("jacaranda")) {
-            generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_0"), new ConstantTintSource(Colors.richLilac));
+            generator.registerSimpleTintedItemModel(block, Identifier.fromNamespaceAndPath(modid, root+id + "_0"), new Constant(Colors.richLilac));
         } else {
-            generator.registerTintedItemModel(block, Identifier.of(modid, root+id + "_0"), new ConstantTintSource(Colors.pastelGreen));
+            generator.registerSimpleTintedItemModel(block, Identifier.fromNamespaceAndPath(modid, root+id + "_0"), new Constant(Colors.pastelGreen));
         }
     }
 
-    public static void fruitingLeaves(BlockStateModelGenerator generator, Block block, String id) {
+    public static void fruitingLeaves(BlockModelGenerators generator, Block block, String id) {
         final String modelPath = "block/leaves";
 
         applyTextureToModel(generator, modelPath+id + "_0", modelPath, id);
@@ -353,53 +387,53 @@ public class WoodGroupBlockStates {
         applyTextureToModel(generator, modelPath+id + "_2", modelPath, id);
         applyTextureToModel(generator, modelPath+id + "_3", modelPath, id);
 
-        generator.registerTintedItemModel(block, Identifier.of(modid, modelPath+id + "_1"), new GrassTintSource());
+        generator.registerSimpleTintedItemModel(block, Identifier.fromNamespaceAndPath(modid, modelPath+id + "_1"), new GrassColorSource());
 
-        CreateVariants(generator, block, BlockStateVariantMap.models(ModProperties.FRUITING)
-                .register(0, modelOf(modelPath+id + "_0", false, 0, 0))
-                .register(1, modelOf(modelPath+id + "_1", false, 0, 0))
-                .register(2, modelOf(modelPath+id + "_2", false, 0, 0))
-                .register(3, modelOf(modelPath+id + "_3", false, 0, 0))
+        CreateVariants(generator, block, PropertyDispatch.initial(ModProperties.FRUITING)
+                .select(0, modelOf(modelPath+id + "_0", false, 0, 0))
+                .select(1, modelOf(modelPath+id + "_1", false, 0, 0))
+                .select(2, modelOf(modelPath+id + "_2", false, 0, 0))
+                .select(3, modelOf(modelPath+id + "_3", false, 0, 0))
         );
     }
 
-    public static void branch(BlockStateModelGenerator generator, String id, Block block, String name) {
+    public static void branch(BlockModelGenerators generator, String id, Block block, String name) {
 
         applyTextureToModel(generator, id + "_diagonal","block/branch_diagonal", log_path + name +"_bark");
         applyTextureToModel(generator, id + "_face","block/branch_face", log_path + name +"_bark");
         applyTextureToModel(generator, id + "_corner","block/branch_corner", log_path + name +"_bark");
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+id + "_diagonal"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+id + "_diagonal"));
 
-        CreateVariants(generator, block, BlockStateVariantMap.models(ModProperties.DIRECTIONS, Verticality.VERTICALITY)
-                .register(OrdinalDirection.N , Verticality.LEVEL, modelOf(id + "_face"    , false, 0  , 0))
-                .register(OrdinalDirection.E , Verticality.LEVEL, modelOf(id + "_face"    , false, 90 , 0))
-                .register(OrdinalDirection.S , Verticality.LEVEL, modelOf(id + "_face"    , false, 180, 0))
-                .register(OrdinalDirection.W , Verticality.LEVEL, modelOf(id + "_face"    , false, 270, 0))
-                .register(OrdinalDirection.N , Verticality.UP   , modelOf(id + "_diagonal", false, 270, 0))
-                .register(OrdinalDirection.E , Verticality.UP   , modelOf(id + "_diagonal", false, 0  , 0))
-                .register(OrdinalDirection.S , Verticality.UP   , modelOf(id + "_diagonal", false, 90 , 0))
-                .register(OrdinalDirection.W , Verticality.UP   , modelOf(id + "_diagonal", false, 180, 0))
-                .register(OrdinalDirection.N , Verticality.DOWN , modelOf(id + "_diagonal", false, 270, 180))
-                .register(OrdinalDirection.W , Verticality.DOWN , modelOf(id + "_diagonal", false, 180, 180))
-                .register(OrdinalDirection.S , Verticality.DOWN , modelOf(id + "_diagonal", false, 90 , 180))
-                .register(OrdinalDirection.E , Verticality.DOWN , modelOf(id + "_diagonal", false, 0  , 180))
-                .register(OrdinalDirection.NW, Verticality.LEVEL, modelOf(id + "_diagonal", false, 180, 270))
-                .register(OrdinalDirection.NE, Verticality.LEVEL, modelOf(id + "_diagonal", false, 0  , 90))
-                .register(OrdinalDirection.SE, Verticality.LEVEL, modelOf(id + "_diagonal", false, 0  , 270))
-                .register(OrdinalDirection.SW, Verticality.LEVEL, modelOf(id + "_diagonal", false, 180, 90))
-                .register(OrdinalDirection.NE, Verticality.UP   , modelOf(id + "_corner"  , false, 0  , 0))
-                .register(OrdinalDirection.NW, Verticality.UP   , modelOf(id + "_corner"  , false, 270, 0))
-                .register(OrdinalDirection.SE, Verticality.UP   , modelOf(id + "_corner"  , false, 90 , 0))
-                .register(OrdinalDirection.SW, Verticality.UP   , modelOf(id + "_corner"  , false, 180, 0))
-                .register(OrdinalDirection.NE, Verticality.DOWN , modelOf(id + "_corner"  , false, 270, 180))
-                .register(OrdinalDirection.NW, Verticality.DOWN , modelOf(id + "_corner"  , false, 180, 180))
-                .register(OrdinalDirection.SE, Verticality.DOWN , modelOf(id + "_corner"  , false, 0  , 180))
-                .register(OrdinalDirection.SW, Verticality.DOWN , modelOf(id + "_corner"  , false, 90 , 180))
+        CreateVariants(generator, block, PropertyDispatch.initial(ModProperties.DIRECTIONS, Verticality.VERTICALITY)
+                .select(OrdinalDirection.N , Verticality.LEVEL, modelOf(id + "_face"    , false, 0  , 0))
+                .select(OrdinalDirection.E , Verticality.LEVEL, modelOf(id + "_face"    , false, 90 , 0))
+                .select(OrdinalDirection.S , Verticality.LEVEL, modelOf(id + "_face"    , false, 180, 0))
+                .select(OrdinalDirection.W , Verticality.LEVEL, modelOf(id + "_face"    , false, 270, 0))
+                .select(OrdinalDirection.N , Verticality.UP   , modelOf(id + "_diagonal", false, 270, 0))
+                .select(OrdinalDirection.E , Verticality.UP   , modelOf(id + "_diagonal", false, 0  , 0))
+                .select(OrdinalDirection.S , Verticality.UP   , modelOf(id + "_diagonal", false, 90 , 0))
+                .select(OrdinalDirection.W , Verticality.UP   , modelOf(id + "_diagonal", false, 180, 0))
+                .select(OrdinalDirection.N , Verticality.DOWN , modelOf(id + "_diagonal", false, 270, 180))
+                .select(OrdinalDirection.W , Verticality.DOWN , modelOf(id + "_diagonal", false, 180, 180))
+                .select(OrdinalDirection.S , Verticality.DOWN , modelOf(id + "_diagonal", false, 90 , 180))
+                .select(OrdinalDirection.E , Verticality.DOWN , modelOf(id + "_diagonal", false, 0  , 180))
+                .select(OrdinalDirection.NW, Verticality.LEVEL, modelOf(id + "_diagonal", false, 180, 270))
+                .select(OrdinalDirection.NE, Verticality.LEVEL, modelOf(id + "_diagonal", false, 0  , 90))
+                .select(OrdinalDirection.SE, Verticality.LEVEL, modelOf(id + "_diagonal", false, 0  , 270))
+                .select(OrdinalDirection.SW, Verticality.LEVEL, modelOf(id + "_diagonal", false, 180, 90))
+                .select(OrdinalDirection.NE, Verticality.UP   , modelOf(id + "_corner"  , false, 0  , 0))
+                .select(OrdinalDirection.NW, Verticality.UP   , modelOf(id + "_corner"  , false, 270, 0))
+                .select(OrdinalDirection.SE, Verticality.UP   , modelOf(id + "_corner"  , false, 90 , 0))
+                .select(OrdinalDirection.SW, Verticality.UP   , modelOf(id + "_corner"  , false, 180, 0))
+                .select(OrdinalDirection.NE, Verticality.DOWN , modelOf(id + "_corner"  , false, 270, 180))
+                .select(OrdinalDirection.NW, Verticality.DOWN , modelOf(id + "_corner"  , false, 180, 180))
+                .select(OrdinalDirection.SE, Verticality.DOWN , modelOf(id + "_corner"  , false, 0  , 180))
+                .select(OrdinalDirection.SW, Verticality.DOWN , modelOf(id + "_corner"  , false, 90 , 180))
         );
     }
 
-    public static void log(BlockStateModelGenerator generator, Block block, String name, String type) {
+    public static void log(BlockModelGenerators generator, Block block, String name, String type) {
 
         String loc0 = "log/" + name + type;
         String loc1 = "log/" + name + "_paintable" + type;
@@ -425,26 +459,26 @@ public class WoodGroupBlockStates {
                 applyTextureToModel(generator, loc1, "block/stripped_log", log_path + name + "_paintable" + type, log_path + name + "_paintable_wood_end");
             }
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0));
 
-        BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction.Axis, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.AXIS, ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C2<MultiVariant, Direction.Axis, LinSeedPaintable> map = PropertyDispatch.initial(BlockStateProperties.AXIS, ModProperties.LINSEED_PAINT);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc;
-            if (paint.asString().equals("none")){
+            if (paint.getSerializedName().equals("none")){
                 finalLoc = loc0;
             }else {
                 finalLoc = loc1;
             }
             map
-                .register(Direction.Axis.Y, paint, modelOf(finalLoc, false, 0, 0))
-                .register(Direction.Axis.Z, paint, modelOf(finalLoc, false, 0, 90))
-                .register(Direction.Axis.X, paint, modelOf(finalLoc, false, 90, 90));
+                .select(Direction.Axis.Y, paint, modelOf(finalLoc, false, 0, 0))
+                .select(Direction.Axis.Z, paint, modelOf(finalLoc, false, 0, 90))
+                .select(Direction.Axis.X, paint, modelOf(finalLoc, false, 90, 90));
         }
         CreateVariants(generator, block, map);
     }
 
-    public static void slab(BlockStateModelGenerator generator, Block block, String name, String type) {
+    public static void slab(BlockModelGenerators generator, Block block, String name, String type) {
 
         final String loc0 = "log/" + name + "_half" + type;
         final String loc1 = "log/" + name + "_paintable" + "_half" + type;
@@ -488,9 +522,9 @@ public class WoodGroupBlockStates {
                 applyTextureToModel(generator, loc1 +r, "block/stripped_half_log"+r, log_path + name + "_paintable" + type, log_path + name + "_paintable_wood_end");
             }
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, Boolean, Direction, LinSeedPaintable> map = BlockStateVariantMap.models(HalfLog.rotated, Properties.FACING, ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C3<MultiVariant, Boolean, Direction, LinSeedPaintable> map = PropertyDispatch.initial(HalfLog.rotated, BlockStateProperties.FACING, ModProperties.LINSEED_PAINT);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc;
@@ -500,24 +534,24 @@ public class WoodGroupBlockStates {
                 finalLoc = loc1;
             }
             map
-            .register(false, Direction.UP   , paint, modelOf(finalLoc, false, 0, 0))
-            .register(false, Direction.DOWN , paint, modelOf(finalLoc, false, 0, 180))
-            .register(false, Direction.NORTH, paint, modelOf(finalLoc, false, 0, 90))
-            .register(false, Direction.SOUTH, paint, modelOf(finalLoc, false, 180, 90))
-            .register(false, Direction.EAST , paint, modelOf(finalLoc, false, 90, 90))
-            .register(false, Direction.WEST , paint, modelOf(finalLoc, false, 270, 90))
-            .register(true , Direction.UP   , paint, modelOf(finalLoc, false, 90, 0))
-            .register(true , Direction.DOWN , paint, modelOf(finalLoc, false, 90, 180))
-            .register(true , Direction.NORTH, paint, modelOf(finalLoc+r, false, 0, 90))
-            .register(true , Direction.SOUTH, paint, modelOf(finalLoc+r, false, 180, 90))
-            .register(true , Direction.EAST , paint, modelOf(finalLoc+r, false, 90, 90))
-            .register(true , Direction.WEST , paint, modelOf(finalLoc+r, false, 270, 90));
+            .select(false, Direction.UP   , paint, modelOf(finalLoc, false, 0, 0))
+            .select(false, Direction.DOWN , paint, modelOf(finalLoc, false, 0, 180))
+            .select(false, Direction.NORTH, paint, modelOf(finalLoc, false, 0, 90))
+            .select(false, Direction.SOUTH, paint, modelOf(finalLoc, false, 180, 90))
+            .select(false, Direction.EAST , paint, modelOf(finalLoc, false, 90, 90))
+            .select(false, Direction.WEST , paint, modelOf(finalLoc, false, 270, 90))
+            .select(true , Direction.UP   , paint, modelOf(finalLoc, false, 90, 0))
+            .select(true , Direction.DOWN , paint, modelOf(finalLoc, false, 90, 180))
+            .select(true , Direction.NORTH, paint, modelOf(finalLoc+r, false, 0, 90))
+            .select(true , Direction.SOUTH, paint, modelOf(finalLoc+r, false, 180, 90))
+            .select(true , Direction.EAST , paint, modelOf(finalLoc+r, false, 90, 90))
+            .select(true , Direction.WEST , paint, modelOf(finalLoc+r, false, 270, 90));
 
         }
         CreateVariants(generator, block, map);
     }
 
-    public static void beam(BlockStateModelGenerator generator, Block block, String name, String type) {
+    public static void beam(BlockModelGenerators generator, Block block, String name, String type) {
         String loc0 = "log/" + name + "_beam" + type;
         String loc2 = "log/" + name + "_beam" + "_paintable" + type;
         boolean pines = name.contains("larch") || name.contains("spruce") || name.contains("sequoia");
@@ -542,9 +576,9 @@ public class WoodGroupBlockStates {
                 applyTextureToModel(generator, loc2, "block/stripped_beam", log_path + name + "_paintable" + type, log_path + name + "_paintable_wood_end");
             }
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
+        //generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction.Axis, LinSeedPaintable, Quadrant> map = BlockStateVariantMap.models(Properties.AXIS, ModProperties.LINSEED_PAINT, ModProperties.QUADRANT);
+        PropertyDispatch.C3<MultiVariant, Direction.Axis, LinSeedPaintable, Quadrant> map = PropertyDispatch.initial(BlockStateProperties.AXIS, ModProperties.LINSEED_PAINT, ModProperties.QUADRANT);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc;
@@ -554,23 +588,24 @@ public class WoodGroupBlockStates {
                 finalLoc = loc2;
             }
             map
-                    .register(Direction.Axis.X, paint, Quadrant.PP , modelOf(finalLoc, true, 90  , 180))
-                    .register(Direction.Axis.X, paint, Quadrant.NP , modelOf(finalLoc, true, 270 , 180))
-                    .register(Direction.Axis.X, paint, Quadrant.NN , modelOf(finalLoc, true, 270 , 0))
-                    .register(Direction.Axis.X, paint, Quadrant.PN , modelOf(finalLoc, true, 90  , 0))
-                    .register(Direction.Axis.Z, paint, Quadrant.PP , modelOf(finalLoc, true, 0  , 180))
-                    .register(Direction.Axis.Z, paint, Quadrant.NP , modelOf(finalLoc, true, 180 , 180))
-                    .register(Direction.Axis.Z, paint, Quadrant.NN , modelOf(finalLoc, true, 180 , 0))
-                    .register(Direction.Axis.Z, paint, Quadrant.PN , modelOf(finalLoc, true, 0  , 0))
-                    .register(Direction.Axis.Y, paint, Quadrant.PP , modelOf(finalLoc, true, 0  , 90))
-                    .register(Direction.Axis.Y, paint, Quadrant.NP , modelOf(finalLoc, true, 270  , 90))
-                    .register(Direction.Axis.Y, paint, Quadrant.NN , modelOf(finalLoc, true, 180  , 90))
-                    .register(Direction.Axis.Y, paint, Quadrant.PN , modelOf(finalLoc, true, 90  , 90));
+                    .select(Direction.Axis.X, paint, Quadrant.I , modelOf(finalLoc, true, 90  , 180))
+                    .select(Direction.Axis.X, paint, Quadrant.II , modelOf(finalLoc, true, 270 , 180))
+                    .select(Direction.Axis.X, paint, Quadrant.III , modelOf(finalLoc, true, 270 , 0))
+                    .select(Direction.Axis.X, paint, Quadrant.IV , modelOf(finalLoc, true, 90  , 0))
+                    .select(Direction.Axis.Z, paint, Quadrant.I , modelOf(finalLoc, true, 0  , 180))
+                    .select(Direction.Axis.Z, paint, Quadrant.II , modelOf(finalLoc, true, 180 , 180))
+                    .select(Direction.Axis.Z, paint, Quadrant.III , modelOf(finalLoc, true, 180 , 0))
+                    .select(Direction.Axis.Z, paint, Quadrant.IV , modelOf(finalLoc, true, 0  , 0))
+                    .select(Direction.Axis.Y, paint, Quadrant.I , modelOf(finalLoc, true, 0  , 90))
+                    .select(Direction.Axis.Y, paint, Quadrant.II , modelOf(finalLoc, true, 270  , 90))
+                    .select(Direction.Axis.Y, paint, Quadrant.III , modelOf(finalLoc, true, 180  , 90))
+                    .select(Direction.Axis.Y, paint, Quadrant.IV , modelOf(finalLoc, true, 90  , 90));
         }
         CreateVariants(generator, block, map);
     }
 
-    public static void beam(BlockStateModelGenerator generator, Block block, String name, String type, String parent) {
+    public static void beam(BlockModelGenerators generator, Block block, String name, String type, String parent) {
+
         String id = idFromBlock(block);
         String loc0 = "log/" + id;
         String loc2 = "log/" + id + "_paintable";
@@ -585,9 +620,9 @@ public class WoodGroupBlockStates {
         }else{
             applyTextureToModel(generator, loc2, "block/trees" + parent, log_path + name + type, log_path + name + "_paintable_wood_end");
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction.Axis, LinSeedPaintable, Quadrant> map = BlockStateVariantMap.models(Properties.AXIS, ModProperties.LINSEED_PAINT, ModProperties.QUADRANT);
+        PropertyDispatch.C3<MultiVariant, Direction.Axis, LinSeedPaintable, Quadrant> map = PropertyDispatch.initial(BlockStateProperties.AXIS, ModProperties.LINSEED_PAINT, ModProperties.QUADRANT);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc;
@@ -597,18 +632,18 @@ public class WoodGroupBlockStates {
                 finalLoc = loc2;
             }
             map
-                    .register(Direction.Axis.X, paint, Quadrant.PP , modelOf(finalLoc, true, 90  , 180))
-                    .register(Direction.Axis.X, paint, Quadrant.NP , modelOf(finalLoc, true, 270 , 180))
-                    .register(Direction.Axis.X, paint, Quadrant.NN , modelOf(finalLoc, true, 270 , 0))
-                    .register(Direction.Axis.X, paint, Quadrant.PN , modelOf(finalLoc, true, 90  , 0))
-                    .register(Direction.Axis.Z, paint, Quadrant.PP , modelOf(finalLoc, true, 0  , 180))
-                    .register(Direction.Axis.Z, paint, Quadrant.NP , modelOf(finalLoc, true, 180 , 180))
-                    .register(Direction.Axis.Z, paint, Quadrant.NN , modelOf(finalLoc, true, 180 , 0))
-                    .register(Direction.Axis.Z, paint, Quadrant.PN , modelOf(finalLoc, true, 0  , 0))
-                    .register(Direction.Axis.Y, paint, Quadrant.PP , modelOf(finalLoc, true, 0  , 90))
-                    .register(Direction.Axis.Y, paint, Quadrant.NP , modelOf(finalLoc, true, 270  , 90))
-                    .register(Direction.Axis.Y, paint, Quadrant.NN , modelOf(finalLoc, true, 180  , 90))
-                    .register(Direction.Axis.Y, paint, Quadrant.PN , modelOf(finalLoc, true, 90  , 90));
+                    .select(Direction.Axis.X, paint, Quadrant.I , modelOf(finalLoc, true, 90  , 180))
+                    .select(Direction.Axis.X, paint, Quadrant.II , modelOf(finalLoc, true, 270 , 180))
+                    .select(Direction.Axis.X, paint, Quadrant.III , modelOf(finalLoc, true, 270 , 0))
+                    .select(Direction.Axis.X, paint, Quadrant.IV , modelOf(finalLoc, true, 90  , 0))
+                    .select(Direction.Axis.Z, paint, Quadrant.I , modelOf(finalLoc, true, 0  , 180))
+                    .select(Direction.Axis.Z, paint, Quadrant.II , modelOf(finalLoc, true, 180 , 180))
+                    .select(Direction.Axis.Z, paint, Quadrant.III , modelOf(finalLoc, true, 180 , 0))
+                    .select(Direction.Axis.Z, paint, Quadrant.IV , modelOf(finalLoc, true, 0  , 0))
+                    .select(Direction.Axis.Y, paint, Quadrant.I , modelOf(finalLoc, true, 0  , 90))
+                    .select(Direction.Axis.Y, paint, Quadrant.II , modelOf(finalLoc, true, 270  , 90))
+                    .select(Direction.Axis.Y, paint, Quadrant.III , modelOf(finalLoc, true, 180  , 90))
+                    .select(Direction.Axis.Y, paint, Quadrant.IV , modelOf(finalLoc, true, 90  , 90));
         }
         CreateVariants(generator, block, map);
     }

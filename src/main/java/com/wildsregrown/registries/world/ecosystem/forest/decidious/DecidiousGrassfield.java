@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class DecidiousGrassfield extends Ecosystem {
 
     public DecidiousGrassfield(){
-        super(Climate.deciduousForest, Biomes.grassfield);
+        super(modid, "decidious_grassfield", Climate.deciduousForest, Biomes.grassfield);
         register(Placement.Biome.normal, Biomes.sparse_oakForest);
         register(Placement.Biome.normal, Biomes.sparse_beechForest);
         register(Placement.Biome.normal, Biomes.sparse_larchForest);

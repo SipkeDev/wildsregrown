@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class KuunderForest extends Ecosystem {
 
     public KuunderForest(){
-        super(Climate.mixedForest, Biomes.mixedForest);
+        super(modid, "kuunder_forest", Climate.mixedForest, Biomes.mixedForest);
         register(Placement.Biome.normal, Biomes.larchForest);
         register(Placement.Biome.normal, Biomes.abandonedFarmland);
         register(Placement.Biome.dry, Biomes.spruceForest);

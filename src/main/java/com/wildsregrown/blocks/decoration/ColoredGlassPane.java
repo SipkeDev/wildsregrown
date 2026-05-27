@@ -1,14 +1,14 @@
 package com.wildsregrown.blocks.decoration;
 
-import com.wildsregrown.blocks.render.IRenderType;
-import com.wildsregrown.blocks.render.ITintedBlock;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
+import wildsregrown.api.block.render.IRenderType;
+import wildsregrown.api.block.render.ITintedBlock;
 
 public class ColoredGlassPane extends GlassPane implements ITintedBlock, IRenderType {
 
     private final int rgb;
 
-    public ColoredGlassPane(Settings settings, int rgb) {
+    public ColoredGlassPane(Properties settings, int rgb) {
         super(settings);
         this.rgb = rgb;
     }

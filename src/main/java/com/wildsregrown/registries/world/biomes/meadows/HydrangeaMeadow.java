@@ -1,16 +1,18 @@
 package com.wildsregrown.registries.world.biomes.meadows;
 
 import com.sipke.Constant;
-import com.sipke.NoiseGenerator;
-import com.sipke.api.features.flora.FloraSpawnRule;
+import com.sipke.api.features.botanic.flora.FloraSpawnRule;
 import com.sipke.api.terrain.Biome;
 import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.wildsregrown.registries.world.Floras;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class HydrangeaMeadow extends Biome {
 
     public HydrangeaMeadow() {
+        super(modid, "hydrangea_meadow");
         register(Floras.grass, FloraSpawnRule.full_coverage, 0f, 1,false);
         register(Floras.hydrangea_white_mist, FloraSpawnRule.dotted, 0f, 1,true);
         register(Floras.hydrangea_white, FloraSpawnRule.occasional, 0f, 1,true);

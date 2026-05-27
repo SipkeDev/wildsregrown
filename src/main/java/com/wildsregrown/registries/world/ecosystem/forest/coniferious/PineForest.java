@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class PineForest extends Ecosystem {
 
     public PineForest() {
-        super(Climate.coniferousForest, Biomes.pineForest);
+        super(modid, "pine_forest", Climate.coniferousForest, Biomes.pineForest);
         register(Placement.Biome.normal, Biomes.spruceForest);
         register(Placement.Biome.normal, Biomes.larchForest);
         register(Placement.Biome.normal, Biomes.larchForest_flowers);

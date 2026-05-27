@@ -1,7 +1,7 @@
 package com.wildsregrown.util;
 
 import com.sipke.math.MathUtil;
-import com.wildsregrown.blocks.render.TintUtil;
+import wildsregrown.api.block.render.TintUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,6 @@
 package com.wildsregrown.blocks.fluids;
 
-import net.minecraft.fluid.FluidState;
+import net.minecraft.world.level.material.FluidState;
 
 public interface SetAbleFluidState {
 

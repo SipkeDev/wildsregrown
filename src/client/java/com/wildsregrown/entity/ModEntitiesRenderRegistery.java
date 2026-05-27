@@ -4,7 +4,7 @@ import com.wildsregrown.entity.blockEntities.renderer.*;
 import com.wildsregrown.entity.mobs.bandit.BanditRenderer;
 import com.wildsregrown.registries.ModEntities;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public class ModEntitiesRenderRegistery {
 
@@ -13,15 +13,14 @@ public class ModEntitiesRenderRegistery {
         EntityRendererRegistry.register(ModEntities.bandit, ctx -> new BanditRenderer(ctx, null));
 
         //Blocks
-        BlockEntityRendererFactories.register(ModEntities.structureBlock,               StructureBlockRenderer::new);
-        BlockEntityRendererFactories.register(ModEntities.crateEntity,                  CrateRenderer::new);
-        BlockEntityRendererFactories.register(ModEntities.tableChestEntity,             TableChestRenderer::new);
-        BlockEntityRendererFactories.register(ModEntities.counterShelvesEntity,         CounterShelvesRender::new);
-        BlockEntityRendererFactories.register(ModEntities.drawerEntity,                 DrawerRender::new);
-        BlockEntityRendererFactories.register(ModEntities.shelvesEntity,                ShelvesRender::new);
-        BlockEntityRendererFactories.register(ModEntities.genericSingleStorageEntity,   SingleStorageRender::new);
-        BlockEntityRendererFactories.register(ModEntities.itemLootPedestal,             ItemLootPedestalRender::new);
-        BlockEntityRendererFactories.register(ModEntities.portableWorkbenchEntity,      PortableWorkbenchRender::new);
+        //BlockEntityRenderers.register(ModEntities.structureBlock,               StructureBlockRenderer::new);
+        BlockEntityRenderers.register(ModEntities.crateEntity,                  CrateRenderer::new);
+        BlockEntityRenderers.register(ModEntities.tableChestEntity,             TableChestRenderer::new);
+        BlockEntityRenderers.register(ModEntities.counterShelvesEntity,         CounterShelvesRender::new);
+        BlockEntityRenderers.register(ModEntities.shelvesEntity,                ShelvesRender::new);
+        BlockEntityRenderers.register(ModEntities.genericSingleStorageEntity,   SingleStorageRender::new);
+        BlockEntityRenderers.register(ModEntities.itemLootPedestal,             ItemLootPedestalRender::new);
+        BlockEntityRenderers.register(ModEntities.portableWorkbenchEntity,      PortableWorkbenchRender::new);
 
     }
 

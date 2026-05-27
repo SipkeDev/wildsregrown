@@ -1,6 +1,6 @@
 package com.wildsregrown.registries.world.biomes.forest;
 
-import com.sipke.api.features.flora.FloraSpawnRule;
+import com.sipke.api.features.botanic.flora.FloraSpawnRule;
 import com.sipke.api.terrain.Biome;
 import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
@@ -9,9 +9,12 @@ import com.wildsregrown.registries.world.Floras;
 import com.wildsregrown.registries.world.Structures;
 import com.wildsregrown.registries.world.Trees;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class MixedForest extends Biome {
 
     public MixedForest() {
+        super(modid, "mixed_forest");
         setTreeDensity(1.2f);
         register(Floras.grass, FloraSpawnRule.full_coverage, 0.25f, 1,false);
         register(Floras.curly_grass, FloraSpawnRule.occasional, 0.25f, 1,false);
@@ -24,7 +27,6 @@ public class MixedForest extends Biome {
         register(Trees.beech, 0.25f, 0.5f);
         register(Floras.chives_purple, FloraSpawnRule.rare, 0.5f, 1,false);
         register(Structures.spruceCabin);
-        register(Structures.larchHut);
     }
 
     @Override

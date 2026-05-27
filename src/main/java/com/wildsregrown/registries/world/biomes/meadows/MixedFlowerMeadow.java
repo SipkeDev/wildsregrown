@@ -1,16 +1,19 @@
 package com.wildsregrown.registries.world.biomes.meadows;
 
 import com.sipke.NoiseGenerator;
-import com.sipke.api.features.flora.FloraSpawnRule;
+import com.sipke.api.features.botanic.flora.FloraSpawnRule;
 import com.sipke.api.terrain.Biome;
 import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.wildsregrown.registries.world.Floras;
 import com.wildsregrown.registries.world.Trees;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class MixedFlowerMeadow extends Biome {
 
     public MixedFlowerMeadow() {
+        super(modid, "mixed_flower_meadow");
         setTreeDensity(1.57f);
         register(Trees.silver_birch, 0f, 1f);
         register(Floras.grass, FloraSpawnRule.full_coverage, 0, 1,false);

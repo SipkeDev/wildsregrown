@@ -1,10 +1,10 @@
 package com.wildsregrown.blocks.properties;
 
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.util.StringRepresentable;
 
-public enum OrdinalDirection implements StringIdentifiable  {
+public enum OrdinalDirection implements StringRepresentable  {
     N   ("n" , 0,0,-1),
     NE  ("ne", 1,0,-1),
     E   ("e" , 1,0, 0),
@@ -101,7 +101,7 @@ public enum OrdinalDirection implements StringIdentifiable  {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return name;
     }
 }

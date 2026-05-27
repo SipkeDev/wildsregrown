@@ -8,11 +8,13 @@ import com.sipke.Constant;
 import com.wildsregrown.registries.world.MaterialRegistery;
 import com.wildsregrown.registries.world.Structures;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Ice extends Biome {
 
     public Ice() {
+        super(modid, "ice");
         setSurface(MaterialRegistery.snow, 3f);
-        register(Structures.whiteTempleRuins);
     }
 
     @Override

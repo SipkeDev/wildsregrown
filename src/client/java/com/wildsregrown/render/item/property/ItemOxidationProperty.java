@@ -4,29 +4,28 @@ import com.mojang.serialization.MapCodec;
 import com.wildsregrown.registries.ModComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.item.property.numeric.NumericProperty;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.HeldItemContext;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
+import net.minecraft.world.entity.ItemOwner;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public record ItemOxidationProperty() implements NumericProperty {
+public record ItemOxidationProperty() implements RangeSelectItemModelProperty {
 
     public static final MapCodec<ItemOxidationProperty> CODEC = MapCodec.unit(new ItemOxidationProperty());
 
     public ItemOxidationProperty() {}
 
     @Override
-    public float getValue(ItemStack stack, @org.jspecify.annotations.Nullable ClientWorld world, @org.jspecify.annotations.Nullable HeldItemContext context, int seed) {
-        if (stack.getComponents().contains(ModComponents.ITEM_OXIDATION)) {
+    public float get(ItemStack stack, @org.jspecify.annotations.Nullable ClientLevel world, @org.jspecify.annotations.Nullable ItemOwner context, int seed) {
+        if (stack.getComponents().has(ModComponents.ITEM_OXIDATION)) {
             return stack.getComponents().get(ModComponents.ITEM_OXIDATION);
         }
         return 0f;
     }
 
-    public MapCodec<ItemOxidationProperty> getCodec() {
+    public MapCodec<ItemOxidationProperty> type() {
         return CODEC;
     }
 }

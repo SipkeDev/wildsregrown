@@ -1,19 +1,27 @@
 package com.wildsregrown.data.blockstates.libraries;
 
-import com.wildsregrown.blocks.properties.framing.DoorState;
-import com.wildsregrown.blocks.properties.LinSeedPaintable;
+import com.wildsregrown.blocks.properties.tree.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
-import com.wildsregrown.blocks.properties.connecting.SupportConnected;
-import com.wildsregrown.blocks.properties.connecting.HorizontalConnected;
-import net.minecraft.block.Block;
-import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.block.enums.StairShape;
-import net.minecraft.client.data.*;
-import net.minecraft.client.render.model.json.WeightedVariant;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
+import com.wildsregrown.blocks.properties.framing.beam.SupportConnected;
+import com.wildsregrown.blocks.properties.framing.beam.SupportCeiling;
+import com.wildsregrown.blocks.properties.framing.beam.SupportDiagonal;
+import com.wildsregrown.blocks.properties.framing.beam.SupportPost;
+import com.wildsregrown.blocks.carpentry.framing.beam.DiagonalSupport;
+import com.wildsregrown.blocks.carpentry.framing.beam.PostSupport;
+import com.wildsregrown.blocks.carpentry.framing.beam.CeilingSupport;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.StairsShape;
 import org.apache.commons.lang3.tuple.Triple;
+import wildsregrown.api.block.properties.WRGProperties;
+import wildsregrown.api.block.properties.connecting.HorizontalConnected;
+import wildsregrown.api.block.properties.shapes.DoorState;
 
 import java.util.stream.Stream;
 
@@ -27,7 +35,7 @@ public class FramingLibrary {
 
     private final static String modelPath = "framing/";
 
-    public static void planks(BlockStateModelGenerator generator, Block block, String id, String type) {
+    public static void planks(BlockModelGenerators generator, Block block, String id, String type) {
 
         String texture0 = plank_path + id + "_" + type;
         String texture2 = plank_path + id + "_paintable_" + type;
@@ -51,9 +59,9 @@ public class FramingLibrary {
         applyTextureToModel(generator, modelPath + id + type + "_paintable_3", "block/framing/layered_2_paintable", texture2);
         applyTextureToModel(generator, modelPath + id + type + "_paintable_4", "block/framing/layered_3_paintable", texture2);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id + type + "_2"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+modelPath + id + type + "_2"));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction, Integer, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.FACING, ModProperties.QUARTER_LAYERS, ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C3<MultiVariant, Direction, Integer, LinSeedPaintable> map = PropertyDispatch.initial(BlockStateProperties.FACING, WRGProperties.QUARTER_LAYERS, ModProperties.LINSEED_PAINT);
 
         Triple<Direction, Integer, Integer>[] directions = new Triple[]{
                 Triple.of(Direction.UP   , 0  , 0),
@@ -67,17 +75,17 @@ public class FramingLibrary {
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalType;
-            if (paint.asString().equals("none")){
+            if (paint.getSerializedName().equals("none")){
                 finalType = type;
             }else {
                 finalType = type + "_paintable";
             }
             Stream.of(directions).forEach(ctx -> {
                         map
-                                .register(ctx.getLeft(), 1, paint, modelOf(modelPath + id + finalType + "_1", true, ctx.getMiddle(), ctx.getRight()))
-                                .register(ctx.getLeft(), 2, paint, modelOf(modelPath + id + finalType + "_2", true, ctx.getMiddle(), ctx.getRight()))
-                                .register(ctx.getLeft(), 3, paint, modelOf(modelPath + id + finalType + "_3", true, ctx.getMiddle(), ctx.getRight()))
-                                .register(ctx.getLeft(), 4, paint, modelOf(modelPath + id + finalType + "_4", true, ctx.getMiddle(), ctx.getRight()));
+                                .select(ctx.getLeft(), 1, paint, modelOf(modelPath + id + finalType + "_1", true, ctx.getMiddle(), ctx.getRight()))
+                                .select(ctx.getLeft(), 2, paint, modelOf(modelPath + id + finalType + "_2", true, ctx.getMiddle(), ctx.getRight()))
+                                .select(ctx.getLeft(), 3, paint, modelOf(modelPath + id + finalType + "_3", true, ctx.getMiddle(), ctx.getRight()))
+                                .select(ctx.getLeft(), 4, paint, modelOf(modelPath + id + finalType + "_4", true, ctx.getMiddle(), ctx.getRight()));
                     }
             );
         }
@@ -85,7 +93,7 @@ public class FramingLibrary {
         CreateVariants(generator, block, map);
     }
 
-    public static void ladder(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void ladder(BlockModelGenerators generator, Block block, String id, String name) {
 
         String texture = "wood";
         String texture0 = log_path + name + "_" + texture;
@@ -102,9 +110,9 @@ public class FramingLibrary {
         applyTextureToModel(generator, modelPath + id, root+"framing/ladder", texture0);
         applyTextureToModel(generator, modelPath + id + "_paintable", root+"framing/ladder", texture1);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+modelPath + id));
 
-        BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C2<MultiVariant, Direction, LinSeedPaintable> map = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, ModProperties.LINSEED_PAINT);
 
         Triple<Direction, Integer, Integer>[] directions = new Triple[]{
                 Triple.of(Direction.SOUTH, 0, 0),
@@ -115,14 +123,14 @@ public class FramingLibrary {
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalType;
-            if (paint.asString().equals("none")) {
+            if (paint.getSerializedName().equals("none")) {
                 finalType = modelPath + id;
             } else {
                 finalType = modelPath + id + "_paintable";
             }
             Stream.of(directions).forEach(ctx -> {
                         map
-                                .register(ctx.getLeft(), paint, modelOf(finalType, true, ctx.getMiddle(), ctx.getRight()));
+                                .select(ctx.getLeft(), paint, modelOf(finalType, true, ctx.getMiddle(), ctx.getRight()));
             }
             );
         }
@@ -130,7 +138,7 @@ public class FramingLibrary {
         CreateVariants(generator, block, map);
     }
 
-    public static void sodRoof(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void sodRoof(BlockModelGenerators generator, Block block, String id, String name) {
 
         String loc0 = modelPath+"roof/" + name + "_planks";
         String loc1 = modelPath+"roof/" + name + "_paintable_planks";
@@ -170,41 +178,41 @@ public class FramingLibrary {
             applyTextureToModel(generator, loc1 + "_top_single", root+modelPath+"roof_moss_top_single", plank_path + name + "_paintable_" + "_planks");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+ loc0 + "_single"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+ loc0 + "_single"));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, LinSeedPaintable, HorizontalConnected, Direction> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, ModProperties.HORIZONTAL_CONNECTED, Properties.FACING);
+        PropertyDispatch.C3<MultiVariant, LinSeedPaintable, HorizontalConnected, Direction> map = PropertyDispatch.initial(ModProperties.LINSEED_PAINT, WRGProperties.HORIZONTAL_CONNECTED, BlockStateProperties.FACING);
 
-        for (LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getValues()){
+        for (LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getPossibleValues()){
             String loc = paint == LinSeedPaintable.NONE ? loc0 : loc1;
-                 map.register(paint, HorizontalConnected.LEFT  , Direction.NORTH, modelOf(loc + "_left", false, 180, 0))
-                    .register(paint, HorizontalConnected.RIGHT , Direction.NORTH, modelOf(loc + "_right", false, 180, 0))
-                    .register(paint, HorizontalConnected.MIDDLE, Direction.NORTH, modelOf(loc + "_straight", false, 180  , 0))
-                    .register(paint, HorizontalConnected.SINGLE, Direction.NORTH, modelOf(loc + "_single", false, 180  , 0))
-                    .register(paint, HorizontalConnected.LEFT,   Direction.SOUTH, modelOf(loc + "_left", false, 0  , 0))
-                    .register(paint, HorizontalConnected.RIGHT , Direction.SOUTH, modelOf(loc + "_right", false, 0  , 0))
-                    .register(paint, HorizontalConnected.MIDDLE, Direction.SOUTH, modelOf(loc + "_straight", false, 0  , 0))
-                    .register(paint, HorizontalConnected.SINGLE, Direction.SOUTH, modelOf(loc + "_single", false, 0  , 0))
-                    .register(paint, HorizontalConnected.LEFT  , Direction.EAST , modelOf(loc + "_left", false, 270, 0))
-                    .register(paint, HorizontalConnected.RIGHT , Direction.EAST , modelOf(loc + "_right", false, 270, 0))
-                    .register(paint, HorizontalConnected.MIDDLE, Direction.EAST , modelOf(loc + "_straight", false, 270, 0))
-                    .register(paint, HorizontalConnected.SINGLE, Direction.EAST , modelOf(loc + "_single", false, 270, 0))
-                    .register(paint, HorizontalConnected.LEFT  , Direction.WEST , modelOf(loc + "_left", false, 90 , 0))
-                    .register(paint, HorizontalConnected.RIGHT , Direction.WEST , modelOf(loc + "_right", false, 90 , 0))
-                    .register(paint, HorizontalConnected.MIDDLE, Direction.WEST , modelOf(loc + "_straight", false, 90 , 0))
-                    .register(paint, HorizontalConnected.SINGLE, Direction.WEST , modelOf(loc + "_single", false, 90 , 0))
-                    .register(paint, HorizontalConnected.LEFT  , Direction.DOWN , modelOf(loc + "_top_side", false, 0  , 0))
-                    .register(paint, HorizontalConnected.RIGHT , Direction.DOWN , modelOf(loc + "_top_side", false, 180, 0))
-                    .register(paint, HorizontalConnected.MIDDLE, Direction.DOWN , modelOf(loc + "_top", false, 0  , 0))
-                    .register(paint, HorizontalConnected.SINGLE, Direction.DOWN , modelOf(loc + "_top_single", false, 0  , 0))
-                    .register(paint, HorizontalConnected.LEFT  , Direction.UP   , modelOf(loc + "_top_side", false, 270, 0))
-                    .register(paint, HorizontalConnected.RIGHT , Direction.UP   , modelOf(loc + "_top_side", false, 90 , 0))
-                    .register(paint, HorizontalConnected.MIDDLE, Direction.UP   , modelOf(loc + "_top", false, 90 , 0))
-                    .register(paint, HorizontalConnected.SINGLE, Direction.UP   , modelOf(loc + "_top_single", false, 90 , 0));
+                 map.select(paint, HorizontalConnected.LEFT  , Direction.NORTH, modelOf(loc + "_left", false, 180, 0))
+                    .select(paint, HorizontalConnected.RIGHT , Direction.NORTH, modelOf(loc + "_right", false, 180, 0))
+                    .select(paint, HorizontalConnected.MIDDLE, Direction.NORTH, modelOf(loc + "_straight", false, 180  , 0))
+                    .select(paint, HorizontalConnected.SINGLE, Direction.NORTH, modelOf(loc + "_single", false, 180  , 0))
+                    .select(paint, HorizontalConnected.LEFT,   Direction.SOUTH, modelOf(loc + "_left", false, 0  , 0))
+                    .select(paint, HorizontalConnected.RIGHT , Direction.SOUTH, modelOf(loc + "_right", false, 0  , 0))
+                    .select(paint, HorizontalConnected.MIDDLE, Direction.SOUTH, modelOf(loc + "_straight", false, 0  , 0))
+                    .select(paint, HorizontalConnected.SINGLE, Direction.SOUTH, modelOf(loc + "_single", false, 0  , 0))
+                    .select(paint, HorizontalConnected.LEFT  , Direction.EAST , modelOf(loc + "_left", false, 270, 0))
+                    .select(paint, HorizontalConnected.RIGHT , Direction.EAST , modelOf(loc + "_right", false, 270, 0))
+                    .select(paint, HorizontalConnected.MIDDLE, Direction.EAST , modelOf(loc + "_straight", false, 270, 0))
+                    .select(paint, HorizontalConnected.SINGLE, Direction.EAST , modelOf(loc + "_single", false, 270, 0))
+                    .select(paint, HorizontalConnected.LEFT  , Direction.WEST , modelOf(loc + "_left", false, 90 , 0))
+                    .select(paint, HorizontalConnected.RIGHT , Direction.WEST , modelOf(loc + "_right", false, 90 , 0))
+                    .select(paint, HorizontalConnected.MIDDLE, Direction.WEST , modelOf(loc + "_straight", false, 90 , 0))
+                    .select(paint, HorizontalConnected.SINGLE, Direction.WEST , modelOf(loc + "_single", false, 90 , 0))
+                    .select(paint, HorizontalConnected.LEFT  , Direction.DOWN , modelOf(loc + "_top_side", false, 0  , 0))
+                    .select(paint, HorizontalConnected.RIGHT , Direction.DOWN , modelOf(loc + "_top_side", false, 180, 0))
+                    .select(paint, HorizontalConnected.MIDDLE, Direction.DOWN , modelOf(loc + "_top", false, 0  , 0))
+                    .select(paint, HorizontalConnected.SINGLE, Direction.DOWN , modelOf(loc + "_top_single", false, 0  , 0))
+                    .select(paint, HorizontalConnected.LEFT  , Direction.UP   , modelOf(loc + "_top_side", false, 270, 0))
+                    .select(paint, HorizontalConnected.RIGHT , Direction.UP   , modelOf(loc + "_top_side", false, 90 , 0))
+                    .select(paint, HorizontalConnected.MIDDLE, Direction.UP   , modelOf(loc + "_top", false, 90 , 0))
+                    .select(paint, HorizontalConnected.SINGLE, Direction.UP   , modelOf(loc + "_top_single", false, 90 , 0));
         }
         CreateVariants(generator, block, map);
     }
 
-    public static void roof(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void roof(BlockModelGenerators generator, Block block, String id, String name) {
 
         String texture = "planks";
         String texture0 = plank_path + name + "_" + texture;
@@ -218,9 +226,9 @@ public class FramingLibrary {
         applyTextureToModel(generator, modelPath + id, root+modelPath + "roof", texture0);
         applyTextureToModel(generator, modelPath + id + "_paintable", root+modelPath + "roof", texture1);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+modelPath + id));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+modelPath + id));
 
-        BlockStateVariantMap.DoubleProperty<WeightedVariant, Direction, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C2<MultiVariant, Direction, LinSeedPaintable> map = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, ModProperties.LINSEED_PAINT);
 
         Triple<Direction, Integer, Integer>[] directions = new Triple[]{
                 Triple.of(Direction.SOUTH, 0, 0),
@@ -231,14 +239,14 @@ public class FramingLibrary {
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalType;
-            if (paint.asString().equals("none")) {
+            if (paint.getSerializedName().equals("none")) {
                 finalType = modelPath + id;
             } else {
                 finalType = modelPath + id + "_paintable";
             }
             Stream.of(directions).forEach(ctx -> {
                         map
-                                .register(ctx.getLeft(), paint, modelOf(finalType, true, ctx.getMiddle(), ctx.getRight()));
+                                .select(ctx.getLeft(), paint, modelOf(finalType, true, ctx.getMiddle(), ctx.getRight()));
                     }
             );
         }
@@ -246,7 +254,7 @@ public class FramingLibrary {
         CreateVariants(generator, block, map);
     }
 
-    public static void woodenSupport(BlockStateModelGenerator generator, String id, Block block, String name) {
+    public static void woodenSupport(BlockModelGenerators generator, String id, Block block, String name) {
 
         String loc0 = modelPath + id;
         String loc1 = modelPath + id + "_paintable";
@@ -261,36 +269,27 @@ public class FramingLibrary {
             tex1 = log_path + "fruit_paintable_wood";}
 
         for (SupportConnected connected : SupportConnected.values()) {
-            //var 1
-            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_1", root+modelPath + "wood_support_" + connected.asString(), tex0);
-            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_1", root+modelPath + "wood_support_" + connected.asString(), tex1);
-            //var 2
-            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_2", root+modelPath + "thin_wood_support_" + connected.asString(), tex0);
-            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_2", root+modelPath + "thin_wood_support_" + connected.asString(), tex1);
-            //var 3
-            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.asString() + "_3", root+modelPath + "thin_r_wood_support_" + connected.asString(), tex0);
-            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.asString() + "_3", root+modelPath + "thin_r_wood_support_" + connected.asString(), tex1);
+            BlockStateLibrary.applyTextureToModel(generator, loc0 + "_" + connected.getSerializedName(), root+modelPath + "wood_support_" + connected.getSerializedName(), tex0);
+            BlockStateLibrary.applyTextureToModel(generator, loc1 + "_" + connected.getSerializedName(), root+modelPath + "wood_support_" + connected.getSerializedName(), tex1);
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_wall_1"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0 + "_wall_1"));
 
-        BlockStateVariantMap.QuadrupleProperty<WeightedVariant, Direction, SupportConnected, LinSeedPaintable, Integer> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, ModProperties.SUPPORT_STATE, ModProperties.LINSEED_PAINT, ModProperties.VARIATIONS_3);
+        PropertyDispatch.C3<MultiVariant, Direction, SupportConnected, LinSeedPaintable> map = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, ModProperties.SUPPORT_STATE, ModProperties.LINSEED_PAINT);
 
-        for (Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+        for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
             for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
                 for (SupportConnected connected : SupportConnected.values()) {
-                    for (int var : ModProperties.VARIATIONS_3.getValues()){
 
-                        String ext = "_" + connected.asString() + "_" + var, path;
-                        int dir = connected == SupportConnected.CEIL ? direction.getAxis() == Direction.Axis.X ? 0 : 90 : (int)  direction.getPositiveHorizontalDegrees();
-                        if (paintable == LinSeedPaintable.NONE){
-                            path = loc0 + ext;
-                        }else {
-                            path = loc1 + ext;
-                        }
-                        map.register(direction, connected, paintable, var, modelOf(path, false, dir, 0));
-
+                    String ext = "_" + connected.getSerializedName(), path;
+                    int dir = connected == SupportConnected.CEIL ? direction.getAxis() == Direction.Axis.X ? 0 : 90 : (int) direction.toYRot();
+                    if (paintable == LinSeedPaintable.NONE) {
+                        path = loc0 + ext;
+                    } else {
+                        path = loc1 + ext;
                     }
+                    map.select(direction, connected, paintable, modelOf(path, false, dir, 0));
+
                 }
             }
         }
@@ -299,7 +298,124 @@ public class FramingLibrary {
 
     }
 
-    public static void crate(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void supportPost(BlockModelGenerators generator, String id, Block block, String name) {
+
+        String loc0 = modelPath + id;
+        String loc1 = modelPath + id + "_paintable";
+        boolean pines = id.contains("larch") || id.contains("spruce");
+        boolean fruit = id.contains("apple") || id.contains("pear") || id.contains("walnut");
+
+        String tex0 = log_path + name + "_wood";
+        String tex1 = log_path + name + "_paintable_wood";
+        if (pines) {tex1 = log_path + "pine_paintable_wood";}
+        if (fruit) {tex1 = log_path + "fruit_paintable_wood";}
+
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_beam_post", root + modelPath + "support/beam_post", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_beam_post_ceiling_bracket", root + modelPath + "support/beam_post_ceiling_bracket", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_beam_post_ceiling_diagonal", root + modelPath + "support/beam_post_ceiling_diagonal", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_beam_post", root + modelPath + "support/beam_post", tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_beam_post_ceiling_bracket", root + modelPath + "support/beam_post_ceiling_bracket", tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_beam_post_ceiling_diagonal", root + modelPath + "support/beam_post_ceiling_diagonal", tex1);
+
+        //generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root + loc0 + "_beam_post"));
+
+        PropertyDispatch.C3<MultiVariant, SupportPost, Direction, LinSeedPaintable> map = PropertyDispatch.initial(PostSupport.SHAPE, BlockStateProperties.HORIZONTAL_FACING, ModProperties.LINSEED_PAINT);
+
+        for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
+            String path = paintable == LinSeedPaintable.NONE ? loc0 : loc1;
+            for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
+                int dir = direction.get2DDataValue()*90;
+                map.select(SupportPost.BEAM, direction, paintable, modelOf(path + "_beam_post", false, dir, 0));
+                map.select(SupportPost.CEILING_BRACKET, direction, paintable, modelOf(path + "_beam_post_ceiling_bracket", false, dir, 0));
+                map.select(SupportPost.CEILING_DIAGONAL, direction, paintable, modelOf(path + "_beam_post_ceiling_diagonal", false, dir, 0));
+            }
+        }
+
+        CreateVariants(generator, block, map);
+
+    }
+
+    public static void supportCeiling(BlockModelGenerators generator, String id, Block block, String name) {
+
+        String loc0 = modelPath + id;
+        String loc1 = modelPath + id + "_paintable";
+        boolean pines = id.contains("larch") || id.contains("spruce");
+        boolean fruit = id.contains("apple") || id.contains("pear") || id.contains("walnut");
+
+        String tex0 = log_path + name + "_wood";
+        String tex1 = log_path + name + "_paintable_wood";
+        if (pines) {tex1 = log_path + "pine_paintable_wood";}
+        if (fruit) {tex1 = log_path + "fruit_paintable_wood";}
+
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_straight", root + modelPath + "support/beam_ceiling_straight", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_t_joint", root + modelPath + "support/beam_ceiling_t_joint", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_cross", root + modelPath + "support/beam_ceiling_cross", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_straight", root + modelPath + "support/beam_ceiling_straight", tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_t_joint", root + modelPath + "support/beam_ceiling_t_joint", tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_cross", root + modelPath + "support/beam_ceiling_cross", tex1);
+
+        //generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root + loc0 + "_straight"));
+
+        PropertyDispatch.C2<MultiVariant, SupportCeiling, LinSeedPaintable> map = PropertyDispatch.initial(CeilingSupport.SHAPE, ModProperties.LINSEED_PAINT);
+
+        for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
+            String path = paintable == LinSeedPaintable.NONE ? loc0 : loc1;
+
+            map.select(SupportCeiling.STRAIGHT, paintable, modelOf(path + "_straight", false, 0, 0));
+            map.select(SupportCeiling.STRAIGHT_ROTATED, paintable, modelOf(path + "_straight", false, 90, 0));
+            map.select(SupportCeiling.T_JOINT_NORTH, paintable, modelOf(path + "_t_joint", false, 270, 0));
+            map.select(SupportCeiling.T_JOINT_EAST, paintable, modelOf(path + "_t_joint", false, 0, 0));
+            map.select(SupportCeiling.T_JOINT_SOUTH, paintable, modelOf(path + "_t_joint", false, 90, 0));
+            map.select(SupportCeiling.T_JOINT_WEST, paintable, modelOf(path + "_t_joint", false, 180, 0));
+            map.select(SupportCeiling.CROSS, paintable, modelOf(path + "_cross", false, 0, 0));
+        }
+
+        CreateVariants(generator, block, map);
+
+    }
+
+    public static void supportDiagonal(BlockModelGenerators generator, String id, Block block, String name) {
+
+        String loc0 = modelPath + id;
+        String loc1 = modelPath + id + "_paintable";
+        boolean pines = id.contains("larch") || id.contains("spruce");
+        boolean fruit = id.contains("apple") || id.contains("pear") || id.contains("walnut");
+
+        String tex0 = log_path + name + "_wood";
+        String tex1 = log_path + name + "_paintable_wood";
+        if (pines) {tex1 = log_path + "pine_paintable_wood";}
+        if (fruit) {tex1 = log_path + "fruit_paintable_wood";}
+
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_beam_diagonal", root + modelPath + "support/beam_diagonal", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_beam_diagonal_bracket", root + modelPath + "support/beam_diagonal_bracket", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_beam_diagonal_post", root + modelPath + "support/beam_diagonal_post", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc0 + "_beam_diagonal_ceil", root + modelPath + "support/beam_diagonal_ceil", tex0);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_beam_diagonal", root + modelPath + "support/beam_diagonal", tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_beam_diagonal_bracket", root + modelPath + "support/beam_diagonal_bracket", tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_beam_diagonal_post", root + modelPath + "support/beam_diagonal_post", tex1);
+        BlockStateLibrary.applyTextureToModel(generator, loc1 + "_beam_diagonal_ceil", root + modelPath + "support/beam_diagonal_ceil", tex1);
+
+        //generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root + loc0 + "_beam_diagonal"));
+
+        PropertyDispatch.C3<MultiVariant, SupportDiagonal, Direction, LinSeedPaintable> map = PropertyDispatch.initial(DiagonalSupport.SHAPE, BlockStateProperties.HORIZONTAL_FACING, ModProperties.LINSEED_PAINT);
+
+        for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
+            String path = paintable == LinSeedPaintable.NONE ? loc0 : loc1;
+            for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
+                int dir = direction.get2DDataValue()*90;
+                map.select(SupportDiagonal.DIAGONAL, direction, paintable, modelOf(path + "_beam_diagonal", false, dir, 0));
+                map.select(SupportDiagonal.DIAGONAL_BRACKET, direction, paintable, modelOf(path + "_beam_diagonal_bracket", false, dir, 0));
+                map.select(SupportDiagonal.DIAGONAL_POST, direction, paintable, modelOf(path + "_beam_diagonal_post", false, dir, 0));
+                map.select(SupportDiagonal.DIAGONAL_ON_POST, direction, paintable, modelOf(path + "_beam_diagonal_on_post", false, dir, 0));
+                map.select(SupportDiagonal.DIAGONAL_CEILING, direction, paintable, modelOf(path + "_beam_diagonal_ceil", false, dir, 0));
+            }
+        }
+
+        CreateVariants(generator, block, map);
+
+    }
+
+    public static void crate(BlockModelGenerators generator, Block block, String id, String name) {
 
         String modelPath = "crafting/crate";
         String loc0 = modelPath + id;
@@ -321,21 +437,21 @@ public class FramingLibrary {
             applyTextureToModel(generator, loc1 + "_open",root+modelPath + "_open", plank_path + name + "_paintable_planks");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid,root+loc0 + "_open"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid,root+loc0 + "_open"));
 
-        BlockStateVariantMap.DoubleProperty<WeightedVariant, LinSeedPaintable, Boolean> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT,Properties.OPEN);
+        PropertyDispatch.C2<MultiVariant, LinSeedPaintable, Boolean> map = PropertyDispatch.initial(ModProperties.LINSEED_PAINT,BlockStateProperties.OPEN);
 
-        for(LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getValues()){
+        for(LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getPossibleValues()){
             String finalLoc = paint == LinSeedPaintable.NONE ? loc0 : loc1;
-            map.register(paint, false, modelOf(finalLoc + "_closed"));
-            map.register(paint,true, modelOf(finalLoc + "_open"));
+            map.select(paint, false, modelOf(finalLoc + "_closed"));
+            map.select(paint,true, modelOf(finalLoc + "_open"));
         }
 
         CreateVariants(generator, block, map);
 
     }
 
-    public static void crateLid(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void crateLid(BlockModelGenerators generator, Block block, String id, String name) {
 
         String modelPath = "crafting/crate_lid";
         String loc0 = modelPath + id;
@@ -357,23 +473,23 @@ public class FramingLibrary {
             applyTextureToModel(generator, loc1 + "_side",root+modelPath + "_side", plank_path + name + "_paintable_planks");
         }
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_floor"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0 + "_floor"));
 
-        BlockStateVariantMap.DoubleProperty<WeightedVariant, LinSeedPaintable, Direction> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HOPPER_FACING);
-        for(LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getValues()){
+        PropertyDispatch.C2<MultiVariant, LinSeedPaintable, Direction> map = PropertyDispatch.initial(ModProperties.LINSEED_PAINT, BlockStateProperties.FACING_HOPPER);
+        for(LinSeedPaintable paint : ModProperties.LINSEED_PAINT.getPossibleValues()){
             String finalLoc = paint == LinSeedPaintable.NONE ? loc0 : loc1;
-            map.register(paint, Direction.NORTH, modelOf(finalLoc + "_side", false, 0, 0));
-            map.register(paint, Direction.SOUTH, modelOf(finalLoc + "_side", false, 180, 0));
-            map.register(paint, Direction.EAST, modelOf(finalLoc + "_side", false, 90, 0));
-            map.register(paint, Direction.WEST, modelOf(finalLoc + "_side", false, 270, 0));
-            map.register(paint, Direction.DOWN, modelOf(finalLoc + "_floor"));
+            map.select(paint, Direction.NORTH, modelOf(finalLoc + "_side", false, 0, 0));
+            map.select(paint, Direction.SOUTH, modelOf(finalLoc + "_side", false, 180, 0));
+            map.select(paint, Direction.EAST, modelOf(finalLoc + "_side", false, 90, 0));
+            map.select(paint, Direction.WEST, modelOf(finalLoc + "_side", false, 270, 0));
+            map.select(paint, Direction.DOWN, modelOf(finalLoc + "_floor"));
         }
 
         CreateVariants(generator, block, map);
 
     }
 
-    public static void portableWorkbench(BlockStateModelGenerator generator, Block block, String id, String name) {
+    public static void portableWorkbench(BlockModelGenerators generator, Block block, String id, String name) {
         String modelPath = "crafting/";
 
         String loc0 = modelPath + id;
@@ -389,22 +505,22 @@ public class FramingLibrary {
         }else {
             applyTextureToModel(generator, loc1, root+modelPath + "portable_workbench", log_path + name + "_paintable_wood");
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0));
 
-        BlockStateVariantMap.SingleProperty<WeightedVariant, LinSeedPaintable> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C1<MultiVariant, LinSeedPaintable> map = PropertyDispatch.initial(ModProperties.LINSEED_PAINT);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc = loc1;
             if (paint == LinSeedPaintable.NONE) {
                 finalLoc = loc0;
             }
-            map.register(paint, modelOf(finalLoc));
+            map.select(paint, modelOf(finalLoc));
         }
 
         CreateVariants(generator, block, map);
     }
 
-    public static void openStairs(BlockStateModelGenerator generator, String name, Block block) {
+    public static void openStairs(BlockModelGenerators generator, String name, Block block) {
 
         String id = idFromBlock(block);
         String loc0 = "planks/" + id;
@@ -428,33 +544,33 @@ public class FramingLibrary {
             applyTextureToModel(generator, "outer_stairs_" + loc1, root + modelPath + "stairs_outer", log_path + name + "_paintable_wood", plank_path + name + "_paintable_planks");
             applyTextureToModel(generator, "straight_stairs_" + loc1, root + modelPath + "stairs", log_path + name + "_paintable_wood", plank_path + name + "_paintable_planks");
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+"straight_stairs_" + loc0));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+"straight_stairs_" + loc0));
 
-        BlockStateVariantMap.QuadrupleProperty<WeightedVariant, LinSeedPaintable, Direction, BlockHalf, StairShape> map = BlockStateVariantMap.models(ModProperties.LINSEED_PAINT, Properties.HORIZONTAL_FACING, Properties.BLOCK_HALF, Properties.STAIR_SHAPE);
+        PropertyDispatch.C4<MultiVariant, LinSeedPaintable, Direction, Half, StairsShape> map = PropertyDispatch.initial(ModProperties.LINSEED_PAINT, BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.HALF, BlockStateProperties.STAIRS_SHAPE);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc = loc1;
             if (paint == LinSeedPaintable.NONE){
                 finalLoc = loc0;
             }
-            for(Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
-                int dir = 90 + (direction.getHorizontalQuarterTurns()*90);
-                map.register(paint, direction, BlockHalf.TOP, StairShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir, 180));
-                map.register(paint, direction, BlockHalf.TOP, StairShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir+90, 180));
-                map.register(paint, direction, BlockHalf.TOP, StairShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir, 180));
-                map.register(paint, direction, BlockHalf.TOP, StairShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir+90, 180));
-                map.register(paint, direction, BlockHalf.TOP, StairShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 180));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir-90, 0));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir, 0));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir-90, 0));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir, 0));
-                map.register(paint, direction, BlockHalf.BOTTOM, StairShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 0));
+            for(Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
+                int dir = 90 + (direction.get2DDataValue()*90);
+                map.select(paint, direction, Half.TOP, StairsShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir, 180));
+                map.select(paint, direction, Half.TOP, StairsShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir+90, 180));
+                map.select(paint, direction, Half.TOP, StairsShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir, 180));
+                map.select(paint, direction, Half.TOP, StairsShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir+90, 180));
+                map.select(paint, direction, Half.TOP, StairsShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 180));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.INNER_LEFT, modelOf("inner_stairs_" + finalLoc, true, dir-90, 0));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.INNER_RIGHT, modelOf("inner_stairs_" + finalLoc, true, dir, 0));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.OUTER_LEFT, modelOf("outer_stairs_" + finalLoc, true, dir-90, 0));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.OUTER_RIGHT, modelOf("outer_stairs_" + finalLoc, true, dir, 0));
+                map.select(paint, direction, Half.BOTTOM, StairsShape.STRAIGHT, modelOf("straight_stairs_" + finalLoc, true, dir, 0));
             }
         }
         CreateVariants(generator, block, map);
     }
 
-    public static void barrel(BlockStateModelGenerator generator, Block block, String name) {
+    public static void barrel(BlockModelGenerators generator, Block block, String name) {
 
         String loc0 = "log/" + name + "_barrel";
         String loc1 = "log/" + name + "_paintable" + "_barrel";
@@ -477,36 +593,36 @@ public class FramingLibrary {
         }else {
             applyTextureToModel(generator, loc1+"_open", root + modelPath + "barrel"+"_open", log_path + name + "_paintable" + "_wood");
         }
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction, LinSeedPaintable, Boolean> map = BlockStateVariantMap.models(Properties.FACING, ModProperties.LINSEED_PAINT, Properties.OPEN);
+        PropertyDispatch.C3<MultiVariant, Direction, LinSeedPaintable, Boolean> map = PropertyDispatch.initial(BlockStateProperties.FACING, ModProperties.LINSEED_PAINT, BlockStateProperties.OPEN);
 
         for (LinSeedPaintable paint : LinSeedPaintable.values()) {
             String finalLoc;
-            if (paint.asString().equals("none")){
+            if (paint.getSerializedName().equals("none")){
                 finalLoc = loc0;
             }else {
                 finalLoc = loc1;
             }
             map
-                    .register(Direction.UP, paint, false, modelOf(finalLoc, false, 0, 0))
-                    .register(Direction.DOWN, paint, false, modelOf(finalLoc, false, 0, 180))
-                    .register(Direction.NORTH, paint, false, modelOf(finalLoc, false, 0, 90))
-                    .register(Direction.SOUTH, paint, false, modelOf(finalLoc, false, 180, 90))
-                    .register(Direction.EAST, paint, false, modelOf(finalLoc, false, 90, 90))
-                    .register(Direction.WEST, paint, false, modelOf(finalLoc, false, 270, 90))
-                    .register(Direction.UP, paint, true, modelOf(finalLoc+"_open", false, 0, 0))
-                    .register(Direction.DOWN, paint, true, modelOf(finalLoc+"_open", false, 0, 180))
-                    .register(Direction.NORTH, paint, true, modelOf(finalLoc+"_open", false, 0, 90))
-                    .register(Direction.SOUTH, paint, true, modelOf(finalLoc+"_open", false, 180, 90))
-                    .register(Direction.EAST, paint, true, modelOf(finalLoc+"_open", false, 90, 90))
-                    .register(Direction.WEST, paint, true, modelOf(finalLoc+"_open", false, 270, 90));
+                    .select(Direction.UP, paint, false, modelOf(finalLoc, false, 0, 0))
+                    .select(Direction.DOWN, paint, false, modelOf(finalLoc, false, 0, 180))
+                    .select(Direction.NORTH, paint, false, modelOf(finalLoc, false, 0, 90))
+                    .select(Direction.SOUTH, paint, false, modelOf(finalLoc, false, 180, 90))
+                    .select(Direction.EAST, paint, false, modelOf(finalLoc, false, 90, 90))
+                    .select(Direction.WEST, paint, false, modelOf(finalLoc, false, 270, 90))
+                    .select(Direction.UP, paint, true, modelOf(finalLoc+"_open", false, 0, 0))
+                    .select(Direction.DOWN, paint, true, modelOf(finalLoc+"_open", false, 0, 180))
+                    .select(Direction.NORTH, paint, true, modelOf(finalLoc+"_open", false, 0, 90))
+                    .select(Direction.SOUTH, paint, true, modelOf(finalLoc+"_open", false, 180, 90))
+                    .select(Direction.EAST, paint, true, modelOf(finalLoc+"_open", false, 90, 90))
+                    .select(Direction.WEST, paint, true, modelOf(finalLoc+"_open", false, 270, 90));
 
         }
         CreateVariants(generator, block, map);
     }
 
-    public static void door(BlockStateModelGenerator generator, Block block, String name, boolean window) {
+    public static void door(BlockModelGenerators generator, Block block, String name, boolean window) {
 
         String id = idFromBlock(block);
         String loc0 = modelPath + id;
@@ -548,25 +664,25 @@ public class FramingLibrary {
         BlockStateLibrary.applyTextureToModel(generator, loc1 + top + right + closed, root+modelPath + "door/wooden_door" + w + top + right + closed, tex1);
         BlockStateLibrary.applyTextureToModel(generator, loc1 + top + right + open, root+modelPath + "door/wooden_door" + w + top + right + open, tex1);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0+top+left+closed));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0+top+left+closed));
 
-        BlockStateVariantMap.QuadrupleProperty<WeightedVariant, Direction, Boolean, DoorState, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, Properties.OPEN, ModProperties.DOOR, ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C4<MultiVariant, Direction, Boolean, DoorState, LinSeedPaintable> map = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.OPEN, WRGProperties.DOOR, ModProperties.LINSEED_PAINT);
 
-        for (Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+        for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
             for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
-                int dir = direction.getHorizontalQuarterTurns() * 90;
+                int dir = direction.get2DDataValue() * 90;
                 String loc = loc1;
                 if (paintable == LinSeedPaintable.NONE) {
                     loc = loc0;
                 }
-                map.register(direction, true, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + open, false, dir, 0));
-                map.register(direction, false, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + closed, false, dir, 0));
-                map.register(direction, true, DoorState.left_top, paintable, modelOf(loc + top + left + open, false, dir, 0));
-                map.register(direction, false, DoorState.left_top, paintable, modelOf(loc + top + left + closed, false, dir, 0));
-                map.register(direction, true, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + open, false, dir, 0));
-                map.register(direction, false, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + closed, false, dir, 0));
-                map.register(direction, true, DoorState.right_top, paintable, modelOf(loc + top + right + open, false, dir, 0));
-                map.register(direction, false, DoorState.right_top, paintable, modelOf(loc + top + right + closed, false, dir, 0));
+                map.select(direction, true, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + open, false, dir, 0));
+                map.select(direction, false, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + closed, false, dir, 0));
+                map.select(direction, true, DoorState.left_top, paintable, modelOf(loc + top + left + open, false, dir, 0));
+                map.select(direction, false, DoorState.left_top, paintable, modelOf(loc + top + left + closed, false, dir, 0));
+                map.select(direction, true, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + open, false, dir, 0));
+                map.select(direction, false, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + closed, false, dir, 0));
+                map.select(direction, true, DoorState.right_top, paintable, modelOf(loc + top + right + open, false, dir, 0));
+                map.select(direction, false, DoorState.right_top, paintable, modelOf(loc + top + right + closed, false, dir, 0));
             }
         }
 
@@ -574,7 +690,7 @@ public class FramingLibrary {
 
     }
 
-    public static void enforcedDoor(BlockStateModelGenerator generator, Block block, String name, boolean window) {
+    public static void enforcedDoor(BlockModelGenerators generator, Block block, String name, boolean window) {
 
         String id = idFromBlock(block);
         String loc0 = modelPath + id;
@@ -620,25 +736,25 @@ public class FramingLibrary {
         BlockStateLibrary.applyTextureToModel(generator, loc1 + top + right + closed, root+modelPath + "door/enforced_wooden_door" + w + top + right + closed, tex1, tex3);
         BlockStateLibrary.applyTextureToModel(generator, loc1 + top + right + open, root+modelPath + "door/enforced_wooden_door" + w + top + right + open, tex1, tex3);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + top + left + closed));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0 + top + left + closed));
 
-        BlockStateVariantMap.QuadrupleProperty<WeightedVariant, Direction, Boolean, DoorState, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, Properties.OPEN, ModProperties.DOOR, ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C4<MultiVariant, Direction, Boolean, DoorState, LinSeedPaintable> map = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.OPEN, WRGProperties.DOOR, ModProperties.LINSEED_PAINT);
 
-        for (Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+        for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
             for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
-                int dir = direction.getHorizontalQuarterTurns() * 90;
+                int dir = direction.get2DDataValue() * 90;
                 String loc = loc1;
                 if (paintable == LinSeedPaintable.NONE) {
                     loc = loc0;
                 }
-                map.register(direction, true, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + open, false, dir, 0));
-                map.register(direction, false, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + closed, false, dir, 0));
-                map.register(direction, true, DoorState.left_top, paintable, modelOf(loc + top + left + open, false, dir, 0));
-                map.register(direction, false, DoorState.left_top, paintable, modelOf(loc + top + left + closed, false, dir, 0));
-                map.register(direction, true, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + open, false, dir, 0));
-                map.register(direction, false, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + closed, false, dir, 0));
-                map.register(direction, true, DoorState.right_top, paintable, modelOf(loc + top + right + open, false, dir, 0));
-                map.register(direction, false, DoorState.right_top, paintable, modelOf(loc + top + right + closed, false, dir, 0));
+                map.select(direction, true, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + open, false, dir, 0));
+                map.select(direction, false, DoorState.left_bottom, paintable, modelOf(loc + bottom + left + closed, false, dir, 0));
+                map.select(direction, true, DoorState.left_top, paintable, modelOf(loc + top + left + open, false, dir, 0));
+                map.select(direction, false, DoorState.left_top, paintable, modelOf(loc + top + left + closed, false, dir, 0));
+                map.select(direction, true, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + open, false, dir, 0));
+                map.select(direction, false, DoorState.right_bottom, paintable, modelOf(loc + bottom + right + closed, false, dir, 0));
+                map.select(direction, true, DoorState.right_top, paintable, modelOf(loc + top + right + open, false, dir, 0));
+                map.select(direction, false, DoorState.right_top, paintable, modelOf(loc + top + right + closed, false, dir, 0));
             }
         }
 
@@ -646,7 +762,7 @@ public class FramingLibrary {
 
     }
 
-    public static void trapDoor(BlockStateModelGenerator generator, Block block, String name) {
+    public static void trapDoor(BlockModelGenerators generator, Block block, String name) {
 
         String id = idFromBlock(block);
         String loc0 = modelPath + id;
@@ -672,19 +788,19 @@ public class FramingLibrary {
         BlockStateLibrary.applyTextureToModel(generator, loc1 + "_closed", root+modelPath + "trapdoor_closed", tex1, tex3);
         BlockStateLibrary.applyTextureToModel(generator, loc1 + "_open", root+modelPath + "trapdoor_open", tex1, tex3);
 
-        generator.registerParentedItemModel(block, Identifier.of(modid, root+loc0 + "_closed"));
+        generator.registerSimpleItemModel(block, Identifier.fromNamespaceAndPath(modid, root+loc0 + "_closed"));
 
-        BlockStateVariantMap.TripleProperty<WeightedVariant, Direction, Boolean, LinSeedPaintable> map = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, Properties.OPEN, ModProperties.LINSEED_PAINT);
+        PropertyDispatch.C3<MultiVariant, Direction, Boolean, LinSeedPaintable> map = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.OPEN, ModProperties.LINSEED_PAINT);
 
-        for (Direction direction : Properties.HORIZONTAL_FACING.getValues()) {
+        for (Direction direction : BlockStateProperties.HORIZONTAL_FACING.getPossibleValues()) {
             for (LinSeedPaintable paintable : LinSeedPaintable.values()) {
-                int dir = direction.getHorizontalQuarterTurns() * 90;
+                int dir = direction.get2DDataValue() * 90;
                 String path = loc1;
                 if (paintable == LinSeedPaintable.NONE) {
                     path = loc0;
                 }
-                map.register(direction, true, paintable, modelOf(path + "_open", false, dir, 0));
-                map.register(direction, false, paintable, modelOf(path + "_closed", false, dir, 0));
+                map.select(direction, true, paintable, modelOf(path + "_open", false, dir, 0));
+                map.select(direction, false, paintable, modelOf(path + "_closed", false, dir, 0));
             }
         }
 

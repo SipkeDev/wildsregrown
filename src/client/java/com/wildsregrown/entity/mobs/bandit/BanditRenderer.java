@@ -2,13 +2,13 @@ package com.wildsregrown.entity.mobs.bandit;
 
 import com.wildsregrown.entities.mob.bandit.Bandit;
 import com.wildsregrown.entity.EntityModelLayers;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.Identifier;
 
-public class BanditRenderer extends MobEntityRenderer<Bandit, BanditRenderState, BanditModel> {
+public class BanditRenderer extends MobRenderer<Bandit, BanditRenderState, BanditModel> {
 
-    public BanditRenderer(EntityRendererFactory.Context context, BanditModel entityModel) {
+    public BanditRenderer(EntityRendererProvider.Context context, BanditModel entityModel) {
         super(context, entityModel,1f);
     }
 
@@ -22,8 +22,7 @@ public class BanditRenderer extends MobEntityRenderer<Bandit, BanditRenderState,
     }
 
     @Override
-    public Identifier getTexture(BanditRenderState state) {
-        return Identifier.of("test");
+    public Identifier getTextureLocation(BanditRenderState livingEntityRenderState) {
+        return Identifier.parse("test");
     }
-
 }

@@ -1,11 +1,11 @@
 package com.wildsregrown.entity.blockEntities.renderstates;
 
-import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
-import net.minecraft.client.render.item.ItemRenderState;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 
 public class CrateRenderState extends BlockEntityRenderState {
     public int light = 255;
-    public final ItemRenderState renderState = new ItemRenderState();
+    public final ItemStackRenderState renderState = new ItemStackRenderState();
     public boolean hasLid = false;
     public int count;
 }

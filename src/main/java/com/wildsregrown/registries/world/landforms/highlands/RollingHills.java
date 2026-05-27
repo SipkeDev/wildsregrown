@@ -8,10 +8,12 @@ import com.sipke.math.MapType;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class RollingHills extends Landform {
 
     public RollingHills() {
-        super(0.5f, Placement.Elevation.highland, Climate.tundra, Climate.coniferousForest, Climate.steppe, Climate.mixedForest, Climate.chaparral, Climate.coolShrubland, Climate.hotScrubland);
+        super(modid, "rolling_hills", 0.5f, Placement.Elevation.highland, Climate.tundra, Climate.coniferousForest, Climate.steppe, Climate.mixedForest, Climate.chaparral, Climate.coolShrubland, Climate.hotScrubland);
     }
 
     @Override

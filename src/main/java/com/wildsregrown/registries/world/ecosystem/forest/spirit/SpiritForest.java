@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class SpiritForest extends Ecosystem {
 
     public SpiritForest(){
-        super(Climate.spiritForest, Biomes.spiritForest);
+        super(modid, "spirit_forest", Climate.spiritForest, Biomes.spiritForest);
         register(Placement.Biome.dry, Biomes.dry_heather_meadow);
         register(Placement.Biome.wet, Biomes.grassfield);
         register(Placement.Biome.swamp, Biomes.swamp);

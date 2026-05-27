@@ -9,10 +9,12 @@ import com.sipke.math.Distance;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Dunes extends Landform {
 
     public Dunes() {
-        super(0.18f, Placement.Elevation.coast, Climate.hotDesert, Climate.coolDesert, Climate.chaparral, Climate.deciduousForest, Climate.coniferousForest, Climate.mixedForest, Climate.tundra, Climate.savanna, Climate.mixedForest, Climate.steppe);
+        super(modid, "dunes", 0.18f, Placement.Elevation.coast, Climate.hotDesert, Climate.coolDesert, Climate.chaparral, Climate.deciduousForest, Climate.coniferousForest, Climate.mixedForest, Climate.tundra, Climate.savanna, Climate.mixedForest, Climate.steppe);
     }
 
     @Override

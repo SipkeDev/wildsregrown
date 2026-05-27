@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class OakForest extends Ecosystem {
 
     public OakForest(){
-        super(Climate.deciduousForest, Biomes.oakForest, 5);
+        super(modid, "oak_forest", Climate.deciduousForest, Biomes.oakForest, 5);
         register(Placement.Biome.normal, Biomes.sparse_oakForest,3);
         register(Placement.Biome.normal, Biomes.grassfield);
         register(Placement.Biome.dry, Biomes.daisy_meadow);

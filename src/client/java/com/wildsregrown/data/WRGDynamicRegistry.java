@@ -1,13 +1,12 @@
 package com.wildsregrown.data;
 
 import com.wildsregrown.WildsRegrown;
-import com.wildsregrown.world.biomes.WRGBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.minecraft.registry.RegistryBuilder;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -17,25 +16,25 @@ import static com.wildsregrown.WildsRegrown.modid;
 
 public class WRGDynamicRegistry extends FabricDynamicRegistryProvider {
 
-    protected WRGDynamicRegistry(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    protected WRGDynamicRegistry(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
-    public static void buildRegistry(RegistryBuilder registryBuilder) {
+    public static void buildRegistry(RegistrySetBuilder registryBuilder) {
         //registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, ::register);
         //registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, ::register);
-        registryBuilder.addRegistry(RegistryKeys.BIOME, WRGBiomes::register);
+        //registryBuilder.add(Registries.BIOME, WRGBiomes::register);
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup wrapperLookup, Entries entries) {
+    protected void configure(HolderLookup.Provider wrapperLookup, Entries entries) {
         //addAll(entries, wrapperLookup.getOrThrow(RegistryKeys.CONFIGURED_FEATURE));
         //addAll(entries, wrapperLookup.getOrThrow(RegistryKeys.PLACED_FEATURE));
-        addAll(entries, wrapperLookup.getOrThrow(RegistryKeys.BIOME));
+        addAll(entries, wrapperLookup.lookupOrThrow(Registries.BIOME));
 
-        WildsRegrown.LOGGER.info("Configuring" + wrapperLookup.streamAllRegistryKeys().count());
-        wrapperLookup.getOrThrow(RegistryKeys.BIOME).streamEntries().forEach(
-                o -> WildsRegrown.LOGGER.info(o.getIdAsString())
+        WildsRegrown.LOGGER.info("Configuring" + wrapperLookup.listRegistryKeys().count());
+        wrapperLookup.lookupOrThrow(Registries.BIOME).listElements().forEach(
+                o -> WildsRegrown.LOGGER.info(o.getRegisteredName())
         );
 
     }
@@ -46,9 +45,9 @@ public class WRGDynamicRegistry extends FabricDynamicRegistryProvider {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public <T> List<RegistryEntry<T>> addAll(Entries entries, RegistryWrapper.Impl<T> registry) {
-        return registry.streamKeys()
-                .filter(tRegistryKey -> tRegistryKey.getValue().getNamespace().equals(modid))
+    public <T> List<Holder<T>> addAll(Entries entries, HolderLookup.RegistryLookup<T> registry) {
+        return registry.listElementIds()
+                .filter(tRegistryKey -> tRegistryKey.identifier().getNamespace().equals(modid))
                 .map(tRegistryKey -> entries.add(registry, tRegistryKey))
                 .toList();
     }

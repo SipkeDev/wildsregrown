@@ -5,11 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Plains extends Ecosystem {
 
     public Plains(){
-        super(Climate.steppe, Biomes.grassfield);
-        register(Placement.Biome.normal, Biomes.grassfield);
+        super(modid, "plains", Climate.steppe, Biomes.grassfield);
         register(Placement.Biome.normal, Biomes.curly_grassfield);
         register(Placement.Biome.normal, Biomes.thin_grassfield);
         register(Placement.Biome.normal, Biomes.tall_grassfield);

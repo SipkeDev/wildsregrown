@@ -1,6 +1,6 @@
 package com.wildsregrown.registries.world.biomes.orchard;
 
-import com.sipke.api.features.flora.FloraSpawnRule;
+import com.sipke.api.features.botanic.flora.FloraSpawnRule;
 import com.sipke.api.terrain.Biome;
 import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
@@ -8,9 +8,12 @@ import com.sipke.NoiseGenerator;
 import com.wildsregrown.registries.world.Floras;
 import com.wildsregrown.registries.world.Trees;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class PearOrchard extends Biome {
 
     public PearOrchard() {
+        super(modid, "pear_orchard");
         register(Trees.pear, 0.25f, 1);
         register(Floras.curly_grass, FloraSpawnRule.dotted, 0.25f, 1,false);;
         register(Floras.tall_curly_grass, FloraSpawnRule.occasional, 0.25f, 1,false);

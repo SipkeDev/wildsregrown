@@ -11,19 +11,21 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class OldMountains extends Landform {
 
     public OldMountains() {
-        super(0.85f, Placement.Elevation.mountain, Climate.mixedForest, Climate.coniferousForest, Climate.deciduousForest, Climate.ancientForest, Climate.spiritForest, Climate.savanna);
-        register(new StratumConfig(MaterialRegistery.sandstone_grey.getKey(), 5, 21, 4));
-        register(new StratumConfig(MaterialRegistery.sandstone_beige.getKey(), 5, 8, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_brown.getKey(), 5, 8, 2));
-        register(new StratumConfig(MaterialRegistery.limestone_grey.getKey(), 13, 55, 2));
-        register(new StratumConfig(MaterialRegistery.marble_black.getKey(), 5, 13, 2));
-        register(new StratumConfig(MaterialRegistery.marble_white.getKey(), 5, 13, 2));
-        register(new StratumConfig(MaterialRegistery.slate_grey.getKey(), 5, 8, 1));
-        register(new StratumConfig(MaterialRegistery.shale_grey.getKey(), 5, 8, 1));
-        register(new StratumConfig(MaterialRegistery.shale_red.getKey(), 5, 8, 1));
+        super(modid, "old_mountains", 0.85f, Placement.Elevation.mountain, Climate.mixedForest, Climate.coniferousForest, Climate.deciduousForest, Climate.ancientForest, Climate.spiritForest, Climate.savanna);
+        register(MaterialRegistery.sandstone_grey, 5, 21, 4);
+        register(MaterialRegistery.sandstone_beige, 5, 8, 2);
+        register(MaterialRegistery.sandstone_brown, 5, 8, 2);
+        register(MaterialRegistery.limestone_grey, 13, 55, 2);
+        register(MaterialRegistery.marble_black, 5, 13, 2);
+        register(MaterialRegistery.marble_white, 5, 13, 2);
+        register(MaterialRegistery.slate_grey, 5, 8, 1);
+        register(MaterialRegistery.shale_grey, 5, 8, 1);
+        register(MaterialRegistery.shale_red, 5, 8, 1);
     }
 
     @Override

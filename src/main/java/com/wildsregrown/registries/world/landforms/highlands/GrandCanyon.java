@@ -13,18 +13,20 @@ import com.sipke.NoiseGenerator;
 import com.sipke.Constant;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class GrandCanyon extends Landform {
 
     public GrandCanyon() {
-        super(0.5f, Placement.Elevation.highland, Climate.savanna, Climate.chaparral, Climate.hotScrubland);
-        register(new StratumConfig(MaterialRegistery.sandstone_brown.getKey(), 12, 22, 1));
-        register(new StratumConfig(MaterialRegistery.sandstone_beige.getKey(), 12, 22, 1));
-        register(new StratumConfig(MaterialRegistery.sandstone_yellow.getKey(), 2, 12, 6));
-        register(new StratumConfig(MaterialRegistery.sandstone_white.getKey(), 1, 4, 3));
-        register(new StratumConfig(MaterialRegistery.sandstone_pink.getKey(), 1, 4, 3));
-        register(new StratumConfig(MaterialRegistery.sandstone_red.getKey(), 1, 4, 3));
-        register(new StratumConfig(MaterialRegistery.slate_purple.getKey(), 1, 3, 1));
-        register(new StratumConfig(MaterialRegistery.shale_red.getKey(), 1, 2, 1));
+        super(modid, "grand_canyon", 0.5f, Placement.Elevation.highland, Climate.savanna, Climate.chaparral, Climate.hotScrubland);
+        register(MaterialRegistery.sandstone_brown, 12, 22, 1);
+        register(MaterialRegistery.sandstone_beige, 12, 22, 1);
+        register(MaterialRegistery.sandstone_yellow, 2, 12, 6);
+        register(MaterialRegistery.sandstone_white, 1, 4, 3);
+        register(MaterialRegistery.sandstone_pink, 1, 4, 3);
+        register(MaterialRegistery.sandstone_red, 1, 4, 3);
+        register(MaterialRegistery.slate_purple, 1, 3, 1);
+        register(MaterialRegistery.shale_red, 1, 2, 1);
     }
 
     @Override

@@ -1,19 +1,19 @@
 package com.wildsregrown.entities.mob.bandit;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
 
-public class Bandit extends HostileEntity {
+public class Bandit extends Monster {
 
-    public Bandit(EntityType<? extends HostileEntity> entityType, World world) {
+    public Bandit(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(this.getEntityWorld().isClient()) {
+        if(this.level().isClientSide()) {
         }
     }
 

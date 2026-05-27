@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Savanna extends Ecosystem {
 
     public Savanna(){
-        super(Climate.savanna, Biomes.savanna_grassfield);
+        super(modid, "savanna", Climate.savanna, Biomes.savanna_grassfield);
         register(Placement.Biome.dry, Biomes.savanna_grassfield);
         register(Placement.Biome.dry, Biomes.savannaShrubs);
         register(Placement.Biome.wet, Biomes.savannaTrees);

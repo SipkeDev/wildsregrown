@@ -7,10 +7,12 @@ import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class GreatPlains extends Landform {
 
     public GreatPlains() {
-        super(0.15f, Placement.Elevation.lowland, Climate.polarDesert, Climate.steppe, Climate.coolDesert, Climate.hotDesert, Climate.savanna, Climate.coniferousForest, Climate.deciduousForest, Climate.mixedForest, Climate.spiritForest);
+        super(modid, "great_plains", 0.15f, Placement.Elevation.lowland, Climate.polarDesert, Climate.steppe, Climate.coolDesert, Climate.hotDesert, Climate.savanna, Climate.coniferousForest, Climate.deciduousForest, Climate.mixedForest, Climate.spiritForest);
     }
 
     @Override

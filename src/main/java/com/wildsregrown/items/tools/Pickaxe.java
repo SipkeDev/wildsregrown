@@ -5,80 +5,77 @@
 
 package com.wildsregrown.items.tools;
 
-import com.wildsregrown.blocks.Dice;
-import com.wildsregrown.blocks.Layered;
-import com.wildsregrown.blocks.properties.ModProperties;
-import com.sipke.math.MathUtil;
-import com.wildsregrown.items.IRadialItem;
 import com.wildsregrown.registries.ModComponents;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import wildsregrown.api.block.properties.WRGProperties;
+import wildsregrown.api.block.shapes.Layered;
+import wildsregrown.api.registry.defaults.ApiComponents;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class Pickaxe extends Item implements IRadialItem {
+public class Pickaxe extends Item {
 
-    public Pickaxe(ToolMaterial material, float attackDamage, float attackSpeed, Settings settings) {
+    public Pickaxe(ToolMaterial material, float attackDamage, float attackSpeed, Properties settings) {
         super(setting(material, attackDamage, attackSpeed, settings));
     }
 
-    private static Settings setting(ToolMaterial material, float attackDamage, float attackSpeed, Settings settings) {
-        return material.applyToolSettings(settings.maxCount(1), BlockTags.PICKAXE_MINEABLE, attackDamage, attackSpeed, 0.125f)
+    private static Properties setting(ToolMaterial material, float attackDamage, float attackSpeed, Properties settings) {
+        return material.applyToolProperties(settings.stacksTo(1), BlockTags.MINEABLE_WITH_PICKAXE, attackDamage, attackSpeed, 0.125f)
                 .component(ModComponents.ITEM_OXIDATION, 0)
                 .component(ModComponents.ITEM_SHARPNESS, 0)
-                .component(ModComponents.ITEM_STANCE, 0);
+                .component(ApiComponents.ITEM_STANCE, 0);
     }
 
-    public void postDamageEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damage(2, attacker, EquipmentSlot.MAINHAND);
+    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        stack.hurtAndBreak(2, attacker, EquipmentSlot.MAINHAND);
     }
 
-    public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        return super.postMine(stack, world, state, pos, miner);
+    public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity miner) {
+        return super.mineBlock(stack, world, state, pos, miner);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
+    public InteractionResult useOn(UseOnContext context) {
 
-        World world = context.getWorld();
-        BlockState state = world.getBlockState(context.getBlockPos());
+        Level world = context.getLevel();
+        BlockState state = world.getBlockState(context.getClickedPos());
         Block block = state.getBlock();
         if (block instanceof Layered){
-            int layer = state.get(ModProperties.LAYERS);
+            int layer = state.getValue(WRGProperties.LAYERS);
             if (layer == 1){
-                world.breakBlock(context.getBlockPos(), true);
+                world.destroyBlock(context.getClickedPos(), true);
             }else if (layer == 8){
-                world.setBlockState(context.getBlockPos(), state.with(Properties.FACING, context.getSide()).with(ModProperties.LAYERS, layer-1),2);
+                world.setBlock(context.getClickedPos(), state.setValue(BlockStateProperties.FACING, context.getClickedFace()).setValue(WRGProperties.LAYERS, layer-1),2);
             }else {
-                world.setBlockState(context.getBlockPos(), state.with(ModProperties.LAYERS, layer-1),2);
+                world.setBlock(context.getClickedPos(), state.setValue(WRGProperties.LAYERS, layer-1),2);
             }
 
-            world.playSound(context.getPlayer(), context.getBlockPos(), SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS);
-            return ActionResult.SUCCESS;
+            world.playSound(context.getPlayer(), context.getClickedPos(), SoundEvents.STONE_BREAK, SoundSource.BLOCKS);
+            return InteractionResult.SUCCESS;
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     /**
@@ -96,13 +93,13 @@ public class Pickaxe extends Item implements IRadialItem {
      */
 
     @Override
-    public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker instanceof PlayerEntity entity) {
-            if (entity.isSneaking()) {
-                playSound(target.getEntityWorld(), target.getBlockPos(), SoundEvents.ENTITY_PAINTING_BREAK);
-                spawnParticles(target.getEntityWorld(), target.getBlockPos(), 20, target.getWidth() * 2.5, target.getHeight());
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 8), attacker);
-                attacker.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 4));
+    public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (attacker instanceof Player entity) {
+            if (entity.isShiftKeyDown()) {
+                playSound(target.level(), target.blockPosition(), SoundEvents.PAINTING_BREAK);
+                spawnParticles(target.level(), target.blockPosition(), 20, target.getBbWidth() * 2.5, target.getBbHeight());
+                target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 60, 8), attacker);
+                attacker.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 60, 4));
             }
         }
     }
@@ -111,7 +108,7 @@ public class Pickaxe extends Item implements IRadialItem {
      * World interactions
      */
 
-    private static void spawnParticles(World world, BlockPos pos, int particleCount, double width, double height) {
+    private static void spawnParticles(Level world, BlockPos pos, int particleCount, double width, double height) {
         Random rand = new Random();
 
         for (int i = 0; i < particleCount; i++) {
@@ -123,25 +120,25 @@ public class Pickaxe extends Item implements IRadialItem {
             double y = pos.getY() + offsetY;
             double z = pos.getZ() + offsetZ;
 
-            if (world instanceof ServerWorld server) {
-                server.spawnParticles(ParticleTypes.POOF, x, y, z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+            if (world instanceof ServerLevel server) {
+                server.sendParticles(ParticleTypes.POOF, x, y, z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
             } else {
-                world.addParticleClient(ParticleTypes.POOF, x, y, z, 0.0D, 0.0D, 0.0D);
+                world.addParticle(ParticleTypes.POOF, x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }
 
-    private static void playSound(World world, BlockPos pos, SoundEvent event) {
-        if (world instanceof ServerWorld serverWorld){
-            serverWorld.playSound(null, pos, event, SoundCategory.PLAYERS);
+    private static void playSound(Level world, BlockPos pos, SoundEvent event) {
+        if (world instanceof ServerLevel serverWorld){
+            serverWorld.playSound(null, pos, event, SoundSource.PLAYERS);
         }
     }
 
     @Override
-    public float getMiningSpeed(ItemStack stack, BlockState state) {
-        float t = super.getMiningSpeed(stack, state);
-        if (stack.contains(ModComponents.ITEM_STANCE)) {
-            switch (stack.get(ModComponents.ITEM_STANCE)) {
+    public float getDestroySpeed(ItemStack stack, BlockState state) {
+        float t = super.getDestroySpeed(stack, state);
+        if (stack.has(ApiComponents.ITEM_STANCE)) {
+            switch (stack.get(ApiComponents.ITEM_STANCE)) {
                 case 0:
                     t *= 1.2f;
                 case 1:

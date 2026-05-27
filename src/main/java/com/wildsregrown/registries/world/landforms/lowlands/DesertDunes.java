@@ -7,10 +7,12 @@ import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class DesertDunes extends Landform {
 
     public DesertDunes() {
-        super(0.25f, Placement.Elevation.lowland, Climate.hotDesert, Climate.coolDesert);
+        super(modid, "desert_dunes", 0.25f, Placement.Elevation.lowland, Climate.hotDesert, Climate.coolDesert);
     }
 
     @Override

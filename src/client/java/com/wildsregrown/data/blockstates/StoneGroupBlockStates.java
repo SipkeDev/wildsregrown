@@ -1,18 +1,20 @@
 package com.wildsregrown.data.blockstates;
 
 import com.wildsregrown.data.blockstates.libraries.BlockStateLibrary;
+import com.wildsregrown.data.blockstates.libraries.CastleLibrary;
 import com.wildsregrown.data.blockstates.libraries.StoneFurnitureLibrary;
 import com.wildsregrown.registries.groups.StoneGroup;
-import net.minecraft.block.Block;
-import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.world.level.block.Block;
+import org.apache.logging.log4j.util.Cast;
 
 import static com.wildsregrown.data.DataGeneratorProvider.idFromBlock;
 
 public class StoneGroupBlockStates {
 
-    private final BlockStateModelGenerator generator;
+    private final BlockModelGenerators generator;
 
-    public StoneGroupBlockStates(BlockStateModelGenerator generator){
+    public StoneGroupBlockStates(BlockModelGenerators generator){
         this.generator = generator;
     }
 
@@ -83,8 +85,12 @@ public class StoneGroupBlockStates {
             BlockStateLibrary.halfArch(generator, idFromBlock(block), block, texture + "_bricks");
             block = group.get(StoneGroup.Construction.bricks_arch);
             BlockStateLibrary.arch(generator, idFromBlock(block), block, texture + "_bricks");
-            block = group.get(StoneGroup.Construction.bricks_arrow_slit);
-            BlockStateLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_bricks");
+            block = group.get(StoneGroup.Construction.bricks_basic_arrow_slit);
+            CastleLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_bricks",0);
+            block = group.get(StoneGroup.Construction.bricks_refined_arrow_slit);
+            CastleLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_bricks",1);
+            block = group.get(StoneGroup.Construction.bricks_cross_arrow_slit);
+            CastleLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_bricks",2);
             block = group.get(StoneGroup.Construction.bricks_machicolations);
             BlockStateLibrary.machicolations(generator, idFromBlock(block), block, texture + "_bricks");
             block = group.get(StoneGroup.Construction.bricks_peeking_hole);
@@ -113,13 +119,13 @@ public class StoneGroupBlockStates {
             block = group.get(StoneGroup.Luxury.dungeonItemPedestal);
             BlockStateLibrary.itemLootPedestal(generator, idFromBlock(block), block, texture + "_polished");
             block = group.get(StoneGroup.Luxury.smooth_arrow_slit);
-            BlockStateLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_smooth");
+            CastleLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_smooth",0);
             block = group.get(StoneGroup.Luxury.smooth_half_arch);
             BlockStateLibrary.halfArch(generator, idFromBlock(block), block, texture + "_smooth");
             block = group.get(StoneGroup.Luxury.smooth_arch);
             BlockStateLibrary.arch(generator, idFromBlock(block), block, texture + "_smooth");
             block = group.get(StoneGroup.Luxury.polished_arrow_slit);
-            BlockStateLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_polished");
+            CastleLibrary.arrowSlit(generator, idFromBlock(block), block, texture + "_polished", 0);
             block = group.get(StoneGroup.Luxury.polished_half_arch);
             BlockStateLibrary.halfArch(generator, idFromBlock(block), block, texture + "_polished");
             block = group.get(StoneGroup.Luxury.polished_arch);

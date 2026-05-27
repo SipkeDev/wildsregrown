@@ -9,10 +9,12 @@ import com.sipke.math.Distance;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class IceSheets extends Landform {
 
     public IceSheets() {
-        super(0.5f, Placement.Elevation.highland, Climate.ice);
+        super(modid, "ice_sheets", 0.5f, Placement.Elevation.highland, Climate.ice);
     }
 
     @Override

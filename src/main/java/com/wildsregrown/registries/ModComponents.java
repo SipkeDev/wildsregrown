@@ -2,10 +2,11 @@ package com.wildsregrown.registries;
 
 import com.mojang.serialization.Codec;
 import com.wildsregrown.WildsRegrown;
-import net.minecraft.component.ComponentType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.food.FoodProperties;
 
 import static com.wildsregrown.WildsRegrown.modid;
 
@@ -13,38 +14,39 @@ public class ModComponents {
 
     //Crafting registeries
     @Deprecated
-    public static final ComponentType<String> IN_WORLD_RESULT = Registry.register(
-            Registries.DATA_COMPONENT_TYPE,
-            Identifier.of(WildsRegrown.modid, "result"),
-            ComponentType.<String>builder().codec(Codec.STRING).build());
+    public static final DataComponentType<String> IN_WORLD_RESULT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(WildsRegrown.modid, "result"),
+            DataComponentType.<String>builder().persistent(Codec.STRING).build());
 
     //Item Properties
-    public static final ComponentType<Integer> ITEM_OXIDATION = Registry.register(
-            Registries.DATA_COMPONENT_TYPE,
-            Identifier.of(WildsRegrown.modid, "item_oxidation"),
-            ComponentType.<Integer>builder().codec(Codec.INT).build());
+    public static final DataComponentType<Integer> ITEM_OXIDATION = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(WildsRegrown.modid, "item_oxidation"),
+            DataComponentType.<Integer>builder().persistent(Codec.INT).build());
 
-    public static final ComponentType<Integer> ITEM_SHARPNESS = Registry.register(
-            Registries.DATA_COMPONENT_TYPE,
-            Identifier.of(WildsRegrown.modid, "item_sharpness"),
-            ComponentType.<Integer>builder().codec(Codec.INT).build());
-
-    public static final ComponentType<Integer> ITEM_STANCE = Registry.register(
-            Registries.DATA_COMPONENT_TYPE,
-            Identifier.of(WildsRegrown.modid, "item_stance"),
-            ComponentType.<Integer>builder().codec(Codec.INT).build());
+    public static final DataComponentType<Integer> ITEM_SHARPNESS = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(WildsRegrown.modid, "item_sharpness"),
+            DataComponentType.<Integer>builder().persistent(Codec.INT).build());
 
     //Block Properties
-    public static final ComponentType<Integer> FUEL = Registry.register(
-            Registries.DATA_COMPONENT_TYPE,
-            Identifier.of(modid, "fuel"),
-            ComponentType.<Integer>builder().codec(Codec.INT).build()
+    public static final DataComponentType<Integer> FUEL = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(modid, "fuel"),
+            DataComponentType.<Integer>builder().persistent(Codec.INT).build()
     );
-    public static final ComponentType<Boolean> LIT = Registry.register(
-            Registries.DATA_COMPONENT_TYPE,
-            Identifier.of(modid, "lit"),
-            ComponentType.<Boolean>builder().codec(Codec.BOOL).build()
+    public static final DataComponentType<Boolean> LIT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(modid, "lit"),
+            DataComponentType.<Boolean>builder().persistent(Codec.BOOL).build()
     );
 
-    public static void initialize() {}
+    public static final FoodProperties WILD_FOOD = (new FoodProperties.Builder()).nutrition(3).saturationModifier(0.25F).build();
+    public static final FoodProperties APPLE = (new FoodProperties.Builder()).nutrition(5).saturationModifier(0.5F).build();
+
+
+    public static void initialize() {
+        WildsRegrown.LOGGER.info("Init WRG components");
+    }
 }

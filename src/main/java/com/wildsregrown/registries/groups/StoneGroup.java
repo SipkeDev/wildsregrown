@@ -1,17 +1,19 @@
 package com.wildsregrown.registries.groups;
 
-import com.wildsregrown.blocks.HalfStairs;
-import com.wildsregrown.blocks.Layered;
-import com.wildsregrown.blocks.QuarterStairs;
-import com.wildsregrown.blocks.StoneBlock;
 import com.wildsregrown.blocks.dungeon.DungeonItemLootPedestal;
-import com.wildsregrown.blocks.stone.castle.*;
-import com.wildsregrown.blocks.stone.decoration.StoneBrazier;
-import com.wildsregrown.blocks.stone.furniture.StoneBench;
-import com.wildsregrown.blocks.stone.furniture.StoneDiningTable;
-import com.wildsregrown.blocks.stone.furniture.StoneStool;
-import com.wildsregrown.blocks.stone.furniture.StoneTable;
-import net.minecraft.block.*;
+import com.wildsregrown.blocks.stonemasonry.castle.*;
+import com.wildsregrown.blocks.stonemasonry.decoration.StoneBrazier;
+import com.wildsregrown.blocks.stonemasonry.furniture.StoneBench;
+import com.wildsregrown.blocks.stonemasonry.furniture.StoneDiningTable;
+import com.wildsregrown.blocks.stonemasonry.furniture.StoneStool;
+import com.wildsregrown.blocks.stonemasonry.furniture.StoneTable;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import wildsregrown.api.block.shapes.Layered;
+import wildsregrown.api.block.materials.StoneBlock;
+import wildsregrown.api.block.shapes.HalfStairs;
+import wildsregrown.api.block.shapes.QuarterStairs;
 
 import static com.wildsregrown.registries.ModBlocks.*;
 import static com.wildsregrown.registries.ModItemGroups.*;
@@ -20,7 +22,7 @@ public class StoneGroup {
 
     private final String id;
 
-    public StoneGroup(String id, AbstractBlock.Settings settings, boolean construction, boolean luxury) {
+    public StoneGroup(String id, BlockBehaviour.Properties settings, boolean construction, boolean luxury) {
 
         this.id = id;
         this.common = new Block[Common.values().length];
@@ -30,36 +32,38 @@ public class StoneGroup {
         this.common[Common.layered.ordinal()]= register(id, StoneBlock::new, settings, STONE_GROUP_KEY);
         this.common[Common.quarter_stairs.ordinal()] = register(id + "_quarter_stairs"  , QuarterStairs::new, settings, STONE_GROUP_KEY);
         this.common[Common.half_stairs.ordinal()] = register(id + "_half_stairs"  , HalfStairs::new, settings, STONE_GROUP_KEY);
-        this.common[Common.stairs.ordinal()] = register(id + "_stairs"  , (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
+        this.common[Common.stairs.ordinal()] = register(id + "_stairs"  , (s) -> new StairBlock(common[Common.layered.ordinal()].defaultBlockState(), s), settings, STONE_GROUP_KEY);
         this.common[Common.cobble_layered.ordinal()]= register(id + "_cobble", StoneBlock::new, settings, STONE_GROUP_KEY);
         this.common[Common.cobble_half_stairs.ordinal()] = register(id + "_cobble_half_stairs"  , HalfStairs::new, settings, STONE_GROUP_KEY);
-        this.common[Common.cobble_stairs.ordinal()] = register(id + "_cobble" + "_stairs"  , (s) -> new StairsBlock(common[Common.cobble_layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
+        this.common[Common.cobble_stairs.ordinal()] = register(id + "_cobble" + "_stairs"  , (s) -> new StairBlock(common[Common.cobble_layered.ordinal()].defaultBlockState(), s), settings, STONE_GROUP_KEY);
 
         if (construction){
             this.construction[Construction.bricks.ordinal()]                = register(id + "_bricks", StoneBlock::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.bricks_quarter_stairs.ordinal()]    = register(id + "_bricks" + "_quarter_stairs", QuarterStairs::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.bricks_half_stairs.ordinal()]    = register(id + "_bricks" + "_half_stairs", HalfStairs::new, settings, STONE_GROUP_KEY);
-            this.construction[Construction.bricks_stairs.ordinal()]         = register(id + "_bricks" + "_stairs", (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
+            this.construction[Construction.bricks_stairs.ordinal()]         = register(id + "_bricks" + "_stairs", (s) -> new StairBlock(common[Common.layered.ordinal()].defaultBlockState(), s), settings, STONE_GROUP_KEY);
             this.construction[Construction.pavement.ordinal()]              = register(id + "_pavement", StoneBlock::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.pavement_quarter_stairs.ordinal()]    = register(id + "_pavement" + "_quarter_stairs", QuarterStairs::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.pavement_half_stairs.ordinal()]  = register(id + "_pavement" + "_half_stairs", HalfStairs::new, settings, STONE_GROUP_KEY);
-            this.construction[Construction.pavement_stairs.ordinal()]       = register(id + "_pavement" + "_stairs", (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
+            this.construction[Construction.pavement_stairs.ordinal()]       = register(id + "_pavement" + "_stairs", (s) -> new StairBlock(common[Common.layered.ordinal()].defaultBlockState(), s), settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_bricks.ordinal()]         = register(id + "_cobble_bricks", StoneBlock::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_bricks_quarter_stairs.ordinal()]    = register(id + "_cobble_bricks" + "_quarter_stairs", QuarterStairs::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_bricks_half_stairs.ordinal()]= register(id + "_cobble_bricks" + "_half_stairs", HalfStairs::new, settings, STONE_GROUP_KEY);
-            this.construction[Construction.cobble_bricks_stairs.ordinal()]  = register(id + "_cobble_bricks" + "_stairs", (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
+            this.construction[Construction.cobble_bricks_stairs.ordinal()]  = register(id + "_cobble_bricks" + "_stairs", (s) -> new StairBlock(common[Common.layered.ordinal()].defaultBlockState(), s), settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_pavement.ordinal()]       = register(id + "_cobble_pavement", StoneBlock::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_pavement_quarter_stairs.ordinal()]    = register(id + "_cobble_pavement" + "_quarter_stairs", QuarterStairs::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.cobble_pavement_half_stairs.ordinal()]= register(id + "_cobble_pavement" + "_half_stairs", HalfStairs::new, settings, STONE_GROUP_KEY);
-            this.construction[Construction.cobble_pavement_stairs.ordinal()]= register(id + "_cobble_pavement" + "_stairs", (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
+            this.construction[Construction.cobble_pavement_stairs.ordinal()]= register(id + "_cobble_pavement" + "_stairs", (s) -> new StairBlock(common[Common.layered.ordinal()].defaultBlockState(), s), settings, STONE_GROUP_KEY);
             this.construction[Construction.pillar.ordinal()]                = register(id + "_pillar", Pillar::new, settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.thin_pillar.ordinal()]           = register("thin_" + id + "_pillar", ThinPillar::new, settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.bricks_pillar.ordinal()]         = register(id + "_bricks_pillar", Pillar::new, settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.bricks_thin_pillar.ordinal()]    = register("thin_" + id + "_bricks_pillar", ThinPillar::new, settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.bricks_wall_support.ordinal()]   = register(id + "_bricks_wall_support", WallSupport::new, settings, STONE_DECO_GROUP_KEY);
-            this.construction[Construction.bricks_half_arch.ordinal()]      = register(id + "_bricks_half_arch", (s) -> new HalfArchBlock(common[Common.layered.ordinal()].getDefaultState(),s), settings, STONE_DECO_GROUP_KEY);
+            this.construction[Construction.bricks_half_arch.ordinal()]      = register(id + "_bricks_half_arch", (s) -> new HalfArchBlock(common[Common.layered.ordinal()].defaultBlockState(),s), settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.bricks_arch.ordinal()]           = register(id + "_bricks_arch", ArchBlock::new, settings, STONE_DECO_GROUP_KEY);
-            this.construction[Construction.bricks_arrow_slit.ordinal()]     = register(id + "_bricks_arrow_slit", ArrowSlitBlock::new, settings, STONE_DECO_GROUP_KEY);
+            this.construction[Construction.bricks_basic_arrow_slit.ordinal()]= register(id + "_bricks_basic_arrow_slit", ctx -> new StoneArrowSlitBlock(ctx, 0), settings, STONE_DECO_GROUP_KEY);
+            this.construction[Construction.bricks_refined_arrow_slit.ordinal()]= register(id + "_bricks_refined_arrow_slit", ctx -> new StoneArrowSlitBlock(ctx, 1), settings, STONE_DECO_GROUP_KEY);
+            this.construction[Construction.bricks_cross_arrow_slit.ordinal()]= register(id + "_bricks_cross_arrow_slit", ctx -> new StoneArrowSlitBlock(ctx, 2), settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.bricks_machicolations.ordinal()] = register(id + "_bricks_machicolations", MachicolationsBlock::new, settings, STONE_DECO_GROUP_KEY);
             this.construction[Construction.bricks_peeking_hole.ordinal()]   = register(id + "_bricks_peeking_hole", PeekingHole::new, settings, STONE_GROUP_KEY);
             this.construction[Construction.battlements.ordinal()]           = register(id + "_battlements", BattlementsBlock::new, settings, STONE_DECO_GROUP_KEY);
@@ -67,20 +71,20 @@ public class StoneGroup {
 
         if (luxury){
             this.luxury[Luxury.smooth.ordinal()]                = register(id + "_smooth", Layered::new, settings, STONE_GROUP_KEY);
-            this.luxury[Luxury.smooth_stairs.ordinal()]         = register(id + "_smooth" + "_stairs"  , (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
+            this.luxury[Luxury.smooth_stairs.ordinal()]         = register(id + "_smooth" + "_stairs"  , (s) -> new StairBlock(common[Common.layered.ordinal()].defaultBlockState(), s), settings, STONE_GROUP_KEY);
             this.luxury[Luxury.polished.ordinal()]              = register(id + "_polished", Layered::new, settings, STONE_GROUP_KEY);
-            this.luxury[Luxury.polished_stairs.ordinal()]       = register(id + "_polished" + "_stairs"  , (s) -> new StairsBlock(common[Common.layered.ordinal()].getDefaultState(), s), settings, STONE_GROUP_KEY);
+            this.luxury[Luxury.polished_stairs.ordinal()]       = register(id + "_polished" + "_stairs"  , (s) -> new StairBlock(common[Common.layered.ordinal()].defaultBlockState(), s), settings, STONE_GROUP_KEY);
             this.luxury[Luxury.balustrade.ordinal()]            = register(id + "_balustrade", Balustrade::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.smooth_balustrade.ordinal()]     = register(id + "_smooth_balustrade", Balustrade::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.brazier.ordinal()]               = register(id + "_brazier", StoneBrazier::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.smooth_brazier.ordinal()]        = register(id + "_smooth_brazier", StoneBrazier::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.dungeonItemPedestal.ordinal()]   = register(id + "_dungeon_item_pedestal", DungeonItemLootPedestal::new, settings, STONE_DECO_GROUP_KEY);
-            this.luxury[Luxury.smooth_half_arch.ordinal()]      = register(id + "_smooth_half_arch", (s) -> new HalfArchBlock(common[Common.layered.ordinal()].getDefaultState(),s), settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.smooth_half_arch.ordinal()]      = register(id + "_smooth_half_arch", (s) -> new HalfArchBlock(common[Common.layered.ordinal()].defaultBlockState(),s), settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.smooth_arch.ordinal()]           = register(id + "_smooth_arch", ArchBlock::new, settings, STONE_DECO_GROUP_KEY);
-            this.luxury[Luxury.smooth_arrow_slit.ordinal()]     = register(id + "_smooth_arrow_slit", ArrowSlitBlock::new, settings, STONE_DECO_GROUP_KEY);
-            this.luxury[Luxury.polished_half_arch.ordinal()]    = register(id + "_polished_half_arch", (s) -> new HalfArchBlock(common[Common.layered.ordinal()].getDefaultState(),s), settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.smooth_arrow_slit.ordinal()]     = register(id + "_smooth_arrow_slit", ctx -> new StoneArrowSlitBlock(ctx, 0), settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.polished_half_arch.ordinal()]    = register(id + "_polished_half_arch", (s) -> new HalfArchBlock(common[Common.layered.ordinal()].defaultBlockState(),s), settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.polished_arch.ordinal()]         = register(id + "_polished_arch", ArchBlock::new, settings, STONE_DECO_GROUP_KEY);
-            this.luxury[Luxury.polished_arrow_slit.ordinal()]   = register(id + "_polished_arrow_slit", ArrowSlitBlock::new, settings, STONE_DECO_GROUP_KEY);
+            this.luxury[Luxury.polished_arrow_slit.ordinal()]   = register(id + "_polished_arrow_slit", ctx -> new StoneArrowSlitBlock(ctx, 0), settings, STONE_DECO_GROUP_KEY);
             //Furniture
             this.luxury[Luxury.smooth_bench.ordinal()]          = register(id + "_smooth_bench", StoneBench::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.polished_bench.ordinal()]        = register(id + "_polished_bench", StoneBench::new, settings, STONE_DECO_GROUP_KEY);
@@ -90,7 +94,6 @@ public class StoneGroup {
             this.luxury[Luxury.polished_dining_table.ordinal()] = register(id + "_polished_dining_table", StoneDiningTable::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.smooth_stool.ordinal()]          = register(id + "_smooth_stool", StoneStool::new, settings, STONE_DECO_GROUP_KEY);
             this.luxury[Luxury.polished_stool.ordinal()]        = register(id + "_polished_stool", StoneStool::new, settings, STONE_DECO_GROUP_KEY);
-
         }
 
     }
@@ -132,7 +135,9 @@ public class StoneGroup {
         bricks_wall_support,
         bricks_half_arch,
         bricks_arch,
-        bricks_arrow_slit,
+        bricks_basic_arrow_slit,
+        bricks_refined_arrow_slit,
+        bricks_cross_arrow_slit,
         bricks_machicolations,
         bricks_peeking_hole,
         battlements

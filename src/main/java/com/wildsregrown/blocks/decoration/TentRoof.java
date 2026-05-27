@@ -1,31 +1,31 @@
 
 package com.wildsregrown.blocks.decoration;
 
-import com.wildsregrown.blocks.VoxelTransform;
-import com.wildsregrown.blocks.render.IRenderType;
-import com.wildsregrown.blocks.render.ITintedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.Waterloggable;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.OrderedTick;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.ticks.ScheduledTick;
+import wildsregrown.api.block.VoxelTransform;
+import wildsregrown.api.block.render.IRenderType;
+import wildsregrown.api.block.render.ITintedBlock;
 
-public class TentRoof extends Block implements Waterloggable, ITintedBlock, IRenderType {
+public class TentRoof extends Block implements SimpleWaterloggedBlock, ITintedBlock, IRenderType {
 
     private static final VoxelShape SOUTH;
     private static final VoxelShape EAST;
@@ -33,53 +33,53 @@ public class TentRoof extends Block implements Waterloggable, ITintedBlock, IRen
     private static final VoxelShape WEST;
     private final int rgb;
 
-    public TentRoof(Settings settings, int rgb) {
+    public TentRoof(Properties settings, int rgb) {
         super(settings);
-        setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(Properties.WATERLOGGED, Boolean.FALSE));
+        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE));
         this.rgb = rgb;
     }
 
 
     @Override
-    protected BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(Properties.HORIZONTAL_FACING, rotation.rotate(state.get(Properties.HORIZONTAL_FACING)));
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }
 
     @Override
-    protected BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.with(Properties.HORIZONTAL_FACING, mirror.apply(state.get(Properties.HORIZONTAL_FACING)));
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, mirror.mirror(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
-        BlockPos blockpos = context.getBlockPos();
-        FluidState fluidstate = context.getWorld().getFluidState(blockpos);
-        Direction direction = context.getHorizontalPlayerFacing();
+        BlockPos blockpos = context.getClickedPos();
+        FluidState fluidstate = context.getLevel().getFluidState(blockpos);
+        Direction direction = context.getHorizontalDirection();
 
-        return getDefaultState().with(Properties.HORIZONTAL_FACING, direction).with(Properties.WATERLOGGED, fluidstate.getProperties() == Fluids.WATER);
+        return defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, direction).setValue(BlockStateProperties.WATERLOGGED, fluidstate.getProperties() == Fluids.WATER);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-        if (state.get(Properties.WATERLOGGED)) {
-            tickView.getFluidTickScheduler().scheduleTick(OrderedTick.create(Fluids.WATER,pos));
+    public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+            tickView.getFluidTicks().schedule(ScheduledTick.probe(Fluids.WATER,pos));
         }
         return state;
     }
 
     public FluidState getFluidState(BlockState state)
     {
-        return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder){
-        builder.add(Properties.HORIZONTAL_FACING, Properties.WATERLOGGED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder){
+        builder.add(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.WATERLOGGED);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        switch (state.get(Properties.HORIZONTAL_FACING)) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
             case SOUTH -> {return SOUTH;}
             case EAST  -> {return EAST ;}
             case NORTH -> {return NORTH;}
@@ -89,27 +89,27 @@ public class TentRoof extends Block implements Waterloggable, ITintedBlock, IRen
     }
 
     static {
-        SOUTH = VoxelShapes.union(
-                Block.createCuboidShape(0, 0, 0, 16, 1, 9),
-                Block.createCuboidShape(0, -1, 0, 16, 0, 8),
-                Block.createCuboidShape(0, -2, 1, 16, -1, 7),
-                Block.createCuboidShape(0, -3, 2, 16, -2, 6),
-                Block.createCuboidShape(0, 15, 15, 16, 16, 17),
-                Block.createCuboidShape(0, -4, 3, 16, -3, 5),
-                Block.createCuboidShape(0, 13, 13, 16, 14, 19),
-                Block.createCuboidShape(0, 9, 9, 16, 10, 18),
-                Block.createCuboidShape(0, 11, 11, 16, 12, 20),
-                Block.createCuboidShape(0, 7, 7, 16, 8, 16),
-                Block.createCuboidShape(0, 5, 5, 16, 6, 14),
-                Block.createCuboidShape(0, 3, 3, 16, 4, 12),
-                Block.createCuboidShape(0, 1, 1, 16, 2, 10),
-                Block.createCuboidShape(0, 2, 2, 16, 3, 11),
-                Block.createCuboidShape(0, 4, 4, 16, 5, 13),
-                Block.createCuboidShape(0, 6, 6, 16, 7, 15),
-                Block.createCuboidShape(0, 10, 10, 16, 11, 19),
-                Block.createCuboidShape(0, 8, 8, 16, 9, 17),
-                Block.createCuboidShape(0, 12, 12, 16, 13, 20),
-                Block.createCuboidShape(0, 14, 14, 16, 15, 18)
+        SOUTH = Shapes.or(
+                Block.box(0, 0, 0, 16, 1, 9),
+                Block.box(0, -1, 0, 16, 0, 8),
+                Block.box(0, -2, 1, 16, -1, 7),
+                Block.box(0, -3, 2, 16, -2, 6),
+                Block.box(0, 15, 15, 16, 16, 17),
+                Block.box(0, -4, 3, 16, -3, 5),
+                Block.box(0, 13, 13, 16, 14, 19),
+                Block.box(0, 9, 9, 16, 10, 18),
+                Block.box(0, 11, 11, 16, 12, 20),
+                Block.box(0, 7, 7, 16, 8, 16),
+                Block.box(0, 5, 5, 16, 6, 14),
+                Block.box(0, 3, 3, 16, 4, 12),
+                Block.box(0, 1, 1, 16, 2, 10),
+                Block.box(0, 2, 2, 16, 3, 11),
+                Block.box(0, 4, 4, 16, 5, 13),
+                Block.box(0, 6, 6, 16, 7, 15),
+                Block.box(0, 10, 10, 16, 11, 19),
+                Block.box(0, 8, 8, 16, 9, 17),
+                Block.box(0, 12, 12, 16, 13, 20),
+                Block.box(0, 14, 14, 16, 15, 18)
         );
         NORTH = VoxelTransform.rotate180(SOUTH);
         EAST  = VoxelTransform.rotate270(SOUTH);

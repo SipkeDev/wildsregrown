@@ -3,10 +3,13 @@ package com.wildsregrown.data;
 import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.data.tags.BiomeTagGenerator;
 import com.wildsregrown.data.tags.BlockTagGenerator;
+import com.wildsregrown.data.tags.FluidTagProvider;
+import com.wildsregrown.data.tags.ItemTagGenerator;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.minecraft.block.Block;
-import net.minecraft.registry.*;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.Block;
 
 public class DataGeneratorProvider implements DataGeneratorEntrypoint {
 
@@ -28,12 +31,12 @@ public class DataGeneratorProvider implements DataGeneratorEntrypoint {
 	}
 
 	@Override
-	public void buildRegistry(RegistryBuilder registryBuilder) {
+	public void buildRegistry(RegistrySetBuilder registryBuilder) {
 		WRGDynamicRegistry.buildRegistry(registryBuilder);
 	}
 
 	public static String idFromBlock(Block block) {
-		return Registries.BLOCK.getId(block).getPath().replaceFirst(".*\\.", "");
+		return BuiltInRegistries.BLOCK.getKey(block).getPath().replaceFirst(".*\\.", "");
 	}
 
 }

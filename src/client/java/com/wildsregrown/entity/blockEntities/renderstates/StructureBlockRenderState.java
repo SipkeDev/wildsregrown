@@ -1,6 +1,6 @@
 package com.wildsregrown.entity.blockEntities.renderstates;
 
-import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 
 public class StructureBlockRenderState extends BlockEntityRenderState {
     public int light = 255;

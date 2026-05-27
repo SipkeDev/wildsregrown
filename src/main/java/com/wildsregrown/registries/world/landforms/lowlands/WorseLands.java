@@ -9,15 +9,17 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class WorseLands extends Landform {
 
     public WorseLands() {
-        super(0.32f, Placement.Elevation.lowland, Climate.coolDesert, Climate.hotScrubland, Climate.coolShrubland, Climate.savanna, Climate.chaparral, Climate.steppe);
-        register(new StratumConfig(MaterialRegistery.sandstone_brown.getKey(), 8, 25, 4));
-        register(new StratumConfig(MaterialRegistery.sandstone_beige.getKey(), 2, 12, 3));
-        register(new StratumConfig(MaterialRegistery.sandstone_yellow.getKey(), 5, 25, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_white.getKey(), 1, 5, 1));
-        register(new StratumConfig(MaterialRegistery.sandstone_red.getKey(), 1, 5, 1));
+        super(modid, "worse_lands", 0.32f, Placement.Elevation.lowland, Climate.coolDesert, Climate.hotScrubland, Climate.coolShrubland, Climate.savanna, Climate.chaparral, Climate.steppe);
+        register(MaterialRegistery.sandstone_brown, 8, 25, 4);
+        register(MaterialRegistery.sandstone_beige, 2, 12, 3);
+        register(MaterialRegistery.sandstone_yellow, 5, 25, 2);
+        register(MaterialRegistery.sandstone_white, 1, 5, 1);
+        register(MaterialRegistery.sandstone_red, 1, 5, 1);
     }
 
     @Override

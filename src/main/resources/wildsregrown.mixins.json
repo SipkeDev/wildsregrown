@@ -3,14 +3,9 @@
   "package": "com.wildsregrown.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "SilenceLog",
     "block.BlockStateMixin",
     "block.CreativeBlockMixin",
-    "block.OffsetAccessor",
-    "block.WaterLogableMixin",
-    "world.LevelPropertiesMixin",
-    "world.SectionMixin",
-    "world.WorldLoading"
+    "block.OffsetAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

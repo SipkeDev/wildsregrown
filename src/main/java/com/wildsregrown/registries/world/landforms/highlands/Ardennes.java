@@ -12,15 +12,17 @@ import com.sipke.math.MapType;
 import com.sipke.noise2d.Noise;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Ardennes extends Landform {
 
     public Ardennes() {
-        super(0.5f, Placement.Elevation.highland, Climate.steppe, Climate.mixedForest, Climate.deciduousForest, Climate.coniferousForest);
-        register(MaterialRegistery.limestone_grey.getKey(), 1, 24, 8);
-        register(MaterialRegistery.slate_grey.getKey(), 1, 24, 5);
-        register(MaterialRegistery.slate_purple.getKey(), 1, 5, 3);
-        register(MaterialRegistery.slate_blue.getKey(), 1, 3, 2);
-        register(MaterialRegistery.marble_green.getKey(), 1, 2, 1);
+        super(modid, "ardennes", 0.5f, Placement.Elevation.highland, Climate.steppe, Climate.mixedForest, Climate.deciduousForest, Climate.coniferousForest);
+        register(MaterialRegistery.limestone_grey, 1, 24, 8);
+        register(MaterialRegistery.slate_grey, 1, 24, 5);
+        register(MaterialRegistery.slate_purple, 1, 5, 3);
+        register(MaterialRegistery.slate_blue, 1, 3, 2);
+        register(MaterialRegistery.marble_green, 1, 2, 1);
     }
 
     @Override

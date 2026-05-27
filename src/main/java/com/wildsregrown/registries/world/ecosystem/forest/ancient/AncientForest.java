@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class AncientForest extends Ecosystem {
 
     public AncientForest(){
-        super(Climate.ancientForest, Biomes.ancientForest);
+        super(modid, "ancient_forest", Climate.ancientForest, Biomes.ancientForest);
         register(Placement.Biome.dry, Biomes.birch_meadow);
         register(Placement.Biome.wet, Biomes.jacarandaForest);
         register(Placement.Biome.swamp, Biomes.swamp);

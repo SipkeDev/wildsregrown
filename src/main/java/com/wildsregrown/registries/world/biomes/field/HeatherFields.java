@@ -1,17 +1,18 @@
 package com.wildsregrown.registries.world.biomes.field;
 
 import com.sipke.Constant;
-import com.sipke.NoiseGenerator;
-import com.sipke.api.features.flora.FloraSpawnRule;
+import com.sipke.api.features.botanic.flora.FloraSpawnRule;
 import com.sipke.api.terrain.Biome;
-import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.wildsregrown.registries.world.Floras;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class HeatherFields extends Biome {
 
     public HeatherFields() {
+        super(modid, "heather_fields");
         setSurface(MaterialRegistery.sand_beige, 3f);
         register(Floras.heather_lilac, FloraSpawnRule.grouped, 0.75f, 1,true);
         register(Floras.heather_purple, FloraSpawnRule.dotted, 0.75f, 1,true);

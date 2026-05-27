@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class DrintskFryskWold extends Ecosystem {
 
     public DrintskFryskWold(){
-        super(Climate.mixedForest, Biomes.larchForest);
+        super(modid, "drintsk_frysk_wold", Climate.mixedForest, Biomes.larchForest);
         register(Placement.Biome.normal, Biomes.larchForest_artiplex);
         register(Placement.Biome.normal, Biomes.spruceForest);
         register(Placement.Biome.normal, Biomes.heather_meadow);

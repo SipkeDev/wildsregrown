@@ -7,10 +7,12 @@ import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class FlatLands extends Landform {
 
     public FlatLands() {
-        super(0.2f, Placement.Elevation.lowland, Climate.hotDesert, Climate.coolDesert, Climate.ice, Climate.tundra, Climate.coniferousForest, Climate.savanna, Climate.steppe);
+        super(modid, "flat_lands", 0.2f, Placement.Elevation.lowland, Climate.hotDesert, Climate.coolDesert, Climate.ice, Climate.tundra, Climate.coniferousForest, Climate.savanna, Climate.steppe);
     }
 
     @Override

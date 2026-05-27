@@ -3,20 +3,24 @@ package com.wildsregrown.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.*;
-import net.minecraft.recipe.book.RecipeBookCategories;
-import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 public record ToolEventRecipe(int stance, Ingredient tool, Ingredient material, ItemStack output) implements Recipe<ToolEventInput> {
 
     @Override
-    public boolean matches(ToolEventInput input, World world) {
+    public boolean matches(ToolEventInput input, Level world) {
         if (stance == input.stance()) {
             return tool.test(input.tool()) && material.test(input.material());
         }
@@ -24,7 +28,7 @@ public record ToolEventRecipe(int stance, Ingredient tool, Ingredient material, 
     }
 
     @Override
-    public ItemStack craft(ToolEventInput input, RegistryWrapper.WrapperLookup registries) {
+    public ItemStack assemble(ToolEventInput recipeInput, HolderLookup.Provider provider) {
         return output.copy();
     }
 
@@ -39,12 +43,12 @@ public record ToolEventRecipe(int stance, Ingredient tool, Ingredient material, 
     }
 
     @Override
-    public IngredientPlacement getIngredientPlacement() {
-        return IngredientPlacement.NONE;
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
     }
 
     @Override
-    public RecipeBookCategory getRecipeBookCategory() {
+    public RecipeBookCategory recipeBookCategory() {
         return RecipeBookCategories.CRAFTING_BUILDING_BLOCKS;
     }
 
@@ -58,12 +62,12 @@ public record ToolEventRecipe(int stance, Ingredient tool, Ingredient material, 
                     ItemStack.CODEC.fieldOf("result").forGetter(ToolEventRecipe::output)).apply(inst, ToolEventRecipe::new));
         }
         @Override
-        public PacketCodec<RegistryByteBuf, ToolEventRecipe> packetCodec() {
-            return PacketCodec.tuple(
-                    PacketCodecs.INTEGER, ToolEventRecipe::stance,
-                    Ingredient.PACKET_CODEC, ToolEventRecipe::tool,
-                    Ingredient.PACKET_CODEC, ToolEventRecipe::material,
-                    ItemStack.PACKET_CODEC, ToolEventRecipe::output,
+        public StreamCodec<RegistryFriendlyByteBuf, ToolEventRecipe> streamCodec() {
+            return StreamCodec.composite(
+                    ByteBufCodecs.INT, ToolEventRecipe::stance,
+                    Ingredient.CONTENTS_STREAM_CODEC, ToolEventRecipe::tool,
+                    Ingredient.CONTENTS_STREAM_CODEC, ToolEventRecipe::material,
+                    ItemStack.STREAM_CODEC, ToolEventRecipe::output,
                     ToolEventRecipe::new);
         }
     }

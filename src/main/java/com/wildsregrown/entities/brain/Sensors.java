@@ -1,13 +1,12 @@
 package com.wildsregrown.entities.brain;
 
-import net.minecraft.entity.ai.brain.sensor.DummySensor;
-import net.minecraft.entity.ai.brain.sensor.Sensor;
-import net.minecraft.entity.ai.brain.sensor.SensorType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-
 import java.util.function.Supplier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.sensing.DummySensor;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 
 import static com.wildsregrown.WildsRegrown.modid;
 
@@ -32,7 +31,7 @@ public class Sensors extends SensorType<DummySensor> {
     }
 
     private static <U extends Sensor<?>> SensorType<U> register(String id, Supplier<U> factory) {
-        return (SensorType) Registry.register(Registries.SENSOR_TYPE, Identifier.of(modid, id), new SensorType(factory));
+        return (SensorType) Registry.register(BuiltInRegistries.SENSOR_TYPE, Identifier.fromNamespaceAndPath(modid, id), new SensorType(factory));
     }
 
 }

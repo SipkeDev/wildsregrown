@@ -11,16 +11,18 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Mountain extends Landform {
 
     public Mountain() {
-        super(1f, Placement.Elevation.mountain, Climate.chaparral, Climate.coniferousForest, Climate.polarDesert, Climate.tundra);
-        register(new StratumConfig(MaterialRegistery.limestone_grey.getKey(), 5, 34,5));
-        register(new StratumConfig(MaterialRegistery.limestone_beige.getKey(), 5, 13, 3));
-        register(new StratumConfig(MaterialRegistery.sandstone_grey.getKey(), 5, 13, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_beige.getKey(), 5, 8, 2));
-        register(new StratumConfig(MaterialRegistery.slate_grey.getKey(), 3, 5, 1));
-        register(new StratumConfig(MaterialRegistery.shale_grey.getKey(), 5, 8, 1));
+        super(modid, "mountain", 1f, Placement.Elevation.mountain, Climate.chaparral, Climate.coniferousForest, Climate.polarDesert, Climate.tundra);
+        register(MaterialRegistery.limestone_grey, 5, 34,5);
+        register(MaterialRegistery.limestone_beige, 5, 13, 3);
+        register(MaterialRegistery.sandstone_grey, 5, 13, 2);
+        register(MaterialRegistery.sandstone_beige, 5, 8, 2);
+        register(MaterialRegistery.slate_grey, 3, 5, 1);
+        register(MaterialRegistery.shale_grey, 5, 8, 1);
     }
 
     @Override

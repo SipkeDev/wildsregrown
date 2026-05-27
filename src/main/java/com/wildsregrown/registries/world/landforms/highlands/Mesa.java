@@ -8,10 +8,12 @@ import com.sipke.math.MapType;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Mesa extends Landform {
 
     public Mesa() {
-        super(0.5f, Placement.Elevation.highland, Climate.hotDesert, Climate.hotScrubland, Climate.savanna);
+        super(modid, "mesa", 0.5f, Placement.Elevation.highland, Climate.hotDesert, Climate.hotScrubland, Climate.savanna);
     }
 
     @Override

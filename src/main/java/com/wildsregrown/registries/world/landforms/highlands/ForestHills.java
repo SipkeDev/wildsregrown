@@ -9,10 +9,12 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.sipke.Constant;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class ForestHills extends Landform {
 
     public ForestHills() {
-        super(0.35f, Placement.Elevation.highland, Climate.mixedForest, Climate.coniferousForest, Climate.deciduousForest, Climate.ancientForest, Climate.spiritForest);
+        super(modid, "forest_hills", 0.35f, Placement.Elevation.highland, Climate.mixedForest, Climate.coniferousForest, Climate.deciduousForest, Climate.ancientForest, Climate.spiritForest);
     }
 
     @Override

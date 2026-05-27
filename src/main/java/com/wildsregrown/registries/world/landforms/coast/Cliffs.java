@@ -10,15 +10,17 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Cliffs extends Landform {
 
     public Cliffs() {
-        super(0.3f, Placement.Elevation.coast, Climate.tundra, Climate.coniferousForest, Climate.mixedForest, Climate.deciduousForest, Climate.ancientForest, Climate.spiritForest, Climate.steppe, Climate.tundra, Climate.polarDesert, Climate.ice);
-        register(new StratumConfig(MaterialRegistery.limestone_grey.getKey(), 5, 32, 2));
-        register(new StratumConfig(MaterialRegistery.limestone_beige.getKey(), 5, 32, 2));
-        register(new StratumConfig(MaterialRegistery.limestone_white.getKey(), 2, 5, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_grey.getKey(), 20, 30, 8));
-        register(new StratumConfig(MaterialRegistery.sandstone_beige.getKey(), 20, 30, 4));
+        super(modid, "cliffs", 0.3f, Placement.Elevation.coast, Climate.tundra, Climate.coniferousForest, Climate.mixedForest, Climate.deciduousForest, Climate.ancientForest, Climate.spiritForest, Climate.steppe, Climate.tundra, Climate.polarDesert, Climate.ice);
+        register(MaterialRegistery.limestone_grey, 5, 32, 2);
+        register(MaterialRegistery.limestone_beige, 5, 32, 2);
+        register(MaterialRegistery.limestone_white, 2, 5, 2);
+        register(MaterialRegistery.sandstone_grey, 20, 30, 8);
+        register(MaterialRegistery.sandstone_beige, 20, 30, 4);
     }
 
     @Override

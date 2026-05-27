@@ -9,17 +9,19 @@ import com.sipke.noise2d.Noise;
 import com.sipke.Constant;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Flat extends Landform {
 
     public Flat() {
-        super(0f, Placement.Elevation.lowland, Climate.tundra, Climate.polarDesert, Climate.ice);
-        register(new StratumConfig(MaterialRegistery.limestone_grey.getKey(), 14, 26, 3));
-        register(new StratumConfig(MaterialRegistery.sandstone_grey.getKey(), 8, 14, 2));
-        register(new StratumConfig(MaterialRegistery.slate_grey.getKey(), 5, 10, 2));
-        register(new StratumConfig(MaterialRegistery.slate_blue.getKey(), 2, 6, 1));
-        register(new StratumConfig(MaterialRegistery.marble_white.getKey(), 2, 6, 1));
-        register(new StratumConfig(MaterialRegistery.marble_black.getKey(), 2, 6, 1));
-        register(new StratumConfig(MaterialRegistery.marble_portoro.getKey(), 2, 6, 1));
+        super(modid, "flat", 0f, Placement.Elevation.lowland, Climate.tundra, Climate.polarDesert, Climate.ice);
+        register(MaterialRegistery.limestone_grey, 14, 26, 3);
+        register(MaterialRegistery.sandstone_grey, 8, 14, 2);
+        register(MaterialRegistery.slate_grey, 5, 10, 2);
+        register(MaterialRegistery.slate_blue, 2, 6, 1);
+        register(MaterialRegistery.marble_white, 2, 6, 1);
+        register(MaterialRegistery.marble_black, 2, 6, 1);
+        register(MaterialRegistery.marble_portoro, 2, 6, 1);
     }
 
     @Override

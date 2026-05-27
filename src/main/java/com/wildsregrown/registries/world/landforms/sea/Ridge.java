@@ -7,10 +7,12 @@ import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Ridge extends Landform {
 
     public Ridge() {
-        super(8, Placement.Elevation.sea, Climate.coldSea, Climate.temperateSea, Climate.warmSea);
+        super(modid, "ridge", 0.08f, Placement.Elevation.sea, Climate.coldSea, Climate.temperateSea, Climate.warmSea);
     }
 
     @Override

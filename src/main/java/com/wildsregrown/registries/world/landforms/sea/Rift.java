@@ -8,10 +8,12 @@ import com.sipke.math.MapType;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Rift extends Landform {
 
     public Rift() {
-        super(0.125f, Placement.Elevation.sea, Climate.coldSea, Climate.temperateSea, Climate.warmSea);
+        super(modid, "rift", 0.125f, Placement.Elevation.sea, Climate.coldSea, Climate.temperateSea, Climate.warmSea);
     }
 
     @Override

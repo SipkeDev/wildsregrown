@@ -1,14 +1,14 @@
 package com.wildsregrown.entity.blockEntities.renderstates;
 
-import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
-import net.minecraft.client.render.item.ItemRenderState;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.core.Direction;
 
 public class ShelvesRenderState extends BlockEntityRenderState {
 
     public int light = 255;
-    public final ItemRenderState leftState = new ItemRenderState();
-    public final ItemRenderState rightState = new ItemRenderState();
+    public final ItemStackRenderState leftState = new ItemStackRenderState();
+    public final ItemStackRenderState rightState = new ItemStackRenderState();
     public Direction facing = null;
 
 }

@@ -7,10 +7,12 @@ import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Tundra extends Landform {
 
     public Tundra (){
-        super(0.12f, Placement.Elevation.lowland, Climate.tundra, Climate.ice, Climate.polarDesert);
+        super(modid, "tundra", 0.12f, Placement.Elevation.lowland, Climate.tundra, Climate.ice, Climate.polarDesert);
     }
 
     @Override

@@ -6,7 +6,13 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.sipke.Constant;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class ColdSea extends Biome {
+
+    public ColdSea(){
+        super(modid, "cold_sea");
+    }
 
     @Override
     protected Noise treeDensityNoise(int seed) {

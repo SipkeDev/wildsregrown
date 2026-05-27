@@ -1,50 +1,50 @@
 package com.wildsregrown.data.recipes;
 
 import com.wildsregrown.recipe.ToolEventRecipe;
-import net.minecraft.advancement.AdvancementCriterion;
-import net.minecraft.block.Block;
-import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.recipe.RecipeExporter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-public class ToolWorkBenchEventBuilder implements CraftingRecipeJsonBuilder {
+public class ToolWorkBenchEventBuilder implements RecipeBuilder {
 
     private final Ingredient tool;
     private final int stance;
     private final Ingredient material;
     private final ItemStack output;
 
-    public ToolWorkBenchEventBuilder(RegistryEntryLookup<Item> registries, int stance, TagKey<Item> tool, Block material, Block workbench, Block output){
-        this.tool = Ingredient.ofTag(registries.getOrThrow(tool));
-        this.material = Ingredient.ofItem(material.asItem());
+    public ToolWorkBenchEventBuilder(HolderGetter<Item> registries, int stance, TagKey<Item> tool, Block material, Block workbench, Block output){
+        this.tool = Ingredient.of(registries.getOrThrow(tool));
+        this.material = Ingredient.of(material.asItem());
         this.stance = stance;
-        this.output = output.asItem().getDefaultStack();
+        this.output = output.asItem().getDefaultInstance();
     }
 
     @Override
-    public CraftingRecipeJsonBuilder criterion(String name, AdvancementCriterion<?> criterion) {
+    public RecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
         return this;
     }
 
     @Override
-    public CraftingRecipeJsonBuilder group(@Nullable String group) {
+    public RecipeBuilder group(@Nullable String group) {
         return this;
     }
 
     @Override
-    public Item getOutputItem() {
+    public Item getResult() {
         return this.output.getItem();
     }
 
     @Override
-    public void offerTo(RecipeExporter exporter, RegistryKey<Recipe<?>> recipeKey) {
+    public void save(RecipeOutput exporter, ResourceKey<Recipe<?>> recipeKey) {
         exporter.accept(recipeKey, new ToolEventRecipe(stance, tool, material, output), null);
     }
 

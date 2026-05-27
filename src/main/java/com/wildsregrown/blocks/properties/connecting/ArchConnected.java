@@ -1,9 +1,9 @@
 package com.wildsregrown.blocks.properties.connecting;
 
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-public enum ArchConnected implements StringIdentifiable {
+public enum ArchConnected implements StringRepresentable {
 
     //Single indentity
     SINGLE("single"),
@@ -24,14 +24,14 @@ public enum ArchConnected implements StringIdentifiable {
     QUAD_RIGHT_RIGHT("quad_right_right");
 
     private final String name;
-    public static final EnumProperty<ArchConnected> ARCH = EnumProperty.of("arch", ArchConnected.class);
+    public static final EnumProperty<ArchConnected> ARCH = EnumProperty.create("arch", ArchConnected.class);
 
     private ArchConnected(String name) {
         this.name = name;
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return name;
     }
 }

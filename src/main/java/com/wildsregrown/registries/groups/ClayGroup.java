@@ -1,16 +1,18 @@
 package com.wildsregrown.registries.groups;
 
-import com.wildsregrown.blocks.HalfStairs;
-import com.wildsregrown.blocks.Layered;
-import com.wildsregrown.blocks.QuarterStairs;
-import com.wildsregrown.blocks.SoilBlock;
-import com.wildsregrown.blocks.decoration.pottery.Amphora;
-import com.wildsregrown.blocks.decoration.pottery.Urn;
-import com.wildsregrown.blocks.stone.castle.*;
-import com.wildsregrown.blocks.wood.framing.Roof;
+import com.wildsregrown.blocks.pottery.Amphora;
+import com.wildsregrown.blocks.pottery.Urn;
+import com.wildsregrown.blocks.stonemasonry.castle.*;
+import com.wildsregrown.blocks.carpentry.framing.Roof;
 import com.wildsregrown.registries.ModBlocks;
-import net.minecraft.block.*;
-
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import wildsregrown.api.block.materials.SoilBlock;
+import wildsregrown.api.block.shapes.HalfStairs;
+import wildsregrown.api.block.shapes.Layered;
+import wildsregrown.api.block.shapes.QuarterStairs;
 
 import static com.wildsregrown.registries.ModItemGroups.*;
 
@@ -18,7 +20,7 @@ public class ClayGroup {
 
     public ClayGroup(String id) {
 
-        AbstractBlock.Settings settings = AbstractBlock.Settings.copy(Blocks.DIRT);
+        BlockBehaviour.Properties settings = BlockBehaviour.Properties.ofFullCopy(Blocks.DIRT);
 
         this.bricks     = new Block[Bricks.values().length];
         this.old_bricks = new Block[Bricks.values().length];
@@ -27,35 +29,35 @@ public class ClayGroup {
         this.pottery    = new Block[Pottery.values().length];
 
         //Soil
-        this.soil = ModBlocks.register(id, SoilBlock::new, AbstractBlock.Settings.copy(Blocks.CLAY), SOIL_GROUP_KEY);
+        this.soil = ModBlocks.register(id, SoilBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CLAY), SOIL_GROUP_KEY);
 
         //Bricks
         this.bricks[Bricks.block.ordinal()]        = ModBlocks.register(id + "_bricks"            , Layered::new      , settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.quarter_stairs.ordinal()]= ModBlocks.register(id + "_brick_quarter_stairs", QuarterStairs::new, settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.half_stairs.ordinal()]   = ModBlocks.register(id + "_brick_half_stairs", HalfStairs::new, settings, SOIL_GROUP_KEY);
-        this.bricks[Bricks.stairs.ordinal()]       = ModBlocks.register(id + "_brick_stairs"      , (s) -> new StairsBlock(bricks[Bricks.block.ordinal()].getDefaultState()  , s)      , settings        , SOIL_GROUP_KEY);
+        this.bricks[Bricks.stairs.ordinal()]       = ModBlocks.register(id + "_brick_stairs"      , (s) -> new StairBlock(bricks[Bricks.block.ordinal()].defaultBlockState()  , s)      , settings        , SOIL_GROUP_KEY);
         this.bricks[Bricks.balustrade.ordinal()]   = ModBlocks.register(id + "_brick_balustrade"  , Balustrade::new    , settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.wall_support.ordinal()] = ModBlocks.register(id + "_brick_wall_support", WallSupport::new   , settings, SOIL_GROUP_KEY);
         this.bricks[Bricks.arch.ordinal()]         = ModBlocks.register(id + "_brick_arch"        , ArchBlock::new     , settings, SOIL_GROUP_KEY);
-        this.bricks[Bricks.arrow_slit.ordinal()]   = ModBlocks.register(id + "_brick_arrow_slit"  , ArrowSlitBlock::new, settings, SOIL_GROUP_KEY);
-        this.bricks[Bricks.half_arch.ordinal()]    = ModBlocks.register(id + "_brick_half_arch"   , (s) -> new HalfArchBlock(bricks[Bricks.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
+        this.bricks[Bricks.arrow_slit.ordinal()]   = ModBlocks.register(id + "_brick_arrow_slit"  , ctx -> new StoneArrowSlitBlock(ctx, 0), settings, SOIL_GROUP_KEY);
+        this.bricks[Bricks.half_arch.ordinal()]    = ModBlocks.register(id + "_brick_half_arch"   , (s) -> new HalfArchBlock(bricks[Bricks.block.ordinal()].defaultBlockState(), s)      , settings        , SOIL_GROUP_KEY);
 
         //Old Bricks
         this.old_bricks[Bricks.block.ordinal()]        = ModBlocks.register("old_" + id + "_bricks"            , Layered::new       , settings, SOIL_GROUP_KEY);
         this.old_bricks[Bricks.quarter_stairs.ordinal()]= ModBlocks.register("old_" + id + "_brick_quarter_stairs", QuarterStairs::new, settings, SOIL_GROUP_KEY);
         this.old_bricks[Bricks.half_stairs.ordinal()]   = ModBlocks.register("old_" + id + "_brick_half_stairs", HalfStairs::new, settings, SOIL_GROUP_KEY);
-        this.old_bricks[Bricks.stairs.ordinal()]       = ModBlocks.register("old_" + id + "_brick_stairs"      , (s) -> new StairsBlock(old_bricks[Bricks.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
+        this.old_bricks[Bricks.stairs.ordinal()]       = ModBlocks.register("old_" + id + "_brick_stairs"      , (s) -> new StairBlock(old_bricks[Bricks.block.ordinal()].defaultBlockState(), s)      , settings        , SOIL_GROUP_KEY);
         this.old_bricks[Bricks.balustrade.ordinal()]   = ModBlocks.register("old_" + id + "_brick_balustrade"  , Balustrade::new    , settings, SOIL_GROUP_KEY);
         this.old_bricks[Bricks.wall_support.ordinal()] = ModBlocks.register("old_" + id + "_brick_wall_support", WallSupport::new   , settings, SOIL_GROUP_KEY);
         this.old_bricks[Bricks.arch.ordinal()]         = ModBlocks.register("old_" + id + "_brick_arch"        , ArchBlock::new     , settings, SOIL_GROUP_KEY);
-        this.old_bricks[Bricks.arrow_slit.ordinal()]   = ModBlocks.register("old_" + id + "_brick_arrow_slit"  , ArrowSlitBlock::new, settings, SOIL_GROUP_KEY);
-        this.old_bricks[Bricks.half_arch.ordinal()]    = ModBlocks.register("old_" + id + "_brick_half_arch"   , (s) -> new HalfArchBlock(old_bricks[Bricks.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
+        this.old_bricks[Bricks.arrow_slit.ordinal()]   = ModBlocks.register("old_" + id + "_brick_arrow_slit"  , ctx -> new StoneArrowSlitBlock(ctx, 0), settings, SOIL_GROUP_KEY);
+        this.old_bricks[Bricks.half_arch.ordinal()]    = ModBlocks.register("old_" + id + "_brick_half_arch"   , (s) -> new HalfArchBlock(old_bricks[Bricks.block.ordinal()].defaultBlockState(), s)      , settings        , SOIL_GROUP_KEY);
 
         //Roof Tiles
         this.tiles[Tiles.block.ordinal()] = ModBlocks.register(id + "_tiles", Layered::new, settings, SOIL_GROUP_KEY);
         this.tiles[Tiles.quarter_stairs.ordinal()]= ModBlocks.register(id + "_tile" + "_quarter_stairs", QuarterStairs::new, settings, SOIL_GROUP_KEY);
         this.tiles[Tiles.half_stairs.ordinal()]   = ModBlocks.register(id + "_tile" + "_half_stairs", HalfStairs::new, settings, SOIL_GROUP_KEY);
-        this.tiles[Tiles.stairs.ordinal()]  = ModBlocks.register(id + "_tile_stairs" , (s) -> new StairsBlock(tiles[Tiles.block.ordinal()].getDefaultState(), s)      , settings        , SOIL_GROUP_KEY);
+        this.tiles[Tiles.stairs.ordinal()]  = ModBlocks.register(id + "_tile_stairs" , (s) -> new StairBlock(tiles[Tiles.block.ordinal()].defaultBlockState(), s)      , settings        , SOIL_GROUP_KEY);
         this.tiles[Tiles.roof.ordinal()]  = ModBlocks.register(id + "_tile_roof" , Roof::new, settings, SOIL_GROUP_KEY);
 
         //Plaster

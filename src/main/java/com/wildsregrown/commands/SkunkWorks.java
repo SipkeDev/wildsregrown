@@ -2,38 +2,37 @@
 package com.wildsregrown.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.sipke.api.features.trees.graph.TreeGraph;
-import com.sipke.api.features.trees.graph.TreeNode;
+import com.sipke.api.features.botanic.trees.graph.TreeGraph;
+import com.sipke.api.features.botanic.trees.graph.TreeNode;
 import com.sipke.features.trees.TreeBuilder;
 import com.wildsregrown.registries.world.Trees;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-
 import java.util.Random;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Blocks;
 
 public class SkunkWorks {
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register((CommandManager.literal("skunkworks").requires(ServerCommandSource::isExecutedByPlayer))
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register((Commands.literal("skunkworks").requires(CommandSourceStack::isPlayer))
                         .executes((context) -> skunkworks(context.getSource()))
         );
     }
 
-    public static int skunkworks(ServerCommandSource source) {
+    public static int skunkworks(CommandSourceStack source) {
 
-        ServerWorld world = source.getWorld();
-        BlockPos pos = source.getPlayer().getBlockPos();
+        ServerLevel world = source.getLevel();
+        BlockPos pos = source.getPlayer().blockPosition();
         TreeGraph graph = TreeGraph.create(Trees.ancient_oak.getKey());
         TreeBuilder.update(graph,new Random().nextInt(),12, 1);
-        render(graph.getRoot(), pos, world);
+        //render(graph.getRoot(), pos, world);
 
         return 0;
     }
 
-    private static void render(TreeNode localRoot, BlockPos pos, ServerWorld world) {
+    private static void render(TreeNode localRoot, BlockPos pos, ServerLevel world) {
         if (localRoot != null) {
 
             BlockPos newPos = new BlockPos(
@@ -43,15 +42,15 @@ public class SkunkWorks {
             );
 
             if (localRoot.volume > 1) {
-                world.setBlockState(newPos, Blocks.GLASS.getDefaultState());
+                world.setBlockAndUpdate(newPos, Blocks.GLASS.defaultBlockState());
             }else
             if (localRoot.volume > 0.5) {
-                world.setBlockState(newPos, Blocks.BLACK_STAINED_GLASS.getDefaultState());
+                world.setBlockAndUpdate(newPos, Blocks.BLACK_STAINED_GLASS.defaultBlockState());
             }else
             if (localRoot.volume > 0.25) {
-                world.setBlockState(newPos, Blocks.WHITE_STAINED_GLASS.getDefaultState());
+                world.setBlockAndUpdate(newPos, Blocks.WHITE_STAINED_GLASS.defaultBlockState());
             }else {
-                world.setBlockState(newPos, Blocks.OAK_LEAVES.getDefaultState());
+                world.setBlockAndUpdate(newPos, Blocks.OAK_LEAVES.defaultBlockState());
             }
 
             render(localRoot.left, pos, world);

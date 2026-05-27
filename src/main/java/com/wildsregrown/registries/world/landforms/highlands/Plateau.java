@@ -11,17 +11,19 @@ import com.sipke.NoiseGenerator;
 import com.sipke.Constant;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class Plateau extends Landform {
 
     public Plateau() {
-        super(0.33f, Placement.Elevation.highland, Climate.coolDesert, Climate.hotDesert, Climate.hotScrubland, Climate.savanna, Climate.chaparral, Climate.steppe);
-        register(new StratumConfig(MaterialRegistery.sandstone_grey.getKey(), 5, 10, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_beige.getKey(), 5, 10, 2));
-        register(new StratumConfig(MaterialRegistery.limestone_beige.getKey(), 5, 10, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_brown.getKey(), 5, 10, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_yellow.getKey(), 2, 4, 4));
-        register(new StratumConfig(MaterialRegistery.sandstone_pink.getKey(), 2, 4, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_red.getKey(), 2, 4, 5));
+        super(modid, "plateau", 0.33f, Placement.Elevation.highland, Climate.coolDesert, Climate.hotDesert, Climate.hotScrubland, Climate.savanna, Climate.chaparral, Climate.steppe);
+        register(MaterialRegistery.sandstone_grey, 5, 10, 2);
+        register(MaterialRegistery.sandstone_beige, 5, 10, 2);
+        register(MaterialRegistery.limestone_beige, 5, 10, 2);
+        register(MaterialRegistery.sandstone_brown, 5, 10, 2);
+        register(MaterialRegistery.sandstone_yellow, 2, 4, 4);
+        register(MaterialRegistery.sandstone_pink, 2, 4, 2);
+        register(MaterialRegistery.sandstone_red, 2, 4, 5);
     }
 
     @Override

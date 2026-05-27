@@ -10,17 +10,19 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.wildsregrown.registries.world.MaterialRegistery;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class DesertRidge extends Landform {
 
     public DesertRidge() {
-        super(0.785f, Placement.Elevation.mountain, Climate.hotDesert, Climate.coolDesert, Climate.coolShrubland, Climate.hotScrubland);
-        register(new StratumConfig(MaterialRegistery.sandstone_brown.getKey(), 5, 10, 1));
-        register(new StratumConfig(MaterialRegistery.sandstone_beige.getKey(), 8, 12, 2));
-        register(new StratumConfig(MaterialRegistery.sandstone_yellow.getKey(), 3, 5, 8));
-        register(new StratumConfig(MaterialRegistery.sandstone_red.getKey(), 2, 6, 8));
-        register(new StratumConfig(MaterialRegistery.sandstone_pink.getKey(), 1, 3, 3));
-        register(new StratumConfig(MaterialRegistery.limestone_beige.getKey(), 12, 50, 4));
-        register(new StratumConfig(MaterialRegistery.slate_grey.getKey(), 5, 12, 1));
+        super(modid, "desert_ridge", 0.785f, Placement.Elevation.mountain, Climate.hotDesert, Climate.coolDesert, Climate.coolShrubland, Climate.hotScrubland);
+        register(MaterialRegistery.sandstone_brown, 5, 10, 1);
+        register(MaterialRegistery.sandstone_beige, 8, 12, 2);
+        register(MaterialRegistery.sandstone_yellow, 3, 5, 8);
+        register(MaterialRegistery.sandstone_red, 2, 6, 8);
+        register(MaterialRegistery.sandstone_pink, 1, 3, 3);
+        register(MaterialRegistery.limestone_beige, 12, 50, 4);
+        register(MaterialRegistery.slate_grey, 5, 12, 1);
     }
 
     @Override

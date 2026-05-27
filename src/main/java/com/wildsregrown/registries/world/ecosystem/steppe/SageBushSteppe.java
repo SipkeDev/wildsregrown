@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class SageBushSteppe extends Ecosystem {
 
     public SageBushSteppe(){
-        super(Climate.steppe, Biomes.sageshrub_plains);
+        super(modid, "sage_bush_steppe", Climate.steppe, Biomes.sageshrub_plains);
         register(Placement.Biome.swamp, Biomes.white_flower_grassfield);
         register(Placement.Biome.dry, Biomes.dry_sageshrub_plains);
         register(Placement.Biome.wet, Biomes.wet_sageshrub_plains);

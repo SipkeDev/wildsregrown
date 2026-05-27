@@ -2,125 +2,130 @@ package com.wildsregrown.blocks.crafting;
 
 import com.mojang.serialization.MapCodec;
 import com.wildsregrown.WildsRegrown;
-import com.wildsregrown.blocks.properties.LinSeedPaintable;
+import com.wildsregrown.blocks.properties.tree.LinSeedPaintable;
 import com.wildsregrown.blocks.properties.ModProperties;
-import com.wildsregrown.blocks.render.ITintedBlock;
 import com.wildsregrown.entities.block.PortableWorkbenchEntity;
 import com.wildsregrown.items.tools.Hatchet;
 import com.wildsregrown.items.tools.Pickaxe;
 import com.wildsregrown.recipe.ModRecipes;
 import com.wildsregrown.recipe.ToolEventInput;
 import com.wildsregrown.recipe.ToolEventRecipe;
-import com.wildsregrown.registries.ModComponents;
 import com.wildsregrown.registries.ModTags;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.ServerRecipeManager;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import wildsregrown.api.block.render.ITintedBlock;
+import wildsregrown.api.registry.defaults.ApiComponents;
 
 import java.util.Optional;
 
-public class PortableWorkBench extends BlockWithEntity implements ITintedBlock {
+public class PortableWorkBench extends BaseEntityBlock implements ITintedBlock {
 
     private static final VoxelShape shape;
     private static final EnumProperty<LinSeedPaintable> PAINT = ModProperties.LINSEED_PAINT;
 
-    public PortableWorkBench(AbstractBlock.Settings settings){
+    public PortableWorkBench(BlockBehaviour.Properties settings){
         super(settings);
     }
 
     @Override
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
 
         PortableWorkbenchEntity entity = (PortableWorkbenchEntity) world.getBlockEntity(pos);
-        ItemStack playerStack = player.getMainHandStack();
+        ItemStack playerStack = player.getMainHandItem();
 
-        world.setBlockState(pos.up(), Blocks.AIR.getDefaultState());
+        world.setBlockAndUpdate(pos.above(), Blocks.AIR.defaultBlockState());
 
         //Both empty, Pick up the workbench
         if (entity.isEmpty() && playerStack.isEmpty()){
-            player.setStackInHand(Hand.MAIN_HAND, this.asItem().getDefaultStack());
-            entity.markRemoved();
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
+            player.setItemInHand(InteractionHand.MAIN_HAND, this.asItem().getDefaultInstance());
+            entity.setRemoved();
+            world.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
             handleInteraction(world, pos, state, entity);
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         //Workbench empty, place material... If craftable...
         else if (entity.isEmpty()){
-            if (playerStack.isIn(ModTags.stone_crafting_materials) || playerStack.isIn(ModTags.wood_crafting_materials)) {
+            if (playerStack.is(ModTags.stone_crafting_materials) || playerStack.is(ModTags.wood_crafting_materials)) {
                 entity.setStack(playerStack);
-                player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+                player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 handleInteraction(world, pos, state, entity);
-                return ActionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }else {
-                return ActionResult.FAIL;
+                return InteractionResult.FAIL;
             }
         }
         //Workbench is full, hand free. Retrieve material
         else if (playerStack.isEmpty() && !entity.isEmpty()){
-            player.setStackInHand(Hand.MAIN_HAND, entity.getStack());
+            player.setItemInHand(InteractionHand.MAIN_HAND, entity.getStack());
             entity.setStack(ItemStack.EMPTY);
             handleInteraction(world, pos, state, entity);
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         //Tool event handler
-        else if (world instanceof ServerWorld serverWorld){
-            if (player.getMainHandStack().getComponents().contains(ModComponents.ITEM_STANCE)) {
-                ServerRecipeManager recipeManager = serverWorld.getRecipeManager();
-                ItemStack tool = player.getMainHandStack();
+        else if (world instanceof ServerLevel serverWorld){
+            if (player.getMainHandItem().getComponents().has(ApiComponents.ITEM_STANCE)) {
+                RecipeManager recipeManager = serverWorld.recipeAccess();
+                ItemStack tool = player.getMainHandItem();
                 ItemStack material = entity.getStack();
 
                 if (tool.getItem() instanceof Pickaxe item){
-                    WildsRegrown.LOGGER.info(String.valueOf(Pickaxe.Stances.values()[tool.get(ModComponents.ITEM_STANCE)]));
+                    WildsRegrown.LOGGER.info(String.valueOf(Pickaxe.Stances.values()[tool.get(ApiComponents.ITEM_STANCE)]));
                 }
                 if (tool.getItem() instanceof Hatchet item){
-                    WildsRegrown.LOGGER.info(String.valueOf(Hatchet.Stances.values()[tool.get(ModComponents.ITEM_STANCE)]));
+                    WildsRegrown.LOGGER.info(String.valueOf(Hatchet.Stances.values()[tool.get(ApiComponents.ITEM_STANCE)]));
                 }
 
-                Optional<RecipeEntry<ToolEventRecipe>> match = recipeManager.getFirstMatch(ModRecipes.toolEventType, new ToolEventInput(tool.get(ModComponents.ITEM_STANCE), tool, material), world);
+                Optional<RecipeHolder<ToolEventRecipe>> match = recipeManager.getRecipeFor(ModRecipes.toolEventType, new ToolEventInput(tool.get(ApiComponents.ITEM_STANCE), tool, material), world);
                 if (match.isPresent()) {
                     ItemStack stack = match.get().value().output();
                     stack.setCount(entity.getStack().getCount());
                     entity.setStack(stack);
 
                     handleInteraction(world, pos, state, entity);
-                    return ActionResult.CONSUME;
+                    return InteractionResult.CONSUME;
                 }
             }
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     /**
      * Interactions
      */
-    private void handleInteraction(World world, BlockPos pos, BlockState state, BlockEntity entity){
-        entity.markDirty();
-        world.updateListeners(pos, state, state, 2);
+    private void handleInteraction(Level world, BlockPos pos, BlockState state, BlockEntity entity){
+        entity.setChanged();
+        world.sendBlockUpdated(pos, state, state, 2);
         displayInteraction(world, pos);
     }
 
-    private void displayInteraction(World world, BlockPos pos){
-        if (world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(ParticleTypes.POOF, pos.getX() + 0.5F, pos.getY() + 1.0, pos.getZ() + 0.5F, 7,0.0F, 0.0F, 0.0F, 0.0F);
+    private void displayInteraction(Level world, BlockPos pos){
+        if (world instanceof ServerLevel serverWorld) {
+            serverWorld.sendParticles(ParticleTypes.POOF, pos.getX() + 0.5F, pos.getY() + 1.0, pos.getZ() + 0.5F, 7,0.0F, 0.0F, 0.0F, 0.0F);
         }
     }
 
@@ -128,42 +133,46 @@ public class PortableWorkBench extends BlockWithEntity implements ITintedBlock {
       * Vanilla constructors
       */
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
-        return createCodec(PortableWorkBench::new);
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(PortableWorkBench::new);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(PAINT);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        return getDefaultState();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return defaultBlockState();
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PortableWorkbenchEntity(pos, state);
     }
 
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return shape;
     }
 
     static {
-        shape = VoxelShapes.union(
-                VoxelShapes.cuboid(0, 0.75, 0, 1, 1, 1),
-                VoxelShapes.cuboid(0.0625, 0, 0.0625, 0.25, 0.75, 0.25),
-                VoxelShapes.cuboid(0.75, 0, 0.0625, 0.9375, 0.75, 0.25),
-                VoxelShapes.cuboid(0.0625, 0, 0.75, 0.25, 0.75, 0.9375),
-                VoxelShapes.cuboid(0.75, 0, 0.75, 0.9375, 0.75, 0.9375),
-                VoxelShapes.cuboid(0.25, 0.125, 0.125, 0.75, 0.25, 0.1875),
-                VoxelShapes.cuboid(0.25, 0.125, 0.8125, 0.75, 0.25, 0.875),
-                VoxelShapes.cuboid(0.8125, 0.125, 0.25, 0.875, 0.25, 0.75),
-                VoxelShapes.cuboid(0.125, 0.125, 0.25, 0.1875, 0.25, 0.75)
+        shape = Shapes.or(
+                Shapes.box(0, 0.75, 0, 1, 1, 1),
+                Shapes.box(0.0625, 0, 0.0625, 0.25, 0.75, 0.25),
+                Shapes.box(0.75, 0, 0.0625, 0.9375, 0.75, 0.25),
+                Shapes.box(0.0625, 0, 0.75, 0.25, 0.75, 0.9375),
+                Shapes.box(0.75, 0, 0.75, 0.9375, 0.75, 0.9375),
+                Shapes.box(0.25, 0.125, 0.125, 0.75, 0.25, 0.1875),
+                Shapes.box(0.25, 0.125, 0.8125, 0.75, 0.25, 0.875),
+                Shapes.box(0.8125, 0.125, 0.25, 0.875, 0.25, 0.75),
+                Shapes.box(0.125, 0.125, 0.25, 0.1875, 0.25, 0.75)
         );
     }
 
+    @Override
+    public int getTint(BlockState blockState, int i) {
+        return blockState.getValue(PAINT).getRGB();
+    }
 }

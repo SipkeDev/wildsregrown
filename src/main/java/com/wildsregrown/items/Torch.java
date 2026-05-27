@@ -1,26 +1,24 @@
 package com.wildsregrown.items;
 
-import com.wildsregrown.WildsRegrown;
 import com.wildsregrown.blocks.properties.ModProperties;
 import com.wildsregrown.registries.ModComponents;
 import com.wildsregrown.registries.ModBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-
-import java.util.List;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import java.util.Objects;
 
 public class Torch extends BlockItem {
 
-    public Torch(Settings settings) {
+    public Torch(Properties settings) {
         super(ModBlocks.torch, settings);
     }
 
@@ -37,41 +35,39 @@ public class Torch extends BlockItem {
     }
     */
 
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        ActionResult actionResult = this.place(new ItemPlacementContext(context));
-        return !actionResult.isAccepted() && context.getStack().contains(DataComponentTypes.CONSUMABLE) ? super.use(context.getWorld(), context.getPlayer(), context.getHand()) : actionResult;
+    public InteractionResult useOn(UseOnContext context) {
+        InteractionResult actionResult = this.place(new BlockPlaceContext(context));
+        return !actionResult.consumesAction() && context.getItemInHand().has(DataComponents.CONSUMABLE) ? super.use(context.getLevel(), context.getPlayer(), context.getHand()) : actionResult;
     }
 
-    public ActionResult place(ItemPlacementContext context) {
+    public InteractionResult place(BlockPlaceContext context) {
 
-        ItemStack stack = context.getStack();
-        BlockState blockState = ModBlocks.torch.getPlacementState(context);
+        ItemStack stack = context.getItemInHand();
+        BlockState blockState = ModBlocks.torch.getStateForPlacement(context);
 
         if (blockState == null) {
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         } else if (canPlace(context, blockState)){
-            blockState = blockState.with(ModProperties.TORCH_FUEL, stack.get(ModComponents.FUEL)).with(Properties.LIT, stack.get(ModComponents.LIT));
-            if (!this.place(context, blockState)) {
-                return ActionResult.FAIL;
+            blockState = blockState.setValue(ModProperties.TORCH_FUEL, stack.get(ModComponents.FUEL)).setValue(BlockStateProperties.LIT, stack.get(ModComponents.LIT));
+            if (!this.placeBlock(context, blockState)) {
+                return InteractionResult.FAIL;
             } else {
-                Objects.requireNonNull(context.getPlayer()).setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
-                return ActionResult.SUCCESS;
+                Objects.requireNonNull(context.getPlayer()).setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                return InteractionResult.SUCCESS;
             }
         }else {
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
         }
     }
 
-    protected boolean place(ItemPlacementContext context, BlockState state) {
-        WildsRegrown.LOGGER.info("placed");
-        return context.getWorld().setBlockState(context.getBlockPos(), state, 11);
+    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
+        return context.getLevel().setBlock(context.getClickedPos(), state, 11);
     }
 
-    protected boolean canPlace(ItemPlacementContext context, BlockState state) {
-        PlayerEntity playerEntity = context.getPlayer();
-        ShapeContext shapeContext = playerEntity == null ? ShapeContext.absent() : ShapeContext.of(playerEntity);
-        return state.canPlaceAt(context.getWorld(), context.getBlockPos()) && context.getWorld().canPlace(state, context.getBlockPos(), shapeContext);
+    protected boolean canPlace(BlockPlaceContext context, BlockState state) {
+        Player playerEntity = context.getPlayer();
+        CollisionContext shapeContext = playerEntity == null ? CollisionContext.empty() : CollisionContext.of(playerEntity);
+        return state.canSurvive(context.getLevel(), context.getClickedPos()) && context.getLevel().isUnobstructed(state, context.getClickedPos(), shapeContext);
     }
-
 
 }

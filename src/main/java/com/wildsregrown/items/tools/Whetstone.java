@@ -5,19 +5,19 @@
 
 package com.wildsregrown.items.tools;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.context.UseOnContext;
 public class Whetstone extends Item {
 
-    public Whetstone(ToolMaterial material, float attackDamage, float attackSpeed, Settings settings) {
+    public Whetstone(ToolMaterial material, float attackDamage, float attackSpeed, Properties settings) {
         super(settings.pickaxe(material, attackDamage, attackSpeed));
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        return ActionResult.PASS;
+    public InteractionResult useOn(UseOnContext context) {
+        return InteractionResult.PASS;
     }
 
 }

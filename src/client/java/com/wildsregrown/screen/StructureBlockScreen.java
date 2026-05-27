@@ -2,22 +2,20 @@ package com.wildsregrown.screen;
 
 import com.sipke.math.MathUtil;
 import com.wildsregrown.WildsRegrown;
-import com.wildsregrown.network.payloads.StructureBlockPayload;
-import com.wildsregrown.network.payloads.StructureSavePayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-import static com.wildsregrown.gui.KeyBindings.hasKeyDown;
-
+import static wildsregrown.api.client.gui.KeyBindings.hasKeyDown;
+/*
 
 public class StructureBlockScreen extends Screen {
 
@@ -39,18 +37,18 @@ public class StructureBlockScreen extends Screen {
     private final int maxSize = 256;
 
     public StructureBlockScreen(StructureBlockPayload payload) {
-        super(Text.of(payload.compound().getString("name","new_world")));
-        this.posx = payload.compound().getInt("posx",0);
-        this.posy = payload.compound().getInt("posy",0);
-        this.posz = payload.compound().getInt("posz",0);
-        this.name = payload.compound().getString("name", "new");
-        this.show = payload.compound().getBoolean("show", false);
-        this.x0 = payload.compound().getInt("x0",0);
-        this.y0 = payload.compound().getInt("y0",0);
-        this.z0 = payload.compound().getInt("z0",0);
-        this.x1 = payload.compound().getInt("x1",0);
-        this.y1 = payload.compound().getInt("y1",0);
-        this.z1 = payload.compound().getInt("z1",0);
+        super(Component.nullToEmpty(payload.compound().getStringOr("name","new_world")));
+        this.posx = payload.compound().getIntOr("posx",0);
+        this.posy = payload.compound().getIntOr("posy",0);
+        this.posz = payload.compound().getIntOr("posz",0);
+        this.name = payload.compound().getStringOr("name", "new");
+        this.show = payload.compound().getBooleanOr("show", false);
+        this.x0 = payload.compound().getIntOr("x0",0);
+        this.y0 = payload.compound().getIntOr("y0",0);
+        this.z0 = payload.compound().getIntOr("z0",0);
+        this.x1 = payload.compound().getIntOr("x1",0);
+        this.y1 = payload.compound().getIntOr("y1",0);
+        this.z1 = payload.compound().getIntOr("z1",0);
 
         this.x = this.width/2;
         this.y = this.height/2;
@@ -61,189 +59,189 @@ public class StructureBlockScreen extends Screen {
         int width = 80;
         int height = 20;
 
-        TextWidget x0 = new TextWidget(Text.of(String.valueOf(this.x0)), this.client.textRenderer);
-        x0.setDimensionsAndPosition(width, height, 40, 40);
-        ButtonWidget x0Up = ButtonWidget.builder(Text.of("Pivot X up"), (btn) -> {
+        StringWidget x0 = new StringWidget(Component.nullToEmpty(String.valueOf(this.x0)), this.minecraft.font);
+        x0.setRectangle(width, height, 40, 40);
+        Button x0Up = Button.builder(Component.nullToEmpty("Pivot X up"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.x0 = MathUtil.clamp(this.x0 + 16, -(maxSize/2), 0);
             }else {
                 this.x0 = MathUtil.clamp(this.x0 + 1, -(maxSize/2), 0);
             }
-            x0.setMessage(Text.of(String.valueOf(this.x0)));
-        }).dimensions(40, 60, width, height).build();
-        ButtonWidget x0Down = ButtonWidget.builder(Text.of("Pivot X Down"), (btn) -> {
+            x0.setMessage(Component.nullToEmpty(String.valueOf(this.x0)));
+        }).bounds(40, 60, width, height).build();
+        Button x0Down = Button.builder(Component.nullToEmpty("Pivot X Down"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.x0 = MathUtil.clamp(this.x0 - 16, -(maxSize/2), 0);
             }else {
                 this.x0 = MathUtil.clamp(this.x0 - 1, -(maxSize/2), 0);
             }
-            x0.setMessage(Text.of(String.valueOf(this.x0)));
-        }).dimensions(40, 80, width, height).build();
-        this.addDrawableChild(x0);
-        this.addDrawableChild(x0Up);
-        this.addDrawableChild(x0Down);
+            x0.setMessage(Component.nullToEmpty(String.valueOf(this.x0)));
+        }).bounds(40, 80, width, height).build();
+        this.addRenderableWidget(x0);
+        this.addRenderableWidget(x0Up);
+        this.addRenderableWidget(x0Down);
 
-        TextWidget y0 = new TextWidget(Text.of(String.valueOf(this.y0)), this.client.textRenderer);
-        y0.setDimensionsAndPosition(width, height, 120, 40);
-        ButtonWidget y0Up = ButtonWidget.builder(Text.of("Pivot Y up"), (btn) -> {
+        StringWidget y0 = new StringWidget(Component.nullToEmpty(String.valueOf(this.y0)), this.minecraft.font);
+        y0.setRectangle(width, height, 120, 40);
+        Button y0Up = Button.builder(Component.nullToEmpty("Pivot Y up"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.y0 = MathUtil.clamp(this.y0 + 16, -(maxSize/2), 0);
             }else {
                 this.y0 = MathUtil.clamp(this.y0 + 1, -(maxSize/2), 0);
             }
-            y0.setMessage(Text.of(String.valueOf(this.y0)));
-        }).dimensions(120, 60, width, height).build();
-        ButtonWidget y0Down = ButtonWidget.builder(Text.of("Pivot Y Down"), (btn) -> {
+            y0.setMessage(Component.nullToEmpty(String.valueOf(this.y0)));
+        }).bounds(120, 60, width, height).build();
+        Button y0Down = Button.builder(Component.nullToEmpty("Pivot Y Down"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.y0 = MathUtil.clamp(this.y0 - 16, -(maxSize/2), 0);
             }else {
                 this.y0 = MathUtil.clamp(this.y0 - 1, -(maxSize/2), 0);
             }
-            y0.setMessage(Text.of(String.valueOf(this.y0)));
-        }).dimensions(120, 80, width, height).build();
-        this.addDrawableChild(y0);
-        this.addDrawableChild(y0Up);
-        this.addDrawableChild(y0Down);
+            y0.setMessage(Component.nullToEmpty(String.valueOf(this.y0)));
+        }).bounds(120, 80, width, height).build();
+        this.addRenderableWidget(y0);
+        this.addRenderableWidget(y0Up);
+        this.addRenderableWidget(y0Down);
 
-        TextWidget z0 = new TextWidget(Text.of(String.valueOf(this.z0)), this.client.textRenderer);
-        z0.setDimensionsAndPosition(width, height, 200, 40);
-        ButtonWidget z0Up = ButtonWidget.builder(Text.of("Pivot Z up"), (btn) -> {
+        StringWidget z0 = new StringWidget(Component.nullToEmpty(String.valueOf(this.z0)), this.minecraft.font);
+        z0.setRectangle(width, height, 200, 40);
+        Button z0Up = Button.builder(Component.nullToEmpty("Pivot Z up"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.z0 = MathUtil.clamp(this.z0 + 16, -(maxSize/2), 0);
             }else {
                 this.z0 = MathUtil.clamp(this.z0 + 1, -(maxSize/2), 0);
             }
-            z0.setMessage(Text.of(String.valueOf(this.z0)));
-        }).dimensions(200, 60, width, height).build();
-        ButtonWidget z0Down = ButtonWidget.builder(Text.of("Pivot Z Down"), (btn) -> {
+            z0.setMessage(Component.nullToEmpty(String.valueOf(this.z0)));
+        }).bounds(200, 60, width, height).build();
+        Button z0Down = Button.builder(Component.nullToEmpty("Pivot Z Down"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.z0 = MathUtil.clamp(this.z0 - 16, -(maxSize/2), 0);
             }else {
                 this.z0 = MathUtil.clamp(this.z0 - 1, -(maxSize/2), 0);
             }
-            z0.setMessage(Text.of(String.valueOf(this.z0)));
-        }).dimensions(200, 80, width, height).build();
-        this.addDrawableChild(z0);
-        this.addDrawableChild(z0Up);
-        this.addDrawableChild(z0Down);
+            z0.setMessage(Component.nullToEmpty(String.valueOf(this.z0)));
+        }).bounds(200, 80, width, height).build();
+        this.addRenderableWidget(z0);
+        this.addRenderableWidget(z0Up);
+        this.addRenderableWidget(z0Down);
 
-        TextWidget x1 = new TextWidget(Text.of(String.valueOf(this.x1)), this.client.textRenderer);
-        x1.setDimensionsAndPosition(width, height, 40, 120);
-        ButtonWidget x1Up = ButtonWidget.builder(Text.of("Size X up"), (btn) -> {
+        StringWidget x1 = new StringWidget(Component.nullToEmpty(String.valueOf(this.x1)), this.minecraft.font);
+        x1.setRectangle(width, height, 40, 120);
+        Button x1Up = Button.builder(Component.nullToEmpty("Size X up"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.x1 = MathUtil.clamp(this.x1 + 16, 0, maxSize+this.x0);
             }else {
                 this.x1 = MathUtil.clamp(this.x1 + 1, 0, maxSize+this.x0);
             }
-            x1.setMessage(Text.of(String.valueOf(this.x1)));
-        }).dimensions(40, 140, width, height).build();
-        ButtonWidget x1Down = ButtonWidget.builder(Text.of("Size X Down"), (btn) -> {
+            x1.setMessage(Component.nullToEmpty(String.valueOf(this.x1)));
+        }).bounds(40, 140, width, height).build();
+        Button x1Down = Button.builder(Component.nullToEmpty("Size X Down"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.x1 = MathUtil.clamp(this.x1 - 16, 0, maxSize+this.x0);
             }else {
                 this.x1 = MathUtil.clamp(this.x1 - 1, 0, maxSize+this.x0);
             }
-            x1.setMessage(Text.of(String.valueOf(this.x1)));
-        }).dimensions(40, 160, width, height).build();
-        this.addDrawableChild(x1);
-        this.addDrawableChild(x1Up);
-        this.addDrawableChild(x1Down);
+            x1.setMessage(Component.nullToEmpty(String.valueOf(this.x1)));
+        }).bounds(40, 160, width, height).build();
+        this.addRenderableWidget(x1);
+        this.addRenderableWidget(x1Up);
+        this.addRenderableWidget(x1Down);
 
-        TextWidget y1 = new TextWidget(Text.of(String.valueOf(this.y1)), this.client.textRenderer);
-        y1.setDimensionsAndPosition(width, height, 120, 120);
-        ButtonWidget y1Up = ButtonWidget.builder(Text.of("Size Y up"), (btn) -> {
+        StringWidget y1 = new StringWidget(Component.nullToEmpty(String.valueOf(this.y1)), this.minecraft.font);
+        y1.setRectangle(width, height, 120, 120);
+        Button y1Up = Button.builder(Component.nullToEmpty("Size Y up"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.y1 = MathUtil.clamp(this.y1 + 16, 0, maxSize+this.y0);
             }else {
                 this.y1 = MathUtil.clamp(this.y1 + 1, 0, maxSize+this.y0);
             }
-            y1.setMessage(Text.of(String.valueOf(this.y1)));
-        }).dimensions(120, 140, width, height).build();
-        ButtonWidget y1Down = ButtonWidget.builder(Text.of("Size Y Down"), (btn) -> {
+            y1.setMessage(Component.nullToEmpty(String.valueOf(this.y1)));
+        }).bounds(120, 140, width, height).build();
+        Button y1Down = Button.builder(Component.nullToEmpty("Size Y Down"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.y1 = MathUtil.clamp(this.y1 - 16, 0, maxSize+this.y0);
             }else {
                 this.y1 = MathUtil.clamp(this.y1 - 1, 0, maxSize+this.y0);
             }
-            y1.setMessage(Text.of(String.valueOf(this.y1)));
-        }).dimensions(120, 160, width, height).build();
-        this.addDrawableChild(y1);
-        this.addDrawableChild(y1Up);
-        this.addDrawableChild(y1Down);
+            y1.setMessage(Component.nullToEmpty(String.valueOf(this.y1)));
+        }).bounds(120, 160, width, height).build();
+        this.addRenderableWidget(y1);
+        this.addRenderableWidget(y1Up);
+        this.addRenderableWidget(y1Down);
 
-        TextWidget z1 = new TextWidget(Text.of(String.valueOf(this.z1)), this.client.textRenderer);
-        z1.setDimensionsAndPosition(width, height, 200, 120);
-        ButtonWidget z1Up = ButtonWidget.builder(Text.of("Size Z up"), (btn) -> {
+        StringWidget z1 = new StringWidget(Component.nullToEmpty(String.valueOf(this.z1)), this.minecraft.font);
+        z1.setRectangle(width, height, 200, 120);
+        Button z1Up = Button.builder(Component.nullToEmpty("Size Z up"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.z1 = MathUtil.clamp(this.z1 + 16, 0, maxSize+this.z0);
             }else {
                 this.z1 = MathUtil.clamp(this.z1 + 1, 0, maxSize+this.z0);
             }
-            z1.setMessage(Text.of(String.valueOf(this.z1)));
-        }).dimensions(200, 140, width, height).build();
-        ButtonWidget z1Down = ButtonWidget.builder(Text.of("Size Z Down"), (btn) -> {
+            z1.setMessage(Component.nullToEmpty(String.valueOf(this.z1)));
+        }).bounds(200, 140, width, height).build();
+        Button z1Down = Button.builder(Component.nullToEmpty("Size Z Down"), (btn) -> {
             if (hasKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)){
                 this.z1 = MathUtil.clamp(this.z1 - 16, 0, maxSize+this.z0);
             }else {
                 this.z1 = MathUtil.clamp(this.z1 - 1, 0, maxSize+this.z0);
             }
-            z1.setMessage(Text.of(String.valueOf(this.z1)));
-        }).dimensions(200, 160, width, height).build();
-        this.addDrawableChild(z1);
-        this.addDrawableChild(z1Up);
-        this.addDrawableChild(z1Down);
+            z1.setMessage(Component.nullToEmpty(String.valueOf(this.z1)));
+        }).bounds(200, 160, width, height).build();
+        this.addRenderableWidget(z1);
+        this.addRenderableWidget(z1Up);
+        this.addRenderableWidget(z1Down);
 
-        ButtonWidget toggle = ButtonWidget.builder(Text.of("Box: " + show), (btn) -> {
+        Button toggle = Button.builder(Component.nullToEmpty("Box: " + show), (btn) -> {
             this.show = !show;
-            btn.setMessage(Text.of(Boolean.toString(show)));
-        }).dimensions(40, this.height-40, width, height).build();
-        this.addDrawableChild(toggle);
+            btn.setMessage(Component.nullToEmpty(Boolean.toString(show)));
+        }).bounds(40, this.height-40, width, height).build();
+        this.addRenderableWidget(toggle);
 
-        ButtonWidget Update = ButtonWidget.builder(Text.of("Update"), (btn) -> {
-            NbtCompound compound = buildCompound();
+        Button Update = Button.builder(Component.nullToEmpty("Update"), (btn) -> {
+            CompoundTag compound = buildCompound();
             compound.putString("action", "update");
             ClientPlayNetworking.send(new StructureBlockPayload(compound));
-            this.client.setScreen(null);
-        }).dimensions(120, this.height-40, width, height).build();
-        Update.setTooltip(Tooltip.of(Text.literal("Update Bounding Box")));
-        this.addDrawableChild(Update);
+            this.minecraft.setScreen(null);
+        }).bounds(120, this.height-40, width, height).build();
+        Update.setTooltip(Tooltip.create(Component.literal("Update Bounding Box")));
+        this.addRenderableWidget(Update);
 
-        TextFieldWidget name = new TextFieldWidget(this.textRenderer, this.width-width-(width/2)-40, this.height-80, width+(width/2), height, Text.of(this.name));
-        name.setText(this.name);
-        name.setTooltip(Tooltip.of(Text.literal("Set name")));
-        name.setChangedListener((input)-> this.name = input);
-        this.addDrawableChild(name);
+        EditBox name = new EditBox(this.font, this.width-width-(width/2)-40, this.height-80, width+(width/2), height, Component.nullToEmpty(this.name));
+        name.setValue(this.name);
+        name.setTooltip(Tooltip.create(Component.literal("Set name")));
+        name.setResponder((input)-> this.name = input);
+        this.addRenderableWidget(name);
 
-        ButtonWidget save = ButtonWidget.builder(Text.of("Save"), (btn) -> {
-            NbtCompound compound = buildCompound();
+        Button save = Button.builder(Component.nullToEmpty("Save"), (btn) -> {
+            CompoundTag compound = buildCompound();
             compound.putString("action", "save");
             ClientPlayNetworking.send(new StructureBlockPayload(compound));
-            this.client.setScreen(null);
-        }).dimensions(this.width-width-40, this.height-40, width, height).build();
-        save.setTooltip(Tooltip.of(Text.literal("Save structure")));
-        this.addDrawableChild(save);
+            this.minecraft.setScreen(null);
+        }).bounds(this.width-width-40, this.height-40, width, height).build();
+        save.setTooltip(Tooltip.create(Component.literal("Save structure")));
+        this.addRenderableWidget(save);
 
-        ButtonWidget load = ButtonWidget.builder(Text.of("load"), (btn) -> {
-            NbtCompound compound = buildCompound();
+        Button load = Button.builder(Component.nullToEmpty("load"), (btn) -> {
+            CompoundTag compound = buildCompound();
             compound.putString("action", "load");
             ClientPlayNetworking.send(new StructureBlockPayload(compound));
-            this.client.setScreen(null);
-        }).dimensions(this.width-width-width-40, this.height-40, width, height).build();
-        load.setTooltip(Tooltip.of(Text.literal("Only works with registered structures, not generated!")));
-        this.addDrawableChild(load);
+            this.minecraft.setScreen(null);
+        }).bounds(this.width-width-width-40, this.height-40, width, height).build();
+        load.setTooltip(Tooltip.create(Component.literal("Only works with registered structures, not generated!")));
+        this.addRenderableWidget(load);
 
-        ButtonWidget glassFloor = ButtonWidget.builder(Text.of("Build floor"), (btn) -> {
-            NbtCompound compound = buildCompound();
+        Button glassFloor = Button.builder(Component.nullToEmpty("Build floor"), (btn) -> {
+            CompoundTag compound = buildCompound();
             compound.putString("action", "floor");
             ClientPlayNetworking.send(new StructureBlockPayload(compound));
-            this.client.setScreen(null);
-        }).dimensions(this.width-width, 40, width, height).build();
-        this.addDrawableChild(glassFloor);
+            this.minecraft.setScreen(null);
+        }).bounds(this.width-width, 40, width, height).build();
+        this.addRenderableWidget(glassFloor);
 
     }
 
-    private NbtCompound buildCompound(){
-        NbtCompound compound = new NbtCompound();
+    private CompoundTag buildCompound(){
+        CompoundTag compound = new CompoundTag();
         compound.putInt("posx", posx);
         compound.putInt("posy", posy);
         compound.putInt("posz", posz);
@@ -259,13 +257,15 @@ public class StructureBlockScreen extends Screen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context,mouseX,mouseY,delta);
     }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubled) {
+    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
         return super.mouseClicked(click, doubled);
     }
 
 }
+
+ */

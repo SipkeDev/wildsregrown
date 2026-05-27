@@ -1,7 +1,7 @@
 package com.wildsregrown.registries.world.biomes.forest.decidious;
 
 import com.sipke.NoiseGenerator;
-import com.sipke.api.features.flora.FloraSpawnRule;
+import com.sipke.api.features.botanic.flora.FloraSpawnRule;
 import com.sipke.api.terrain.Biome;
 import com.sipke.core.Seed;
 import com.sipke.noise2d.Noise;
@@ -9,9 +9,12 @@ import com.wildsregrown.registries.world.Floras;
 import com.wildsregrown.registries.world.Structures;
 import com.wildsregrown.registries.world.Trees;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class WetOakForest extends Biome {
 
     public WetOakForest() {
+        super(modid, "wet_oak_forest");
         register(Trees.oak, 0.25f, 1);
         register(Floras.grass, FloraSpawnRule.full_coverage, 0.75f, 1,false);
         register(Floras.clover_white, FloraSpawnRule.grouped, 0.75f, 1,false);

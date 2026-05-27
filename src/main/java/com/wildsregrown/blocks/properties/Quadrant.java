@@ -1,12 +1,19 @@
 package com.wildsregrown.blocks.properties;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum Quadrant implements StringIdentifiable {
+public enum Quadrant implements StringRepresentable {
+
+    I("i"),
+    II("ii"),
+    III("iii"),
+    IV("iv");
+    /*
     PP("pp"),
     NP("np"),
     NN("nn"),
     PN("pn");
+     */
 
     private final String name;
 
@@ -16,23 +23,23 @@ public enum Quadrant implements StringIdentifiable {
 
     public Quadrant mirrorH() {
         switch (this) {
-            case PN -> {return NN;}
-            case NN -> {return PN;}
-            case NP -> {return PP;}
-            default -> {return NP;}
+            case IV -> {return III;}
+            case III -> {return IV;}
+            case II -> {return I;}
+            default -> {return II;}
         }
     }
 
     public Quadrant rotateCC() {
-        return this.ordinal() == 3 ? PP : values()[this.ordinal()+1];
+        return this.ordinal() == 3 ? I : values()[this.ordinal()+1];
     }
 
     public Quadrant rotate() {
-        return this.ordinal() == 0 ? PN : values()[this.ordinal()-1];
+        return this.ordinal() == 0 ? IV : values()[this.ordinal()-1];
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

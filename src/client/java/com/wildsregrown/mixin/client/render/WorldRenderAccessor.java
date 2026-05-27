@@ -1,12 +1,12 @@
 package com.wildsregrown.mixin.client.render;
 
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LevelRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(WorldRenderer.class)
+@Mixin(LevelRenderer.class)
 public interface WorldRenderAccessor {
-    @Accessor("world")
-    ClientWorld getWorld();
+    @Accessor("level")
+    ClientLevel getWorld();
 }

@@ -9,10 +9,12 @@ import com.sipke.noise2d.Noise;
 import com.sipke.NoiseGenerator;
 import com.sipke.Constant;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class DesertBeach extends Landform {
 
     public DesertBeach() {
-        super(0.175f, Placement.Elevation.coast, Climate.tundra, Climate.coolShrubland, Climate.hotScrubland, Climate.hotDesert, Climate.coolDesert);
+        super(modid, "desert_beach", 0.175f, Placement.Elevation.coast, Climate.tundra, Climate.coolShrubland, Climate.hotScrubland, Climate.hotDesert, Climate.coolDesert);
     }
 
     @Override

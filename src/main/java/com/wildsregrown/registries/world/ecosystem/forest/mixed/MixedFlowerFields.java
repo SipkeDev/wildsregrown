@@ -5,10 +5,12 @@ import com.sipke.api.categorization.Placement;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class MixedFlowerFields extends Ecosystem {
 
     public MixedFlowerFields(){
-        super(Climate.mixedForest,  Biomes.dense_grassfield);
+        super(modid, "mixed_flower_fields", Climate.mixedForest,  Biomes.dense_grassfield);
         register(Placement.Biome.normal, Biomes.birch_meadow);
         register(Placement.Biome.normal, Biomes.clover_meadow);
         register(Placement.Biome.normal, Biomes.lily_meadow);

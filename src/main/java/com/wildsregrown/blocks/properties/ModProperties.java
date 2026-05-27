@@ -1,72 +1,52 @@
 package com.wildsregrown.blocks.properties;
 
 import com.wildsregrown.blocks.properties.connecting.*;
-import com.wildsregrown.blocks.properties.flora.FloraStage;
 import com.wildsregrown.blocks.properties.framing.Tudor;
 import com.wildsregrown.blocks.properties.fuel.FuelBurn;
 import com.wildsregrown.blocks.properties.fuel.FueledLight;
-import com.wildsregrown.blocks.properties.framing.DoorState;
-import com.wildsregrown.blocks.properties.framing.DrawerState;
-import com.wildsregrown.blocks.properties.framing.HalfStair;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
+import com.wildsregrown.blocks.properties.framing.beam.SupportConnected;
+import com.wildsregrown.blocks.properties.metal.TorchHolderState;
+import com.wildsregrown.blocks.properties.tree.LinSeedPaintable;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 public class ModProperties {
 
     //Basic
-    public static final IntProperty LAYERS = IntProperty.of("layers", 1, 8);
-    public static final IntProperty QUARTER_LAYERS = IntProperty.of("layers", 1, 4);
-    public static final IntProperty OXIDATION = IntProperty.of("oxidation", 0, 3);
-
-    ///fluids
-    //Movement vectors, -1/1 float too 0-40 Integer
-    public static final IntProperty vector = IntProperty.of("vector", 0, 16);
-    public static final IntProperty velocity = IntProperty.of("velocity", 0, 6);
+    public static final IntegerProperty OXIDATION = IntegerProperty.create("oxidation", 0, 3);
 
     //Paintables
-    public static final EnumProperty<LinSeedPaintable> LINSEED_PAINT = EnumProperty.of("paint", LinSeedPaintable.class);
+    public static final EnumProperty<LinSeedPaintable> LINSEED_PAINT = EnumProperty.create("paint", LinSeedPaintable.class);
 
     //Flora cycles
-    public static final IntProperty FRUITING = IntProperty.of("fruiting", 0, 3);
-    public static final IntProperty OVERGROWN = IntProperty.of("overgrown", 0, 5);
-    public static final IntProperty MOISTURE = IntProperty.of("moisture", 0, 8);//Inaccurate 0-1 float
-    public static final IntProperty AGE_4 = IntProperty.of("age", 0, 3);
-    public static final IntProperty AGE_6 = IntProperty.of("age", 0, 5);
-    public static final EnumProperty<FloraStage> FLORAL_STAGE = EnumProperty.of("floral_stage", FloraStage.class);
+    public static final IntegerProperty FRUITING = IntegerProperty.create("fruiting", 0, 3);
 
     //Part states
-    public static final EnumProperty<VerticalConnected> VERTICAL_CONNECTED = EnumProperty.of("part", VerticalConnected.class);
-    public static final EnumProperty<HorizontalConnected> HORIZONTAL_CONNECTED = EnumProperty.of("part", HorizontalConnected.class);
-    public static final EnumProperty<HorizontalCornerConnected> HORIZONTAL_CORNER_CONNECTED = EnumProperty.of("part", HorizontalCornerConnected.class);
-    public static final EnumProperty<CornerConnecting> CORNER_CONNECTING = EnumProperty.of("corner", CornerConnecting.class);
-    public static final EnumProperty<SupportConnected> SUPPORT_STATE = EnumProperty.of("part", SupportConnected.class);
+    public static final EnumProperty<SupportConnected> SUPPORT_STATE = EnumProperty.create("part", SupportConnected.class);
+    public static final EnumProperty<ArrowSlitConnected> ARROW_SLIT_CONNECTED = EnumProperty.create("part", ArrowSlitConnected.class);
 
     //Decorative
-    public static final IntProperty VARIATIONS_2 = IntProperty.of("variations", 1, 2);
-    public static final IntProperty VARIATIONS_3 = IntProperty.of("variations", 1, 3);
-    public static final IntProperty VARIATIONS_4 = IntProperty.of("variations", 1, 4);
-
-    //Furniture states
-    public static final EnumProperty<DrawerState> DRAWER_STATE = EnumProperty.of("drawers", DrawerState.class);
+    public static final IntegerProperty VARIATIONS_2 = IntegerProperty.create("variations", 1, 2);
+    public static final IntegerProperty VARIATIONS_3 = IntegerProperty.create("variations", 1, 3);
+    public static final IntegerProperty VARIATIONS_4 = IntegerProperty.create("variations", 1, 4);
 
     //Castle States
-    public static final EnumProperty<ArchConnected> ARCH = EnumProperty.of("arch", ArchConnected.class);
+    public static final EnumProperty<ArchConnected> ARCH = EnumProperty.create("arch", ArchConnected.class);
 
     //Light sources
     //todo remove FueledLight
-    public static final EnumProperty<FueledLight> FUELED_LIGHT = EnumProperty.of("fueled_light", FueledLight.class);
-    public static final EnumProperty<FuelBurn> FUEL_BURN = EnumProperty.of("burning", FuelBurn.class);
-    public static final IntProperty TORCH_FUEL = IntProperty.of("fuel", 0, 15);
-    public static final IntProperty FUEL_6 = IntProperty.of("fuel", 0, 6);
-    public static final IntProperty FUEL_32 = IntProperty.of("fuel", 0, 32);
-    public static final EnumProperty<TorchHolderState> TORCH_HOLDER_STATE = EnumProperty.of("torch_holder", TorchHolderState.class);
+    public static final EnumProperty<FueledLight> FUELED_LIGHT = EnumProperty.create("fueled_light", FueledLight.class);
+    public static final EnumProperty<FuelBurn> FUEL_BURN = EnumProperty.create("burning", FuelBurn.class);
+    public static final IntegerProperty TORCH_FUEL = IntegerProperty.create("fuel", 0, 15);
+    public static final IntegerProperty FUEL_6 = IntegerProperty.create("fuel", 0, 6);
+    public static final IntegerProperty FUEL_32 = IntegerProperty.create("fuel", 0, 32);
+    public static final EnumProperty<TorchHolderState> TORCH_HOLDER_STATE = EnumProperty.create("torch_holder", TorchHolderState.class);
 
-    public static final EnumProperty<DoorState> DOOR = EnumProperty.of("part", DoorState.class);
-    public static final EnumProperty<Tudor> TUDOR = EnumProperty.of("shape", Tudor.class);
-    public static final EnumProperty<Orientation> ORIENTATION = EnumProperty.of("orientation", Orientation.class);
-    public static final EnumProperty<HalfStair> HALF = EnumProperty.of("half", HalfStair.class);
+    public static final EnumProperty<Tudor> TUDOR = EnumProperty.create("shape", Tudor.class);
 
-    public static final EnumProperty<Quadrant> QUADRANT = EnumProperty.of("quadrant", Quadrant.class);
-    public static final EnumProperty<OrdinalDirection> DIRECTIONS = EnumProperty.of("ordinal", OrdinalDirection.class);
+    public static final EnumProperty<Quadrant> QUADRANT = EnumProperty.create("quadrant", Quadrant.class);
+    public static final EnumProperty<OrdinalDirection> DIRECTIONS = EnumProperty.create("ordinal", OrdinalDirection.class);
+
+
 
 }

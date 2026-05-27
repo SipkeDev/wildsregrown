@@ -1,72 +1,74 @@
 package com.wildsregrown.entities.block;
 
 import com.google.common.collect.UnmodifiableIterator;
-import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.Arm;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class SitEntity extends Entity {
 
-    public SitEntity(EntityType<?> type, World world) {
+    public SitEntity(EntityType<?> type, Level world) {
         super(type, world);
-        this.noClip = true;
+        this.noPhysics = true;
     }
 
     @Override
     public void tick() {
-        if (!this.getEntityWorld().isClient() && !this.hasPassengers()) {
+        if (!this.level().isClientSide() && !this.isVehicle()) {
             this.discard();
         }
     }
 
     @Override
-    public Vec3d updatePassengerForDismount(LivingEntity passenger) {
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         //return super.updatePassengerForDismount(passenger);
-        Vec3d vec3d = getPassengerDismountOffset(this.getWidth(), passenger.getWidth(), this.getYaw() + (passenger.getMainArm() == Arm.RIGHT ? 90.0F : -90.0F));
-        Vec3d vec3d2 = this.locateSafeDismountingPos(vec3d, passenger);
+        Vec3 vec3d = getCollisionHorizontalEscapeVector(this.getBbWidth(), passenger.getBbWidth(), this.getYRot() + (passenger.getMainArm() == HumanoidArm.RIGHT ? 90.0F : -90.0F));
+        Vec3 vec3d2 = this.locateSafeDismountingPos(vec3d, passenger);
         if (vec3d2 != null) {
             return vec3d2;
         } else {
-            Vec3d vec3d3 = getPassengerDismountOffset(this.getWidth(), passenger.getWidth(), this.getYaw() + (passenger.getMainArm() == Arm.LEFT ? 90.0F : -90.0F));
-            Vec3d vec3d4 = this.locateSafeDismountingPos(vec3d3, passenger);
-            return vec3d4 != null ? vec3d4 : this.getEntityPos();
+            Vec3 vec3d3 = getCollisionHorizontalEscapeVector(this.getBbWidth(), passenger.getBbWidth(), this.getYRot() + (passenger.getMainArm() == HumanoidArm.LEFT ? 90.0F : -90.0F));
+            Vec3 vec3d4 = this.locateSafeDismountingPos(vec3d3, passenger);
+            return vec3d4 != null ? vec3d4 : this.position();
         }
     }
 
-    private Vec3d locateSafeDismountingPos(Vec3d offset, LivingEntity passenger) {
+    private Vec3 locateSafeDismountingPos(Vec3 offset, LivingEntity passenger) {
 
         double x = this.getX() + offset.x;
         double y = this.getBoundingBox().minY;
         double z = this.getZ() + offset.z;
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
-        UnmodifiableIterator iterator = passenger.getPoses().iterator();
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        UnmodifiableIterator<Pose> iterator = passenger.getDismountPoses().iterator();
 
         while(iterator.hasNext()) {
-            EntityPose entityPose = (EntityPose) iterator.next();
+            Pose entityPose = iterator.next();
             mutable.set(x, y, z);
             double g = this.getBoundingBox().maxY + (double)0.75F;
 
             while(true) {
-                double h = this.getEntityWorld().getDismountHeight(mutable);
+                double h = this.level().getBlockFloorHeight(mutable);
                 if ((double)mutable.getY() + h > g) {
                     break;
                 }
 
-                if (Dismounting.canDismountInBlock(h)) {
-                    Box box = passenger.getBoundingBox(entityPose);
-                    Vec3d vec3d = new Vec3d(x, (double)mutable.getY() + h, z);
-                    if (Dismounting.canPlaceEntityAt(this.getEntityWorld(), passenger, box.offset(vec3d))) {
+                if (DismountHelper.isBlockFloorValid(h)) {
+                    AABB box = passenger.getLocalBoundsForPose(entityPose);
+                    Vec3 vec3d = new Vec3(x, (double)mutable.getY() + h, z);
+                    if (DismountHelper.canDismountTo(this.level(), passenger, box.move(vec3d))) {
                         passenger.setPose(entityPose);
                         return vec3d;
                     }
@@ -88,21 +90,21 @@ public class SitEntity extends Entity {
     }
 
     @Override
-    protected void readCustomData(ReadView view) {
+    protected void readAdditionalSaveData(ValueInput view) {
 
     }
 
     @Override
-    protected void writeCustomData(WriteView view) {
+    protected void addAdditionalSaveData(ValueOutput view) {
 
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
     @Override
-    public boolean damage(ServerWorld world, DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
         return false;
     }
 

@@ -1,12 +1,11 @@
 package com.wildsregrown.entities.brain;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-
 import java.util.Optional;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 
 import static com.wildsregrown.WildsRegrown.modid;
 
@@ -17,11 +16,11 @@ public class Memory extends MemoryModuleType<Object> {
     }
 
     private static <U> MemoryModuleType<U> register(String id, Codec<U> codec) {
-        return Registry.register(Registries.MEMORY_MODULE_TYPE, Identifier.of(modid,id), new MemoryModuleType(Optional.of(codec)));
+        return Registry.register(BuiltInRegistries.MEMORY_MODULE_TYPE, Identifier.fromNamespaceAndPath(modid,id), new MemoryModuleType(Optional.of(codec)));
     }
 
     private static <U> MemoryModuleType<U> register(String id) {
-        return Registry.register(Registries.MEMORY_MODULE_TYPE, Identifier.of(modid,id), new MemoryModuleType(Optional.empty()));
+        return Registry.register(BuiltInRegistries.MEMORY_MODULE_TYPE, Identifier.fromNamespaceAndPath(modid,id), new MemoryModuleType(Optional.empty()));
     }
 
 }

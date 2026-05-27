@@ -4,10 +4,12 @@ import com.sipke.api.categorization.Climate;
 import com.sipke.api.terrain.Ecosystem;
 import com.wildsregrown.registries.world.Biomes;
 
+import static com.wildsregrown.WildsRegrown.modid;
+
 public class HotDesert extends Ecosystem {
 
     public HotDesert(){
-        super(Climate.hotDesert, Biomes.hotDesert);
+        super(modid, "hot_desert", Climate.hotDesert, Biomes.hotDesert);
     }
 
 }
